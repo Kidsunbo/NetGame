@@ -1,5 +1,6 @@
 package Server;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -23,7 +24,19 @@ public class SignupMessageHandler extends MessageHandler {
     }
 
     private void signUp(JSONObject jsonObject, JSONObject response) {
+        try{
+            if (jsonObject.has("username") && jsonObject.has("password")) {
+                String username = jsonObject.getString("username");
 
+            }
+            else{
+                response.put("success","no");
+                response.put("reply","You didn't provide the username or password");
+            }
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
 
     }
 }
