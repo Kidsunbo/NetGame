@@ -26,8 +26,9 @@ public class SocketHandler extends Thread {
             while (true) {
                 String line = in.readLine();
                 if(line==null) break;
-                String responce = MessageHandler.getMessageHandler(line).process();
-                out.println(responce);
+                //String responce = MessageHandler.getMessageHandler(line).process();
+                //out.println(responce);
+                out.println("Response From Server:"+line.toUpperCase());
             }
         }
         catch (IOException e){
