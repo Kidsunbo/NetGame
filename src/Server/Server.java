@@ -40,6 +40,6 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        Server.getInstance().Start(4333);
+        Server.getInstance().Start(4399);
     }
 }
