@@ -106,6 +106,28 @@ public class Database {
     }
 
     public void addUserInfo(String table,String username,String password){
+        try(Connection connection = DriverManager.getConnection(url,this.username,this.password);Statement statement = connection.createStatement()){
+            String sql = String.format("INSERT INTO %s (username,password) VALUE (?,?)",table,username,password);
+            statement.executeUpdate(sql);
 
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method is only used to do some operation
+     * @param sql
+     * @param value
+     */
+    public void execute(String sql,Object... value){
+        String s = String.format(sql,value);
+        try(Connection conn = DriverManager.getConnection(url,username,password);Statement stmt= conn.createStatement()){
+            ResultSet rs =stmt.executeQuery(sql);
+            }
+        catch(SQLException e){
+            System.out.println("Cannot connect to Database");
+        }
     }
 }
