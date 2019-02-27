@@ -1,10 +1,13 @@
 package Server;
 
+import Database.Database;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * Created by bxs863 on 26/02/19.
+ * process->check->checkIfLoggedIn->tryToLogin
+ *
  */
 public class LoginMessageHandler extends MessageHandler {
     public LoginMessageHandler(String message) {
@@ -72,8 +75,16 @@ public class LoginMessageHandler extends MessageHandler {
 
     private static boolean tryToLogin(JSONObject jsonObject, JSONObject response) {
         // Connect with Database to check if logged in
-
-        return true;
+        if(Database.getInstance().userMatch("user_info",jsonObject.getString("username"),jsonObject.getString("password"))){
+            response.put("success","yes");
+            response.put("reply","Log in successfully");
+            return true;
+        }
+        else{
+            response.put("success","yes");
+            response.put("reply","You username or password is in correct");
+        }
+        return false;
     }
 
 }

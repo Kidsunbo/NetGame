@@ -89,7 +89,7 @@ public class Database {
     public boolean userMatch(String table,String usr,String pw){
         try(Connection conn = DriverManager.getConnection(url,username,password);Statement stmt= conn.createStatement()){
 
-            String sql = "SELECT username,password FROM accounting";
+            String sql = String.format("SELECT %s,%s FROM %s","username","password",table);
             ResultSet rs =stmt.executeQuery(sql);
             while(rs.next()){
                 if(usr.equals(rs.getString("username"))
@@ -103,5 +103,9 @@ public class Database {
             System.out.println("Cannot connect to Database");
         }
         return false;
+    }
+
+    public void addUserInfo(String table,String username,String password){
+
     }
 }
