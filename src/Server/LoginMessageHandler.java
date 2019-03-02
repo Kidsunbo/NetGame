@@ -4,14 +4,19 @@ import Database.Database;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.Socket;
+
 /**
  * Created by bxs863 on 26/02/19.
  * process->check->checkIfLoggedIn->tryToLogin
  *
  */
 public class LoginMessageHandler extends MessageHandler {
-    public LoginMessageHandler(String message) {
+    Socket socket = null;
+
+    public LoginMessageHandler(String message,Socket socket) {
         super(message);
+        this.socket = socket;
     }
 
     @Override
@@ -19,7 +24,9 @@ public class LoginMessageHandler extends MessageHandler {
         JSONObject response = new JSONObject();
         try{
             response.put("type","login_response");
-            check(jsonObject,response);
+            if(check(jsonObject,response)){
+                Server.getInstance().getClients().put(this.jsonObject.getString("username"),socket);
+            }
         }
         catch (Exception e){
 

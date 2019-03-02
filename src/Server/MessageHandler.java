@@ -3,6 +3,8 @@ package Server;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.Socket;
+
 /**
  * Created by bxs863 on 26/02/19.
  */
@@ -21,14 +23,14 @@ public abstract class MessageHandler {
         }
     }
 
-    public static MessageHandler getMessageHandler(String message){
+    public static MessageHandler getMessageHandler(String message, Socket socket){
         MessageHandler result = null;
         try {
             JSONObject js = new JSONObject(message);
             MessageType type = MessageHandlerHelper.getType(js);
             switch (type) {
                 case LogIn:
-                    result = new LoginMessageHandler(message);
+                    result = new LoginMessageHandler(message,socket);
                     break;
                 case LogOut:
                     result = new LogOutMessageHandler(message);
