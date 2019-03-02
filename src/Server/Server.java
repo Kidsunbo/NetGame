@@ -13,6 +13,10 @@ public class Server {
     private Hashtable<String,Socket> clients = new Hashtable<>();
     private static Server server = null;
 
+    private Server(){
+
+    }
+
     public static Server getInstance(){
         if(server == null){
             server = new Server();

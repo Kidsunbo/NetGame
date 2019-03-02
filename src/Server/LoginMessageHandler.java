@@ -42,6 +42,8 @@ public class LoginMessageHandler extends MessageHandler {
      * @return
      */
     private static boolean check(JSONObject jsonObject,JSONObject response){
+        System.out.println(jsonObject.toString());
+
         if(jsonObject.has("username") && jsonObject.has("password")){
             return checkIfLoggedIn(jsonObject, response);
         }
@@ -88,7 +90,7 @@ public class LoginMessageHandler extends MessageHandler {
             return true;
         }
         else{
-            response.put("success","yes");
+            response.put("success","no");
             response.put("reply","You username or password is in correct");
         }
         return false;

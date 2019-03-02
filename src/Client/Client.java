@@ -1,5 +1,6 @@
 package Client;
 
+import javafx.application.Platform;
 import netscape.javascript.JSObject;
 import org.json.JSONObject;
 
@@ -16,14 +17,20 @@ public class Client {
     private Socket socket = null;
     private BufferedReader in = null;
     private PrintWriter out = null;
-    public Client(String ip, int port){
-        try {
+    public Client(String ip, int port) throws IOException {
             socket=new Socket(ip,port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(),true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    }
+
+    public boolean checkConnect() throws IOException {
+            if(socket.getInputStream().read()==-1)
+                return false;
+            return true;
+    }
+
+    public void closeConnection() throws IOException {
+        socket.close();
     }
 
     public Future<JSONObject> send(JSONObject message){
@@ -32,6 +39,7 @@ public class Client {
             JSONObject result = null;
             try {
                 String line = in.readLine();
+                System.out.println(line);
                 result = new JSONObject(line);
             } catch (IOException e) {
                 e.printStackTrace();

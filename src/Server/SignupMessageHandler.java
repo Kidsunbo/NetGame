@@ -34,7 +34,9 @@ public class SignupMessageHandler extends MessageHandler {
                     response.put("reply","Your username has been registered, please use a new username");
                 }
                 else{
-
+                    response.put("success","yes");
+                    response.put("reply","Your username has been registered, please use a new username");
+                    Database.getInstance().addUserInfo("user_info",username,password);
                 }
             }
             else{
