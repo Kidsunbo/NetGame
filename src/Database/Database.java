@@ -34,9 +34,9 @@ public class Database {
                     content.append(line);
                 }
                 JSONObject setting = new JSONObject(content.toString());
-                String username = setting.getString("username");
-                String password = setting.getString("password");
-                String url = setting.getString("url");
+                String username = setting.getString("sql_usr");
+                String password = setting.getString("sql_password");
+                String url = setting.getString("sql_url");
                 database = new Database(url, username, password);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -100,7 +100,7 @@ public class Database {
             return false;
         }
         catch(SQLException e){
-            System.out.println("Cannot connect to Database");
+            System.out.println("Table doesn't exist or user doesn't exist");
         }
         return false;
     }

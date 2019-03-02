@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by bxs863 on 26/02/19.
@@ -13,7 +15,7 @@ import java.util.Map;
 public class SocketHandler extends Thread {
 
     private Socket socket;
-
+    private Timer timer;
     public SocketHandler(Socket socket){
 
         this.socket = socket;
@@ -27,11 +29,8 @@ public class SocketHandler extends Thread {
             while (true) {
                 String line = in.readLine();
                 if(line==null || line.equals("")){ //Handle the situation when client quits
-                    socket.close();
-                    for(Map.Entry<String,Socket> e:Server.getInstance().getClients().entrySet()){
-                        if(e.getValue().isClosed())
-                            Server.getInstance().getClients().remove(e.getKey());
-                    }
+                    System.out.println("Quit");
+                    closeSocket();
                     break;
                 }
                 String responce = MessageHandler.getMessageHandler(line,socket).process();
@@ -41,6 +40,14 @@ public class SocketHandler extends Thread {
         }
         catch (IOException e){
             e.printStackTrace();
+        }
+    }
+
+    private void closeSocket() throws IOException {
+        socket.close();
+        for(Map.Entry<String,Socket> e:Server.getInstance().getClients().entrySet()){
+            if(e.getValue().isClosed())
+                Server.getInstance().getClients().remove(e.getKey());
         }
     }
 
