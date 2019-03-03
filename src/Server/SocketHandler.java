@@ -29,12 +29,11 @@ public class SocketHandler extends Thread {
             while (true) {
                 String line = in.readLine();
                 if(line==null || line.equals("")){ //Handle the situation when client quits
-                    System.out.println("Quit");
                     closeSocket();
                     break;
                 }
                 String responce = MessageHandler.getMessageHandler(line,socket).process();
-                out.println(responce);
+                out.println("THIS IS FOR ONLINE TEST   |-|-|"+responce);
                 //out.println("Response From Server:"+line.toUpperCase());
             }
         }
