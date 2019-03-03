@@ -16,7 +16,7 @@ public class SignupMessageHandler extends MessageHandler {
     String process() {
         JSONObject response = new JSONObject();
         try {
-            response.put("type", "logout_response");
+            response.put("type", "signup_response");
             signUp(jsonObject, response);
         } catch (Exception e) {
             e.printStackTrace();

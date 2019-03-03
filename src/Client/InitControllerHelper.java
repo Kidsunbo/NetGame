@@ -1,14 +1,12 @@
 package Client;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.Button;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
-import javafx.util.Duration;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+
 import org.json.JSONObject;
 
 import java.util.Timer;
