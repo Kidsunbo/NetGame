@@ -6,6 +6,10 @@
 .idea/**/tasks.xml
 .idea/dictionaries
 
+.idea/libraries/*
+.idea/
+NetGame.iml
+
 # Sensitive or high-churn files:
 .idea/**/dataSources/
 .idea/**/dataSources.ids
@@ -47,4 +51,6 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+lib/
 

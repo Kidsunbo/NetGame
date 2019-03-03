@@ -16,7 +16,8 @@ public class SignupMessageHandler extends MessageHandler {
     String process() {
         JSONObject response = new JSONObject();
         try {
-            response.put("type", "logout_response");
+
+            response.put("type", "signup_response");
             signUp(jsonObject, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -34,6 +35,10 @@ public class SignupMessageHandler extends MessageHandler {
                     response.put("reply","Your username has been registered, please use a new username");
                 }
                 else{
+
+                    response.put("success","yes");
+                    response.put("reply","Your username has been registered, please use a new username");
+                    Database.getInstance().addUserInfo("user_info",username,password);
 
                 }
             }
