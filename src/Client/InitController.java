@@ -21,7 +21,6 @@ import java.util.concurrent.ExecutionException;
 
 public class InitController {
     private Client client = null;
-    private boolean timerIsRunning = false;
     static ArrayList<Timer> timers = new ArrayList<>();
 
     public static void closeApplication() {
@@ -35,31 +34,30 @@ public class InitController {
 
     @FXML
     public void initialize(){
-        Timer time = new Timer();
-        timers.add(time);
-        time.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
+//        Timer time = new Timer();
+//        timers.add(time);
+//        time.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
                 try {
                     if(client ==null)
                         client = new Client("localhost",4399);
                     else if(!client.checkConnect()) {
-                        client.closeConnection();
                         client = null;
                         throw new IOException("connect failed");
                     }
-                    loginBtn.setDisable(false);
-                    loginBtn.setDisable(false);
-                    connectCircle.setFill(Color.GREEN);
-                    connectCircle.setStroke(Color.GREEN);
+//                    loginBtn.setDisable(false);
+//                    loginBtn.setDisable(false);
+//                    connectCircle.setFill(Color.GREEN);
+//                    connectCircle.setStroke(Color.GREEN);
                 } catch (IOException e) {
-                    loginBtn.setDisable(true);
-                    signupBtn.setDisable(true);
-                    connectCircle.setFill(Color.RED);
-                    connectCircle.setStroke(Color.RED);
+//                    loginBtn.setDisable(true);
+//                    signupBtn.setDisable(true);
+//                    connectCircle.setFill(Color.RED);
+//                    connectCircle.setStroke(Color.RED);
                 }
-            }
-        },100,1000);
+//            }
+//        },0,10);
     }
 
     @FXML
@@ -101,12 +99,9 @@ public class InitController {
                 Base64.Encoder encoder = Base64.getEncoder();
                 String pwd = encoder.encodeToString(hash);
                 passwordInput.setText(pwd);
-                System.out.println(client.login(usernameInput.getText(),pwd).get().toString());
+                client.login(usernameInput.getText(),pwd);
+                System.out.println("Yes");
             } catch (NoSuchAlgorithmException | InvalidKeySpecException e1) {
-                e1.printStackTrace();
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            } catch (ExecutionException e1) {
                 e1.printStackTrace();
             }
         }
