@@ -61,7 +61,7 @@ public class LoginController {
                         throw new IOException("connect failed");
                     }
                     loginBtn.setDisable(false);
-                    loginBtn.setDisable(false);
+                    signupBtn.setDisable(false);
                     connectCircle.setFill(Color.GREEN);
                     connectCircle.setStroke(Color.GREEN);
                 } catch (IOException e) {

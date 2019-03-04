@@ -15,10 +15,11 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="301.0" style="-fx-background-color: #393E46;" fx:controller="Client.LoginController" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
+      <TextField fx:id="usernameInput" promptText="Username" layoutX="67.0" layoutY="151.0" style="-fx-background-color: #393E46;-fx-text-inner-color: white;" onKeyPressed="#keyPress"/>
+
       <PasswordField promptText="password" fx:id="passwordInput" layoutX="69.0" layoutY="209.0" prefHeight="27.0"
                      prefWidth="176.0" style="-fx-background-color: #393E46;-fx-text-inner-color: white;" onKeyPressed="#keyPress"/>
       <Label disable="true" layoutX="70.0" layoutY="192.0" text="Password" textFill="#eeeeee" />
-      <TextField fx:id="usernameInput" promptText="Username" layoutX="67.0" layoutY="151.0" style="-fx-background-color: #393E46;-fx-text-inner-color: white;" onKeyPressed="#keyPress"/>
       <Label disable="true" layoutX="69.0" layoutY="127.0" text="Username" textFill="#eeeeee" />
       <Button fx:id="loginBtn" layoutX="67.0" layoutY="266.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="154.0" style="-fx-background-color: #00adb5;" text="Sign in" textFill="#eeeeee" onAction="#loginAction">
          <font>
