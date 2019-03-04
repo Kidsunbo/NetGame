@@ -15,7 +15,7 @@ import java.util.TimerTask;
 /**
  * Created by bxs863 on 02/03/19.
  */
-public class InitControllerHelper {
+public class LoginControllerHelper {
 
     public static void empyInput(TextField textField, Control control){
         Timer time = new Timer();

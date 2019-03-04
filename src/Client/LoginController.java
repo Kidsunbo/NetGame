@@ -1,6 +1,5 @@
 package Client;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -24,7 +23,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 
-public class InitController {
+public class LoginController {
     private static Client client = null;
     private ExecutorService es = Executors.newFixedThreadPool(5, r -> {
         Thread t = Executors.defaultThreadFactory().newThread(r);
@@ -85,10 +84,10 @@ public class InitController {
     @FXML
     void loginAction(ActionEvent e){
         if(usernameInput.getText().isEmpty()){
-            InitControllerHelper.empyInput(usernameInput,loginBtn);
+            LoginControllerHelper.empyInput(usernameInput,loginBtn);
         }
         else if(passwordInput.getText().isEmpty()){
-            InitControllerHelper.empyInput(passwordInput,loginBtn);
+            LoginControllerHelper.empyInput(passwordInput,loginBtn);
         }
         else{
             try {
