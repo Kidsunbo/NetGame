@@ -14,13 +14,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        Parent root = fxmlLoader.load(getClass().getResource("View/InitWindow.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("View/Login.fxml"));
         primaryStage.setTitle("Game World");
         Scene login = new Scene(root, 300, 275);
-        login.getStylesheets().add(getClass().getResource("View/style.css").toExternalForm());
         primaryStage.setResizable(false);
-        //primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setScene(login);
         primaryStage.show();
     }
