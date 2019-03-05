@@ -2,13 +2,21 @@ package Client;
 
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import org.json.JSONObject;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
+import java.util.Base64;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -41,6 +49,23 @@ public class LoginControllerHelper {
         }
         return jsonObject;
     }
+
+    public static String encrypt(String password){
+        String pwd = "";
+        try {
+            byte[] salt = "This is dummy salt".getBytes();
+            KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
+            SecretKeyFactory fac = null;
+            fac = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            byte[] hash = fac.generateSecret(spec).getEncoded();
+            Base64.Encoder encoder = Base64.getEncoder();
+            pwd = encoder.encodeToString(hash);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        return pwd;
+    }
+
 
 
 }
