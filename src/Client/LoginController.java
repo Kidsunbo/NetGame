@@ -2,12 +2,16 @@ package Client;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import org.json.JSONObject;
 
 import javax.crypto.SecretKeyFactory;
@@ -25,12 +29,16 @@ import java.util.concurrent.Future;
 
 public class LoginController {
     private static Client client = null;
+    private Stage stage;
     private ExecutorService es = Executors.newFixedThreadPool(5, r -> {
         Thread t = Executors.defaultThreadFactory().newThread(r);
         t.setDaemon(true);
         return t;
     });
 
+
+    @FXML
+    private Pane root;
 
     @FXML
     private TextField usernameInput;
@@ -78,6 +86,12 @@ public class LoginController {
 
     @FXML
     void signUpAction(ActionEvent e){
+        try {
+            stage = (Stage)(root.getScene().getWindow());
+            stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/Signup.fxml"))));
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
 
     }
 
@@ -110,7 +124,7 @@ public class LoginController {
             try {
                 JSONObject jsonObject = future.get();
                 if(jsonObject.get("success").equals("no")){
-                    
+                    System.out.println(jsonObject.toString());
                 }
                 else{
 

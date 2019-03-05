@@ -13,7 +13,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="301.0" style="-fx-background-color: #393E46;" fx:controller="Client.LoginController" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="301.0" style="-fx-background-color: #393E46;" fx:controller="Client.LoginController" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextField fx:id="usernameInput" promptText="Username" layoutX="67.0" layoutY="151.0" style="-fx-background-color: #393E46;-fx-text-inner-color: white;" onKeyPressed="#keyPress"/>
 
