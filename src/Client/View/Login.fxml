@@ -13,7 +13,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="301.0" style="-fx-background-color: #393E46;" fx:controller="Client.LoginController" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="300.0" style="-fx-background-color: #393E46;" fx:controller="Client.LoginController" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextField fx:id="usernameInput" promptText="Username" layoutX="67.0" layoutY="151.0" style="-fx-background-color: #393E46;-fx-text-inner-color: white;" onKeyPressed="#keyPress"/>
 
@@ -36,7 +36,7 @@
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#222831" height="50.0" layoutY="346.0" stroke="BLACK" strokeType="INSIDE" width="301.0" />
       <Text fill="#eeeeee" layoutX="25.0" layoutY="375.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Don't have an account?" wrappingWidth="200" />
       <Button fx:id="signupBtn" style="-fx-background-color: #00ADB5" layoutX="193.0" layoutY="359.0" text="Sign up" textFill="#EEEEEE" onAction="#signUpAction"/>
-      <Text fill="#00adb5" layoutX="23.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Snake" wrappingWidth="175.99999806284904" >
+      <Text fill="#00adb5" layoutX="23.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Snake War" wrappingWidth="175.99999806284904" >
          <font>
             <Font size="32.0" />
          </font>
