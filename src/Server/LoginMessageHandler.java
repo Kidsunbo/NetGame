@@ -46,7 +46,8 @@ public class LoginMessageHandler extends MessageHandler {
      * @param response
      * @return
      */
-    private static boolean check(JSONObject jsonObject, JSONObject response) {
+
+    private static boolean check(JSONObject jsonObject,JSONObject response){
 
         if (jsonObject.has("username") && jsonObject.has("password")) {
             return checkIfLoggedIn(jsonObject, response);

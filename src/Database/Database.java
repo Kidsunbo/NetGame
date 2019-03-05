@@ -110,13 +110,17 @@ public class Database {
     }
 
     public void addUserInfo(String table,String username,String password){
-        try(Connection connection = DriverManager.getConnection(url,this.username,this.password);Statement statement = connection.createStatement()){
-            String sql = String.format("INSERT INTO %s (username,password) VALUE (?,?)",table,username,password);
-            statement.executeUpdate(sql);
+        if(checkExist("user_info")) {
+            try (Connection connection = DriverManager.getConnection(url, this.username, this.password); Statement statement = connection.createStatement()) {
+                String sql = String.format("INSERT INTO %s (username,password) VALUES ('%s','%s');", table, username, password);
+                statement.executeUpdate(sql);
 
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        catch (SQLException e){
-            e.printStackTrace();
+        else{
+            System.out.println("NOOOOOOO");
         }
     }
 
