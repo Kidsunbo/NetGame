@@ -1,5 +1,6 @@
 package Server;
 
+import Database.Database;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,7 +16,8 @@ public class SignupMessageHandler extends MessageHandler {
     String process() {
         JSONObject response = new JSONObject();
         try {
-            response.put("type", "logout_response");
+
+            response.put("type", "signup_response");
             signUp(jsonObject, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -27,7 +29,18 @@ public class SignupMessageHandler extends MessageHandler {
         try{
             if (jsonObject.has("username") && jsonObject.has("password")) {
                 String username = jsonObject.getString("username");
+                String password = jsonObject.getString("password");
+                if(Database.getInstance().checkExist("user_info","username",username)){
+                    response.put("success","no");
+                    response.put("reply","Your username has been registered, please use a new username");
+                }
+                else{
 
+                    response.put("success","yes");
+                    response.put("reply","Your username has been registered, please use a new username");
+                    Database.getInstance().addUserInfo("user_info",username,password);
+
+                }
             }
             else{
                 response.put("success","no");
