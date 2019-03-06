@@ -132,6 +132,13 @@ public class LoginController {
 //                        alert.setHeaderText("Login Succeed!");
 //                        alert.showAndWait();
                         MsgBoxController.display("Login Succeed",jsonObject.getString("reply"));
+                        try {
+                            stage = (Stage) (root.getScene().getWindow());
+                            loginScene = root.getScene();
+                            stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/chatroom.fxml"))));
+                        }catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
                     });
                 }

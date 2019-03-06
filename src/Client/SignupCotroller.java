@@ -72,16 +72,18 @@ public class SignupCotroller {
                 jsonObject.put("username", usrnameTf.getText());
                 try {
                     JSONObject result = LoginController.getClient().send(jsonObject).get();
-                    if (result.get("success").equals("yes") && !result.getBoolean("reply")) {
-                        Platform.runLater(() -> {
-                            checkLabel.setText("OK");
-                            checkLabel.setTextFill(Color.GREEN);
-                        });
-                    } else {
-                        Platform.runLater(() -> {
-                            checkLabel.setText("No");
-                            checkLabel.setTextFill(Color.RED);
-                        });
+                    if(result.has("success")) {
+                        if (result.get("success").equals("yes") && !result.getBoolean("reply")) {
+                            Platform.runLater(() -> {
+                                checkLabel.setText("OK");
+                                checkLabel.setTextFill(Color.GREEN);
+                            });
+                        } else {
+                            Platform.runLater(() -> {
+                                checkLabel.setText("No");
+                                checkLabel.setTextFill(Color.RED);
+                            });
+                        }
                     }
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
