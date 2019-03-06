@@ -43,12 +43,14 @@ public class Client {
             JSONObject result = null;
             try {
                 String line = in.readLine();
-                line = line.substring(line.indexOf("{"));
-                result = new JSONObject(line);
+                if(line!=null && line.contains("{")) {
+                    line = line.substring(line.indexOf("{"));
+                    result = new JSONObject(line);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return result;
+            return result==null?new JSONObject("{}"):result;
         });
     }
 
