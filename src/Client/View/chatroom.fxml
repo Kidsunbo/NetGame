@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.Line?>
 
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.8" prefHeight="400.0" prefWidth="473.0" fx:controller="Client.ChatControlloer" style="-fx-background-color: #222831;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.8" prefHeight="400.0" prefWidth="473.0" fx:controller="Client.ChatController" style="-fx-background-color: #222831;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="104.0" layoutY="88.0" textFill="#00adb5" />
       <Pane layoutX="228.0" layoutY="14.0" prefHeight="240.0" prefWidth="220.0" style="-fx-background-color: #393e46;">

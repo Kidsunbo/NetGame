@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by bxs863 on 05/03/19.
  */
-public class SignupCotroller {
+public class SignupController {
 
     private Stage stage;
     private ExecutorService es = Executors.newFixedThreadPool(10, r -> {
@@ -72,7 +72,8 @@ public class SignupCotroller {
                 jsonObject.put("username", usrnameTf.getText());
                 try {
                     JSONObject result = LoginController.getClient().send(jsonObject).get();
-                    if(result.has("success")) {
+                    if(result.has("success") ) {
+                        System.out.println(result.toString());
                         if (result.get("success").equals("yes") && !result.getBoolean("reply")) {
                             Platform.runLater(() -> {
                                 checkLabel.setText("OK");

@@ -119,28 +119,30 @@ public class LoginController {
             try {
                 JSONObject jsonObject = future.get();
                 System.out.println(jsonObject.toString());
-                if (jsonObject.get("success").equals("no")) {
-                    Platform.runLater(() -> {
+                if(jsonObject.get("type").equals("login_response")&&jsonObject.has("success")) {
+                    if (jsonObject.get("success").equals("no")) {
+                        Platform.runLater(() -> {
 //                        Alert alert = new Alert(Alert.AlertType.INFORMATION, jsonObject.getString("reply"));
 //                        alert.setHeaderText("Login Failed!");
 //                        alert.showAndWait();
-                        MsgBoxController.display("Login Failed",jsonObject.getString("reply"));
-                    });
-                } else {
-                    Platform.runLater(() -> {
+                            MsgBoxController.display("Login Failed", jsonObject.getString("reply"));
+                        });
+                    } else {
+                        Platform.runLater(() -> {
 //                        Alert alert = new Alert(Alert.AlertType.INFORMATION, jsonObject.getString("reply"));
 //                        alert.setHeaderText("Login Succeed!");
 //                        alert.showAndWait();
-                        MsgBoxController.display("Login Succeed",jsonObject.getString("reply"));
-                        try {
-                            stage = (Stage) (root.getScene().getWindow());
-                            loginScene = root.getScene();
-                            stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/chatroom.fxml"))));
-                        }catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                            MsgBoxController.display("Login Succeed", jsonObject.getString("reply"));
+                            try {
+                                stage = (Stage) (root.getScene().getWindow());
+                                loginScene = root.getScene();
+                                stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/chatroom.fxml"))));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 
-                    });
+                        });
+                    }
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
