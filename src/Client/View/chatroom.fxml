@@ -4,28 +4,34 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.8" prefHeight="400.0" prefWidth="473.0" fx:controller="Client.ChatController" style="-fx-background-color: #222831;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.8" prefHeight="450.0" prefWidth="500.0" style="-fx-background-color: #222831;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.ChatController">
    <children>
       <Label layoutX="104.0" layoutY="88.0" textFill="#00adb5" />
-      <Pane layoutX="228.0" layoutY="14.0" prefHeight="240.0" prefWidth="220.0" style="-fx-background-color: #393e46;">
-         <children>
-            <VBox layoutX="195.0" prefHeight="240.0" prefWidth="22.0" />
-         </children>
-      </Pane>
-      <TextArea layoutX="228.0" layoutY="282.0" prefHeight="75.0" prefWidth="220.0" style="-fx-background-color: #393E46;" />
-      <Pane layoutX="14.0" layoutY="79.0" prefHeight="300.0" prefWidth="200.0" style="-fx-background-color: #393e46;">
-         <children>
-            <ListView prefHeight="300.0" prefWidth="200.0" style="-fx-background-color: #393E46;" />
-         </children>
-      </Pane>
-      <Button layoutX="228.0" layoutY="355.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="112.0" style="-fx-background-color: #00adb5;" text="Start game" textFill="#eeeeee" />
-      <Button layoutX="336.0" layoutY="355.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="112.0" style="-fx-background-color: #00adb5;" text="Send message" textFill="#eeeeee" />
-      <Line endX="100.0" layoutX="353.0" layoutY="268.0" startX="-130.5" stroke="#00adb5" />
-      <Line endX="100.0" endY="312.0" layoutX="122.0" layoutY="69.0" startX="100.0" startY="-51.0" stroke="#00adb5" />
+      <ListView layoutX="200.0" layoutY="16.0" orientation="HORIZONTAL" prefHeight="47.0" prefWidth="233.0" style="-fx-background-color: #393e46;" />
+      <ListView layoutX="168.0" layoutY="76.0" prefHeight="202.0" prefWidth="301.0" style="-fx-background-color: #393E46;" />
+      <TextArea layoutX="168.0" layoutY="299.0" prefHeight="100.0" prefWidth="301.0" style="-fx-background-color: #393E46;" />
+      <Button fx:id="startBtn" layoutX="168.0" layoutY="400.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="143.0" style="-fx-background-color: #00adb5;" text="Start game" textFill="#eeeeee" />
+      <Button fx:id="sendBtn" layoutX="326.0" layoutY="400.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="143.0" style="-fx-background-color: #00adb5;" text="Send message" textFill="#eeeeee" />
+      <Line endX="161.0" layoutX="313.0" layoutY="286.0" startX="-150.5" stroke="#00adb5" />
+      <Line endX="100.0" endY="361.0" layoutX="62.0" layoutY="67.0" startX="100.0" startY="9.0" stroke="#00adb5" />
+      <Label layoutX="114.0" layoutY="39.0" text="Label" />
+      <ImageView fitHeight="92.0" fitWidth="126.0" layoutX="-17.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@logo.png" />
+         </image>
+      </ImageView>
+      <Line endX="-100.0" endY="46.0" layoutX="161.0" layoutY="19.0" startX="-100.0" stroke="#00adb5" />
+      <Label fx:id="usernameLabel" layoutX="73.0" layoutY="25.0" text="Username" textFill="#00adb5">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <ListView layoutX="14.0" layoutY="78.0" prefHeight="347.0" prefWidth="133.0" style="-fx-background-color: #393E46;" />
    </children>
 </Pane>

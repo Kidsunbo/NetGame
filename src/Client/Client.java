@@ -79,4 +79,23 @@ public class Client {
     }
 
 
+    public String receiveMessage(){
+        try {
+            String message = in.readLine();
+            if(message==null) return "";
+            return message;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public void sendMessage(String message){
+        out.println(message);
+    }
+
+    public void sendMessage(JSONObject jsonObject){
+        sendMessage(jsonObject.toString());
+    }
+
 }
