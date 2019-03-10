@@ -40,9 +40,7 @@ public class test extends Application {
         label.setFont(Font.font("Verdana", 20));
 
         list.setItems(data);
-
         list.setCellFactory(list -> new ColorRectCell());
-
         list.getSelectionModel().selectedItemProperty().addListener(
                 (ov, old_val, new_val) -> {
                     label.setText(new_val);

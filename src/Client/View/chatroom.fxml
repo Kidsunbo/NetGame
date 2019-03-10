@@ -32,6 +32,6 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <ListView layoutX="14.0" layoutY="78.0" prefHeight="347.0" prefWidth="133.0" style="-fx-background-color: #393E46;" />
+      <ListView fx:id="contactList" layoutX="14.0" layoutY="78.0" prefHeight="347.0" prefWidth="133.0" style="-fx-background-color: #393E46;" />
    </children>
 </Pane>
