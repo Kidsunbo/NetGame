@@ -82,11 +82,10 @@ public class Client {
     public String receiveMessage(){
         try {
             String message = in.readLine();
-            if(message==null) return "";
             return message;
         } catch (IOException e) {
             e.printStackTrace();
-            return "";
+            return null;
         }
     }
 

@@ -1,18 +1,12 @@
 package Client;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.control.*;
+
 import org.json.JSONObject;
 
+
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -34,13 +28,17 @@ public class ChatController {
         public void updateItem(String item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
-
+                setText(item);
             }
         }
     }
 
     @FXML
     private ListView<String> contactList;
+    @FXML
+    private ListView<String> gameList;
+    @FXML
+    private ListView<String> chatArea;
     @FXML
     private Label usernameLabel;
     @FXML
@@ -52,26 +50,39 @@ public class ChatController {
     public void initialize() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type", "forward");
-        jsonObject.put("sub_type", "contacts");
+        jsonObject.put("subtype", "contacts");
+        LoginController.getClient().sendMessage(jsonObject);
         contactList.setCellFactory(list -> new MyListViewCell());
         es.execute(() -> {
             while (true) {
-                try {
-                    JSONObject result = LoginController.getClient().send(jsonObject).get();
-                    String[] name = new String[0];
-                    if(result.getString("type").equals("forward_response") && result.getString("subtype").equals("contact_response")){
-                        List<String> nameList = result.getJSONArray("contact_names").toList().stream().map(Object::toString).collect(Collectors.toList());
-                        name = new String[nameList.size()];
-                        name = nameList.toArray(name);
-                    }
-                    contactList.getItems().addAll(name);
-
-
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
+                String response_str = LoginController.getClient().receiveMessage();
+                if (response_str == null || response_str.equals("")) continue;
+                JSONObject response = new JSONObject(response_str);
+                if (response.getString("type").equals("forward")) {
+                    processNewMessage(response);
+                } else if (response.getString("type").equals("forward_response")) {
+                    processResponse(response);
                 }
+
+
             }
         });
     }
+
+    private void processNewMessage(JSONObject jsonObject){
+
+    }
+
+    private void processResponse(JSONObject jsonObject){
+        if(jsonObject.getString("subtype").equals("contact_response")){
+            List<String> nameList = jsonObject.getJSONArray("contact_names").toList().stream().map(Object::toString).collect(Collectors.toList());
+//            String[] name = new String[nameList.size()];
+            String[] name = {"hello","hello1","hello2"};
+            name = nameList.toArray(name);
+            contactList.getItems().addAll(name);
+        }
+    }
+
+
 }
 

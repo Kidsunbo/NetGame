@@ -34,6 +34,7 @@ import java.util.concurrent.Future;
 
 public class LoginController {
     private static Client client = null;
+    private Timer time;
     private Stage stage;
     public static Scene loginScene = null;
     private ExecutorService es = Executors.newFixedThreadPool(5, r -> {
@@ -62,7 +63,7 @@ public class LoginController {
 
     @FXML
     public void initialize(){
-        Timer time = new Timer(true);
+        time = new Timer(true);
         TimerTask ts = new TimerTask() {
             @Override
             public void run() {
@@ -124,7 +125,10 @@ public class LoginController {
                         Platform.runLater(() -> {
 
                             MsgBoxController.display("Login Failed", jsonObject.getString("reply"));
+
                             try {
+                                time.cancel();
+                                time.purge();
                                 stage = (Stage) (root.getScene().getWindow());
                                 loginScene = root.getScene();
                                 stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/chatroom.fxml"))));
@@ -134,7 +138,8 @@ public class LoginController {
                         });
                     } else {
                         Platform.runLater(() -> {
-
+                            time.cancel();
+                            time.purge();
                             MsgBoxController.display("Login Succeed", jsonObject.getString("reply"));
                             try {
                                 stage = (Stage) (root.getScene().getWindow());
