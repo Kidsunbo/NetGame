@@ -27,6 +27,7 @@ public class LoginMessageHandler extends MessageHandler {
             if(check(jsonObject,response)){
                 Server.getInstance().getClients().put(this.jsonObject.getString("username"),socket);
             }
+            System.out.println(response);
         }
         catch (Exception e){
 

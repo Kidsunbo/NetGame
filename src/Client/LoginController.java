@@ -129,6 +129,7 @@ public class LoginController {
                             try {
                                 time.cancel();
                                 time.purge();
+                                ChatController.username=usernameInput.getText();
                                 stage = (Stage) (root.getScene().getWindow());
                                 loginScene = root.getScene();
                                 stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/chatroom.fxml"))));
@@ -141,6 +142,7 @@ public class LoginController {
                             time.cancel();
                             time.purge();
                             MsgBoxController.display("Login Succeed", jsonObject.getString("reply"));
+                            ChatController.username=usernameInput.getText();
                             try {
                                 stage = (Stage) (root.getScene().getWindow());
                                 loginScene = root.getScene();

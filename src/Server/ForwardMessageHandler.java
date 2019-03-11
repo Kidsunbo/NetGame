@@ -30,14 +30,17 @@ public class ForwardMessageHandler extends MessageHandler {
                 try {
                     if(Server.getInstance().getClients().containsKey(toUser)) {
                         new PrintWriter(Server.getInstance().getClients().get(toUser).getOutputStream(), true).println(forward_msg.toString());
+                        response.put("subtype","forward_response");
                         response.put("success", "yes");
                         response.put("reply", "Your message has been sent.");
                     }
                     else{
+                        response.put("subtype","forward_response");
                         response.put("success", "no");
                         response.put("reply", "User has logged out.");
                     }
                 } catch (IOException e) {
+                    response.put("subtype","forward_response");
                     response.put("success","no");
                     response.put("reply","Your message has not been sent.");
                     e.printStackTrace();

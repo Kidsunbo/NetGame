@@ -82,6 +82,9 @@ public class Client {
     public String receiveMessage(){
         try {
             String message = in.readLine();
+            if(message!=null && message.contains("{")) {
+                message = message.substring(message.indexOf("{"));
+            }
             return message;
         } catch (IOException e) {
             e.printStackTrace();
