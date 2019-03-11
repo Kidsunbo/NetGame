@@ -142,30 +142,31 @@ public class ChatController {
         usernameLabel.setText(username);
     }
 
-    private void processNewMessage(JSONObject jsonObject){
+    private void processNewMessage(JSONObject jsonObject) {
         String fromUser = jsonObject.getString("from_user");
         String message = jsonObject.getString("message");
-        for(Profile p : contactList.getItems()){
-            if(p.getUsername().equals(fromUser)){
-                p.getListView().getItems().add(message);
-                if(p.getUsername().equals(contactList.getSelectionModel().getSelectedItem().getUsername())){
-                    contactList.getItems().remove(p);
-                    contactList.getItems().add(0, p);
-                    contactList.getSelectionModel().selectFirst();
-                }
-                else {
-                    contactList.getItems().remove(p);
-                    contactList.getItems().add(0, p);
-                }
+        for (Profile p : contactList.getItems()) {
+            if (p.getUsername().equals(fromUser)) {
+                Platform.runLater(() -> {
+                    p.getListView().getItems().add(message);
+                    if (p.getUsername().equals(contactList.getSelectionModel().getSelectedItem().getUsername())) {
+                        contactList.getItems().remove(p);
+                        contactList.getItems().add(0, p);
+                        contactList.getSelectionModel().selectFirst();
+                    } else {
+                        contactList.getItems().remove(p);
+                        contactList.getItems().add(0, p);
+                    }
+                });
                 break;
             }
         }
     }
 
-    private void processResponse(JSONObject jsonObject){
-        if(jsonObject.getString("subtype").equals("contact_response")){
+    private void processResponse(JSONObject jsonObject) {
+        if (jsonObject.getString("subtype").equals("contact_response")) {
             boolean isEmpty = false;
-            if(contactList.getItems().isEmpty()){
+            if (contactList.getItems().isEmpty()) {
                 isEmpty = true;
             }
             List<String> nameList = jsonObject.getJSONArray("contact_names").toList().stream().map(Object::toString).collect(Collectors.toList());
@@ -174,10 +175,15 @@ public class ChatController {
             String[] name = new String[nameList.size()];
 //            String[] name = {"tom","mary","lucy","jenny"};
             name = nameList.toArray(name);
-            contactList.getItems().addAll(stringsToProfiles(name));
-            contactList.getItems().removeAll(offlineList);
-            if(isEmpty) contactList.getSelectionModel().selectFirst();
-            contactList.refresh();
+            String[] finalName = name;
+            boolean finalIsEmpty = isEmpty;
+            Platform.runLater(() -> {
+                contactList.getItems().addAll(stringsToProfiles(finalName));
+                contactList.getItems().removeAll(offlineList);
+                if (finalIsEmpty) contactList.getSelectionModel().selectFirst();
+                contactList.refresh();
+            });
+
         }
     }
 
