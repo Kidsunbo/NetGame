@@ -32,7 +32,7 @@ public class LoginMessageHandler extends MessageHandler {
         catch (Exception e){
 
         }
-
+        System.out.println(response.toString());
         return response.toString();
     }
 
