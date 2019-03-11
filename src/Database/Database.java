@@ -88,7 +88,6 @@ public class Database {
 
     public boolean userMatch(String table,String usr,String pw){
         try(Connection conn = DriverManager.getConnection(url,username,password);Statement stmt= conn.createStatement()){
-
             String sql = String.format("SELECT %s,%s FROM %s","username","password",table);
             ResultSet rs =stmt.executeQuery(sql);
             while(rs.next()){
@@ -119,6 +118,8 @@ public class Database {
             System.out.println("NOOOOOOO");
         }
     }
+
+
 
     /**
      * This method is only used to do some operation

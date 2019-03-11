@@ -69,7 +69,7 @@ public class LoginController {
             public void run() {
                 try {
                     if(client ==null)
-                        client = new Client("localhost",4399);
+                        client = new Client("147.188.195.101",4399);
                     else if(!client.checkConnect()) {
                         client = null;
                         throw new IOException("connect failed");
@@ -86,7 +86,7 @@ public class LoginController {
                 }
             }
         };
-        time.scheduleAtFixedRate(ts,0,10);
+        time.scheduleAtFixedRate(ts,0,100);
     }
 
 
@@ -110,7 +110,7 @@ public class LoginController {
             LoginControllerHelper.empyInput(passwordInput, loginBtn);
         } else {
             String pwd = LoginControllerHelper.encrypt(passwordInput.getText());
-            passwordInput.setText(pwd);
+//            passwordInput.setText(pwd);
             afterLogin(client.login(usernameInput.getText(), pwd));
         }
     }
@@ -126,24 +126,14 @@ public class LoginController {
 
                             MsgBoxController.display("Login Failed", jsonObject.getString("reply"));
 
-                            try {
-                                time.cancel();
-                                time.purge();
-                                ChatController.username=usernameInput.getText();
-                                stage = (Stage) (root.getScene().getWindow());
-                                loginScene = root.getScene();
-                                stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/chatroom.fxml"))));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
                         });
                     } else {
                         Platform.runLater(() -> {
-                            time.cancel();
-                            time.purge();
                             MsgBoxController.display("Login Succeed", jsonObject.getString("reply"));
                             ChatController.username=usernameInput.getText();
                             try {
+                                time.cancel();
+                                time.purge();
                                 stage = (Stage) (root.getScene().getWindow());
                                 loginScene = root.getScene();
                                 stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/chatroom.fxml"))));

@@ -29,20 +29,19 @@ public class Client {
             out = new PrintWriter(socket.getOutputStream(),true);
     }
 
-    public boolean checkConnect() throws IOException {
-        if ( socket.getInputStream().read() == -1) {
-            return false;
-        }
+    public boolean checkConnect(){
+        //TO BE SOLVED
         return true;
     }
 
 
     public Future<JSONObject> send(JSONObject message){
-        out.println(message.toString());
         return es.submit(()->{
             JSONObject result = null;
             try {
+                out.println(message.toString());
                 String line = in.readLine();
+                System.out.println(line);
                 if(line!=null && line.contains("{")) {
                     line = line.substring(line.indexOf("{"));
                     result = new JSONObject(line);

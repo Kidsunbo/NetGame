@@ -1,7 +1,5 @@
 {
-
-  "sql_url": "jdbc:postgresql://mod-fund-databases.cs.bham.ac.uk:5432/bxs863",
-  "sql_password": "d15837993682",
-  "sql_usr": "bxs863"
-
+  "sql_url": "jdbc:postgresql://mod-msc-sw1.cs.bham.ac.uk:5432/group9",
+  "sql_password": "p61s32do5p",
+  "sql_usr": "group9"
 }

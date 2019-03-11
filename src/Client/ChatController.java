@@ -1,6 +1,7 @@
 package Client;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -16,9 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.json.JSONObject;
 
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -37,6 +36,8 @@ public class ChatController {
             super.updateItem(item, empty);
             if (item != null) {
                 setGraphic(item.getItem());
+            } else {
+                setGraphic(null);
             }
         }
     }
@@ -80,7 +81,7 @@ public class ChatController {
     private static Client client = LoginController.getClient();
 
 
-    private ExecutorService es = Executors.newFixedThreadPool(5, r -> {
+    private ExecutorService es = Executors.newFixedThreadPool(10, r -> {
         Thread t = Executors.defaultThreadFactory().newThread(r);
         t.setDaemon(true);
         return t;
@@ -106,13 +107,20 @@ public class ChatController {
     @FXML
     public void initialize() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("type", "forward");
-        jsonObject.put("subtype", "contact");
-        LoginController.getClient().sendMessage(jsonObject);
-        contactList.setCellFactory(list->new MyListViewCell());
+        new Timer(true).scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                jsonObject.put("type", "forward");
+                jsonObject.put("subtype", "contact");
+                LoginController.getClient().sendMessage(jsonObject);
+            }
+        },0,5000);
+
+
+        contactList.setCellFactory(list -> new MyListViewCell());
         contactList.getSelectionModel().selectedItemProperty().addListener(
                 (ov, old_val, new_val) -> {
-                    if(old_val!=null){
+                    if (old_val != null) {
                         old_val.getListView().setItems(chatArea.getItems());
                         chatArea.setItems(new_val.getListView().getItems());
                     }
@@ -131,22 +139,49 @@ public class ChatController {
                 }
             }
         });
+        usernameLabel.setText(username);
     }
 
     private void processNewMessage(JSONObject jsonObject){
-
+        String fromUser = jsonObject.getString("from_user");
+        String message = jsonObject.getString("message");
+        for(Profile p : contactList.getItems()){
+            if(p.getUsername().equals(fromUser)){
+                p.getListView().getItems().add(message);
+                if(p.getUsername().equals(contactList.getSelectionModel().getSelectedItem().getUsername())){
+                    contactList.getItems().remove(p);
+                    contactList.getItems().add(0, p);
+                    contactList.getSelectionModel().selectFirst();
+                }
+                else {
+                    contactList.getItems().remove(p);
+                    contactList.getItems().add(0, p);
+                }
+                break;
+            }
+        }
     }
 
     private void processResponse(JSONObject jsonObject){
         if(jsonObject.getString("subtype").equals("contact_response")){
+            boolean isEmpty = false;
+            if(contactList.getItems().isEmpty()){
+                isEmpty = true;
+            }
             List<String> nameList = jsonObject.getJSONArray("contact_names").toList().stream().map(Object::toString).collect(Collectors.toList());
-//            String[] name = new String[nameList.size()];
-            String[] name = {"tom","mary","lucy","jenny"};
-//            name = nameList.toArray(name);
+            Profile[] offlineList = filterOffline(nameList);
+            nameList = filterExist(nameList);
+            String[] name = new String[nameList.size()];
+//            String[] name = {"tom","mary","lucy","jenny"};
+            name = nameList.toArray(name);
             contactList.getItems().addAll(stringsToProfiles(name));
-            contactList.getSelectionModel().selectFirst();
+            contactList.getItems().removeAll(offlineList);
+            if(isEmpty) contactList.getSelectionModel().selectFirst();
+            contactList.refresh();
         }
     }
+
+
 
     public void sendByKeyboard(KeyEvent keyEvent) {
         if(keyEvent.getCode() == KeyCode.ENTER){
@@ -159,8 +194,10 @@ public class ChatController {
     }
 
 
+
     private void sendMessage(){
         String msg = inputArea.getText();
+        Profile p = contactList.getSelectionModel().getSelectedItem();
         chatArea.getItems().add(msg);
         inputArea.clear();
         JSONObject jsonObject = new JSONObject();
@@ -171,11 +208,8 @@ public class ChatController {
         jsonObject.put("from_user",username);
         es.execute(()->LoginController.getClient().sendMessage(jsonObject));
 
-        Profile p = contactList.getSelectionModel().getSelectedItem();
-        System.out.println(p.getUsername());
         contactList.getItems().remove(p);
         contactList.getItems().add(0,p);
-
         contactList.getSelectionModel().selectFirst();
 
     }
@@ -186,6 +220,29 @@ public class ChatController {
             profiles[i]=new Profile(args[i]);
         }
         return profiles;
+    }
+
+    private List<String> filterExist(List<String> names){
+        List<String> existName = new ArrayList<>();
+        for(Profile i : contactList.getItems()){
+            existName.add(i.getUsername());
+        }
+        List<String> result = new ArrayList<>();
+        for(String name:names){
+            if(existName.contains(name)) continue;
+            result.add(name);
+        }
+        return result;
+    }
+
+    private Profile[] filterOffline(List<String> nameList) {
+        List<Profile> offline = new ArrayList<Profile>();
+        for(Profile p : contactList.getItems()){
+            if(!nameList.contains(p.getUsername())){
+                offline.add(p);
+            }
+        }
+        return offline.toArray(new Profile[0]);
     }
 
 }
