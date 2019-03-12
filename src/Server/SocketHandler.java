@@ -36,7 +36,7 @@ public class SocketHandler extends Thread {
                 }
                 System.out.println(line);
                 String responce = MessageHandler.getMessageHandler(line,socket).process();
-                out.println("THIS IS FOR ONLINE TEST   |-|-|"+responce);
+                out.println(responce);
                 //out.println("Response From Server:"+line.toUpperCase());
             }
         }

@@ -69,7 +69,7 @@ public class LoginController {
             public void run() {
                 try {
                     if(client ==null)
-                        client = new Client("147.188.195.101",4399);
+                        client = new Client("localhost",4399);
                     else if(!client.checkConnect()) {
                         client = null;
                         throw new IOException("connect failed");
