@@ -26,16 +26,13 @@ import java.util.TimerTask;
 public class LoginControllerHelper {
 
     public static void empyInput(TextField textField, Control control){
-        Timer time = new Timer();
-        String origin = textField.getStyle();
+        Timer time = new Timer(true);
         time.schedule(new TimerTask() {
             @Override
             public void run() {
-                textField.setStyle(origin);
+                textField.setStyle("-fx-background-color:#393E46;-fx-text-inner-color: white;");
                 control.setDisable(true);
                 Platform.runLater(textField::requestFocus);
-                time.cancel();
-                time.purge();
             }
         },200);
         textField.setStyle("-fx-background-color:#ffcc00");
@@ -55,8 +52,7 @@ public class LoginControllerHelper {
         try {
             byte[] salt = "This is dummy salt".getBytes();
             KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
-            SecretKeyFactory fac = null;
-            fac = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+            SecretKeyFactory fac = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             byte[] hash = fac.generateSecret(spec).getEncoded();
             Base64.Encoder encoder = Base64.getEncoder();
             pwd = encoder.encodeToString(hash);

@@ -33,7 +33,6 @@ import java.util.concurrent.Future;
 
 
 public class LoginController {
-    private static Client client = null;
     private Timer time;
     private Stage stage;
     public static Scene loginScene = null;
@@ -62,23 +61,17 @@ public class LoginController {
     private Circle connectCircle;
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         time = new Timer(true);
         TimerTask ts = new TimerTask() {
             @Override
             public void run() {
-                try {
-                    if(client ==null)
-                        client = new Client("localhost",4399);
-                    else if(!client.checkConnect()) {
-                        client = null;
-                        throw new IOException("connect failed");
-                    }
+                if (Client.getClient().isConnected()) {
                     loginBtn.setDisable(false);
                     signupBtn.setDisable(false);
                     connectCircle.setFill(Color.GREEN);
                     connectCircle.setStroke(Color.GREEN);
-                } catch (IOException e) {
+                } else {
                     loginBtn.setDisable(true);
                     signupBtn.setDisable(true);
                     connectCircle.setFill(Color.RED);
@@ -86,7 +79,7 @@ public class LoginController {
                 }
             }
         };
-        time.scheduleAtFixedRate(ts,0,100);
+        time.scheduleAtFixedRate(ts, 0, 10);
     }
 
 
@@ -103,51 +96,40 @@ public class LoginController {
     }
 
     @FXML
-    void loginAction(ActionEvent e) {
+    void loginAction(ActionEvent event) {
         if (usernameInput.getText().isEmpty()) {
             LoginControllerHelper.empyInput(usernameInput, loginBtn);
         } else if (passwordInput.getText().isEmpty()) {
             LoginControllerHelper.empyInput(passwordInput, loginBtn);
         } else {
             String pwd = LoginControllerHelper.encrypt(passwordInput.getText());
-//            passwordInput.setText(pwd);
-            afterLogin(client.login(usernameInput.getText(), pwd));
-        }
-    }
-
-    void afterLogin(Future<JSONObject> future) {
-        es.execute(() -> {
-            try {
-                JSONObject jsonObject = future.get();
-                System.out.println(jsonObject.toString());
-                if(jsonObject.get("type").equals("login_response")&&jsonObject.has("success")) {
-                    if (jsonObject.get("success").equals("no")) {
-                        Platform.runLater(() -> {
-
-                            MsgBoxController.display("Login Failed", jsonObject.getString("reply"));
-
-                        });
-                    } else {
-                        Platform.runLater(() -> {
-                            MsgBoxController.display("Login Succeed", jsonObject.getString("reply"));
-                            ChatController.username=usernameInput.getText();
-                            try {
-                                time.cancel();
-                                time.purge();
-                                stage = (Stage) (root.getScene().getWindow());
-                                loginScene = root.getScene();
-                                stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/chatroom.fxml"))));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-                        });
+            passwordInput.setText(pwd);
+            Client.getClient().login(usernameInput.getText(), pwd);
+            es.execute(() -> {
+                    JSONObject jsonObject = Client.getClient().retreiveJson("login_response");
+                    if(jsonObject.has("success")) {
+                        if (jsonObject.get("success").equals("no")) {
+                            Platform.runLater(() -> {
+                                MsgBoxController.display("Login Failed", jsonObject.getString("reply"));
+                            });
+                        } else {
+                            Platform.runLater(() -> {
+                                MsgBoxController.display("Login Succeed", jsonObject.getString("reply"));
+                                ChatController.username=usernameInput.getText();
+                                try {
+                                    time.cancel();
+                                    time.purge();
+                                    stage = (Stage) (root.getScene().getWindow());
+                                    loginScene = root.getScene();
+                                    stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/chatroom.fxml"))));
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                        }
                     }
-                }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        });
+            });
+        }
     }
 
     @FXML
@@ -155,9 +137,5 @@ public class LoginController {
         if(!usernameInput.getText().isEmpty() && !passwordInput.getText().isEmpty()){
             loginBtn.setDisable(false);
         }
-    }
-
-    public static Client getClient() {
-        return client;
     }
 }

@@ -4,6 +4,8 @@ import Database.Database;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
@@ -26,6 +28,7 @@ public class LoginMessageHandler extends MessageHandler {
             response.put("type","login_response");
             if(check(jsonObject,response)){
                 Server.getInstance().getClients().put(this.jsonObject.getString("username"),socket);
+                sendNewContactList();
             }
             System.out.println(response);
         }
@@ -94,6 +97,15 @@ public class LoginMessageHandler extends MessageHandler {
             response.put("reply","You username or password is in correct");
         }
         return false;
+    }
+
+    private void sendNewContactList() throws IOException {
+        JSONObject response = new JSONObject();
+        response.put("type","contact_list");
+        response.put("contact_names",Server.getInstance().getClients().keySet());
+        for(Socket socket:Server.getInstance().getClients().values()){
+            new PrintWriter(socket.getOutputStream(),true).println(response.toString());
+        }
     }
 
 }

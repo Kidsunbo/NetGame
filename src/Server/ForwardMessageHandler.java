@@ -17,13 +17,12 @@ public class ForwardMessageHandler extends MessageHandler {
     String process() {
         JSONObject response = new JSONObject();
         response.put("type","forward_response");
-        if(jsonObject.getString("type").equals("forward")){
             if(jsonObject.getString("subtype").equals("forward")){
                 String toUser = jsonObject.getString("to_user");
                 String message = jsonObject.getString("message");
                 String fromUser = jsonObject.getString("from_user");
                 JSONObject forward_msg = new JSONObject();
-                forward_msg.put("type","forward");
+                forward_msg.put("type","forward_new_message");
                 forward_msg.put("from_user",fromUser);
                 forward_msg.put("to_user",toUser);
                 forward_msg.put("message",message);
@@ -47,11 +46,6 @@ public class ForwardMessageHandler extends MessageHandler {
                 }
 
             }
-            else if(jsonObject.getString("subtype").equals("contact")){
-                response.put("subtype","contact_response");
-                response.put("contact_names",Server.getInstance().getClients().keySet());
-            }
-        }
         return response.toString();
     }
 }

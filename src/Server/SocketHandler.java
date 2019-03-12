@@ -1,6 +1,7 @@
 package Server;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,7 +38,6 @@ public class SocketHandler extends Thread {
                 System.out.println(line);
                 String responce = MessageHandler.getMessageHandler(line,socket).process();
                 out.println(responce);
-                //out.println("Response From Server:"+line.toUpperCase());
             }
         }
         catch (IOException e){
@@ -46,10 +46,21 @@ public class SocketHandler extends Thread {
     }
 
     private void closeSocket() throws IOException {
+
         socket.close();
         for(Map.Entry<String,Socket> e:Server.getInstance().getClients().entrySet()){
             if(e.getValue().isClosed())
                 Server.getInstance().getClients().remove(e.getKey());
+        }
+        sendNewContactList();
+    }
+
+    private void sendNewContactList() throws IOException {
+        JSONObject response = new JSONObject();
+        response.put("type","contact_list");
+        response.put("contact_names",Server.getInstance().getClients().keySet());
+        for(Socket socket:Server.getInstance().getClients().values()){
+            new PrintWriter(socket.getOutputStream(),true).println(response.toString());
         }
     }
 

@@ -17,7 +17,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -78,7 +80,6 @@ public class ChatController {
 
 
     public static String username;
-    private static Client client = LoginController.getClient();
 
 
     private ExecutorService es = Executors.newFixedThreadPool(10, r -> {
@@ -106,17 +107,6 @@ public class ChatController {
 
     @FXML
     public void initialize() {
-        JSONObject jsonObject = new JSONObject();
-        new Timer(true).scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                jsonObject.put("type", "forward");
-                jsonObject.put("subtype", "contact");
-                LoginController.getClient().sendMessage(jsonObject);
-            }
-        },0,5000);
-
-
         contactList.setCellFactory(list -> new MyListViewCell());
         contactList.getSelectionModel().selectedItemProperty().addListener(
                 (ov, old_val, new_val) -> {
@@ -127,19 +117,62 @@ public class ChatController {
                 });
         es.execute(() -> {
             while (true) {
-                String response_str = LoginController.getClient().receiveMessage();
-                System.out.println(response_str);
-
-                if (response_str == null || response_str.equals("")) Platform.exit();
-                JSONObject response = new JSONObject(response_str);
-                if (response.getString("type").equals("forward")) {
+                if (!Client.getClient().isConnected()){
+                    Timer timer = new Timer(true);
+                    timer.schedule(new TimerTask(){
+                        @Override
+                        public void run() {
+                            Platform.exit();
+                        }
+                    },60000);
+                    while(!Client.getClient().isConnected()) try {
+                        Platform.runLater(()->{inputArea.setDisable(true);sendBtn.setDisable(true);});
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Platform.runLater(()->{inputArea.setDisable(false);sendBtn.setDisable(false);});
+                    timer.cancel();
+                    timer.purge();
+                }
+                JSONObject response;
+                if ( (response= Client.getClient().findNext("forward_new_message"))!=null) {
                     processNewMessage(response);
-                } else if (response.getString("type").equals("forward_response")) {
+                }
+                if ((response= Client.getClient().findNext("forward_response"))!=null) {
                     processResponse(response);
+                }
+                if ((response=Client.getClient().findNext("contact_list"))!=null){
+                    updateContactList(response);
+                }
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         });
         usernameLabel.setText(username);
+    }
+
+    private void updateContactList(JSONObject jsonObject) {
+        boolean isEmpty = false;
+        if (contactList.getItems().isEmpty()) {
+            isEmpty = true;
+        }
+        List<String> nameList = jsonObject.getJSONArray("contact_names").toList().stream().map(Object::toString).collect(Collectors.toList());
+        Profile[] offlineList = filterOffline(nameList);
+        nameList = filterExist(nameList);
+        String[] name = new String[nameList.size()];
+        name = nameList.toArray(name);
+        String[] finalName = name;
+        boolean finalIsEmpty = isEmpty;
+        Platform.runLater(() -> {
+            contactList.getItems().addAll(stringsToProfiles(finalName));
+            contactList.getItems().removeAll(offlineList);
+            if (finalIsEmpty) contactList.getSelectionModel().selectFirst();
+            contactList.refresh();
+        });
     }
 
     private void processNewMessage(JSONObject jsonObject) {
@@ -164,27 +197,7 @@ public class ChatController {
     }
 
     private void processResponse(JSONObject jsonObject) {
-        if (jsonObject.getString("subtype").equals("contact_response")) {
-            boolean isEmpty = false;
-            if (contactList.getItems().isEmpty()) {
-                isEmpty = true;
-            }
-            List<String> nameList = jsonObject.getJSONArray("contact_names").toList().stream().map(Object::toString).collect(Collectors.toList());
-            Profile[] offlineList = filterOffline(nameList);
-            nameList = filterExist(nameList);
-            String[] name = new String[nameList.size()];
-//            String[] name = {"tom","mary","lucy","jenny"};
-            name = nameList.toArray(name);
-            String[] finalName = name;
-            boolean finalIsEmpty = isEmpty;
-            Platform.runLater(() -> {
-                contactList.getItems().addAll(stringsToProfiles(finalName));
-                contactList.getItems().removeAll(offlineList);
-                if (finalIsEmpty) contactList.getSelectionModel().selectFirst();
-                contactList.refresh();
-            });
-
-        }
+        //RESERVE FOR FUTURE USE
     }
 
 
@@ -212,7 +225,7 @@ public class ChatController {
         jsonObject.put("to_user",contactList.getSelectionModel().getSelectedItem().getUsername());
         jsonObject.put("message",msg);
         jsonObject.put("from_user",username);
-        es.execute(()->LoginController.getClient().sendMessage(jsonObject));
+        es.execute(()->Client.getClient().sendMessage(jsonObject));
 
         contactList.getItems().remove(p);
         contactList.getItems().add(0,p);
