@@ -1,7 +1,7 @@
 package Client;
 
+import Server.MessageHandler;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -17,7 +17,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.json.JSONObject;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -31,13 +30,27 @@ import java.util.stream.Collectors;
 public class ChatController {
 
 
+
     //INNER CLASS
-    class MyListViewCell extends ListCell<Profile> {
+    class ContactListCell extends ListCell<Profile> {
         @Override
         public void updateItem(Profile item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
                 setGraphic(item.getItem());
+            } else {
+                setGraphic(null);
+            }
+        }
+    }
+
+    class MessageCell extends ListCell<String>{
+
+        @Override
+        public void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+            if (item != null) {
+                setText(item);
             } else {
                 setGraphic(null);
             }
@@ -107,7 +120,7 @@ public class ChatController {
 
     @FXML
     public void initialize() {
-        contactList.setCellFactory(list -> new MyListViewCell());
+        contactList.setCellFactory(list -> new ContactListCell());
         contactList.getSelectionModel().selectedItemProperty().addListener(
                 (ov, old_val, new_val) -> {
                     if (old_val != null) {
@@ -117,24 +130,7 @@ public class ChatController {
                 });
         es.execute(() -> {
             while (true) {
-                if (!Client.getClient().isConnected()){
-                    Timer timer = new Timer(true);
-                    timer.schedule(new TimerTask(){
-                        @Override
-                        public void run() {
-                            Platform.exit();
-                        }
-                    },60000);
-                    while(!Client.getClient().isConnected()) try {
-                        Platform.runLater(()->{inputArea.setDisable(true);sendBtn.setDisable(true);});
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    Platform.runLater(()->{inputArea.setDisable(false);sendBtn.setDisable(false);});
-                    timer.cancel();
-                    timer.purge();
-                }
+                checkConnection();
                 JSONObject response;
                 if ( (response= Client.getClient().findNext("forward_new_message"))!=null) {
                     processNewMessage(response);
@@ -145,8 +141,17 @@ public class ChatController {
                 if ((response=Client.getClient().findNext("contact_list"))!=null){
                     updateContactList(response);
                 }
+                if((response=Client.getClient().findNext("start_game_response"))!=null){
+                    processStartGameResponse(response);
+                }
+                if((response=Client.getClient().findNext("start_game_answer"))!=null){
+                    processStartGameAnswer(response);
+                }
+                if((response=Client.getClient().findNext("invitation"))!=null){
+                    processInvitation(response);
+                }
                 try {
-                    Thread.sleep(1);
+                    Thread.sleep(20);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -155,6 +160,54 @@ public class ChatController {
         usernameLabel.setText(username);
     }
 
+    private void processInvitation(JSONObject response) {
+        Platform.runLater(()->{MsgBoxController.display("Invitation",response.getString("message"));});
+
+        //Still need to change the thing
+    }
+
+    private void processStartGameAnswer(JSONObject response) {
+
+    }
+
+    private void processStartGameResponse(JSONObject response) {
+        //Do nothing
+    }
+
+
+
+    public void startNewGame(MouseEvent mouseEvent) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type","data");
+        jsonObject.put("sub_type","start_game");
+        jsonObject.put("first_user",username);
+        jsonObject.put("second_user",contactList.getSelectionModel().getSelectedItem().getUsername());
+        jsonObject.put("game",gameList.getSelectionModel().getSelectedItem()==null?"snake":gameList.getSelectionModel().getSelectedItem());
+        es.execute(()->Client.getClient().sendMessage(jsonObject));
+        MsgBoxController.display("Message has sent","You message has been sent");
+
+    }
+
+    private void checkConnection(){
+        if (!Client.getClient().isConnected()){
+            Timer timer = new Timer(true);
+            timer.schedule(new TimerTask(){
+                @Override
+                public void run() {
+                    Platform.exit();
+                }
+            },60000);
+            while(!Client.getClient().isConnected()) try {
+                Platform.runLater(()->{inputArea.setDisable(true);sendBtn.setDisable(true);});
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Platform.runLater(()->{inputArea.setDisable(false);sendBtn.setDisable(false);});
+            timer.cancel();
+            timer.purge();
+        }
+    }
     private void updateContactList(JSONObject jsonObject) {
         boolean isEmpty = false;
         if (contactList.getItems().isEmpty()) {
@@ -221,7 +274,7 @@ public class ChatController {
         inputArea.clear();
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type","forward");
-        jsonObject.put("subtype","forward");
+        jsonObject.put("sub_type","forward");
         jsonObject.put("to_user",contactList.getSelectionModel().getSelectedItem().getUsername());
         jsonObject.put("message",msg);
         jsonObject.put("from_user",username);

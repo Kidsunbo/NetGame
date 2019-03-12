@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,10 +49,7 @@ public class SocketHandler extends Thread {
     private void closeSocket() throws IOException {
 
         socket.close();
-        for(Map.Entry<String,Socket> e:Server.getInstance().getClients().entrySet()){
-            if(e.getValue().isClosed())
-                Server.getInstance().getClients().remove(e.getKey());
-        }
+        Server.getInstance().getClients().entrySet().removeIf(p -> p.getValue().isClosed());
         sendNewContactList();
     }
 

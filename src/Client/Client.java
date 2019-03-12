@@ -10,7 +10,6 @@ import java.net.Socket;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -85,11 +84,8 @@ public class Client {
     }
 
     public synchronized JSONObject findNext(String type){
+        messageQueue.removeIf(obj->!obj.has("type"));
         for(JSONObject obj : messageQueue){
-            if(!obj.has("type")){
-                messageQueue.remove(obj);
-                continue;
-            }
             if(obj.getString("type").equals(type)){
                 messageQueue.remove(obj);
                 return obj;
