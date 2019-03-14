@@ -17,7 +17,7 @@ public class ForwardMessageHandler extends MessageHandler {
     String process() {
         JSONObject response = new JSONObject();
         response.put("type","forward_response");
-            if(jsonObject.getString("subtype").equals("forward")){
+            if(jsonObject.getString("sub_type").equals("forward")){
                 String toUser = jsonObject.getString("to_user");
                 String message = jsonObject.getString("message");
                 String fromUser = jsonObject.getString("from_user");
@@ -29,17 +29,17 @@ public class ForwardMessageHandler extends MessageHandler {
                 try {
                     if(Server.getInstance().getClients().containsKey(toUser)) {
                         new PrintWriter(Server.getInstance().getClients().get(toUser).getOutputStream(), true).println(forward_msg.toString());
-                        response.put("subtype","forward_response");
+                        response.put("sub_type","forward_response");
                         response.put("success", "yes");
                         response.put("reply", "Your message has been sent.");
                     }
                     else{
-                        response.put("subtype","forward_response");
+                        response.put("sub_type","forward_response");
                         response.put("success", "no");
                         response.put("reply", "User has logged out.");
                     }
                 } catch (IOException e) {
-                    response.put("subtype","forward_response");
+                    response.put("sub_type","forward_response");
                     response.put("success","no");
                     response.put("reply","Your message has not been sent.");
                     e.printStackTrace();

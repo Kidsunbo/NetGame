@@ -116,6 +116,7 @@ public class LoginController {
                             Platform.runLater(() -> {
                                 MsgBoxController.display("Login Succeed", jsonObject.getString("reply"));
                                 ChatController.username=usernameInput.getText();
+                                ChatController.password=passwordInput.getText();
                                 try {
                                     time.cancel();
                                     time.purge();

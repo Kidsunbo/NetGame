@@ -93,7 +93,7 @@ public class ChatController {
 
 
     public static String username;
-
+    public static String password;
 
     private ExecutorService es = Executors.newFixedThreadPool(10, r -> {
         Thread t = Executors.defaultThreadFactory().newThread(r);
@@ -203,6 +203,11 @@ public class ChatController {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            JSONObject cookie = new JSONObject();
+            cookie.put("type","login");
+            cookie.put("username",username);
+            cookie.put("password",password);
+            Client.getClient().sendMessage(cookie);
             Platform.runLater(()->{inputArea.setDisable(false);sendBtn.setDisable(false);});
             timer.cancel();
             timer.purge();
