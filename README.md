@@ -7,5 +7,5 @@ The member in this group is:
 - Shengdong Yan
 - Hao Feng
 - Lixuan Dai
-- Greg
+- Greg Field
 ---
