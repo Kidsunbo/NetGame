@@ -88,7 +88,7 @@ public class LoginController {
         try {
             stage = (Stage)(root.getScene().getWindow());
             loginScene=root.getScene();
-            stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/Signup.fxml")),300,450));
+            stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/Signup.fxml")),800,450));
         } catch (IOException e1) {
             e1.printStackTrace();
         }
