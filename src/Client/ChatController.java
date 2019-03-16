@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 public class ChatController {
 
 
-
     //INNER CLASS
     class ContactListCell extends ListCell<Profile> {
         @Override
