@@ -3,6 +3,7 @@ package Client;
 import Server.MessageHandler;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 
 import javafx.scene.control.Button;
@@ -17,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.json.JSONObject;
 
+import javax.xml.soap.Text;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -50,10 +52,14 @@ public class ChatController {
         public void updateItem(String item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
-                if(item.charAt(0)=='0')
+                if(item.charAt(0)=='0') {
                     this.setStyle("-fx-background-color: yellow");
-                else
-                    this.setStyle("-fx-background-color: green");
+                    this.setAlignment(Pos.CENTER_LEFT);
+                }
+                else {
+                    this.setStyle("-fx-background-color: pink");
+                    this.setAlignment(Pos.CENTER_RIGHT);
+                }
                 setText(item.substring(1));
             } else {
                 setGraphic(null);
@@ -79,6 +85,7 @@ public class ChatController {
             label.setStyle("-fx-font-weight: bold");
             vBox.getChildren().add(label);
             item.getChildren().add(vBox);
+            listView.setCellFactory(list->new MessageCell());
         }
 
         public HBox getItem() {
@@ -129,9 +136,13 @@ public class ChatController {
                 (ov, old_val, new_val) -> {
                     if (old_val != null) {
                         old_val.getListView().setItems(chatArea.getItems());
-                        chatArea.setItems(new_val.getListView().getItems());
+                        if(new_val!=null)
+                            chatArea.setItems(new_val.getListView().getItems());
+                        else
+                            chatArea.setItems(old_val.getListView().getItems());
                     }
                 });
+        chatArea.setCellFactory(list->new MessageCell());
         es.execute(() -> {
             while (true) {
                 checkConnection();
@@ -172,7 +183,7 @@ public class ChatController {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Invitation");
             alert.setContentText(invite.getString("message"));
-
+            alert.showAndWait();
         });
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type","data");
@@ -186,12 +197,15 @@ public class ChatController {
 
     private void processStartGameAnswer(JSONObject response) {
         if(response.getString("reply").equals("yes")){
-            ProcessBuilder p = new ProcessBuilder("java","-jar",response.getString("game")+".jar");
+            ProcessBuilder p = new ProcessBuilder("java","-jar",response.getString("game")+".jar","'"+response.toString()+"'");
             try {
                 p.start();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        else{
+            Platform.runLater(()->MsgBoxController.display("No","Your friend refuses to play with you, sad."));
         }
     }
 

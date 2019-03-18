@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -21,12 +22,14 @@ import java.net.URL;
  */
 public class MsgBoxController {
 
-    private static Stage stage;
 
     @FXML
     private Label title;
     @FXML
     private Text context;
+    @FXML
+    private Pane root;
+
 
     public void setTitle(String title) {
         this.title.setText(title);
@@ -44,7 +47,7 @@ public class MsgBoxController {
 
     public static void display(String title, String content) {
         try {
-            stage = new Stage();
+            Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
             FXMLLoader loader = new FXMLLoader(MsgBoxController.class.getResource("View/MsgBox.fxml"));
@@ -66,6 +69,7 @@ public class MsgBoxController {
     }
 
     public void quit(MouseEvent mouseEvent) {
+        Stage stage = (Stage) (root.getScene().getWindow());
         stage.close();
     }
 }

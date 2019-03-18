@@ -18,7 +18,8 @@ public class GameServer {
 
     private static GameServer server = new GameServer();
     private Hashtable<String,User> users = new Hashtable<>();
-
+    private Hashtable<String,Hashtable<String,User>> games = new Hashtable<>();
+    private Hashtable<String,Integer> gameIDs = new Hashtable<>();
 
     class User{
         public InetAddress address;
@@ -31,22 +32,9 @@ public class GameServer {
     }
 
     private GameServer(){
-    }
-
-    public static GameServer getGameServer(){
-        return server;
-    }
+        
 
 
-    /**
-     * Create a new Server
-     * @return Group Number in String
-     */
-    public JSONObject createNewServer(){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("type","game_server_info");
-        jsonObject.put("ip_address","localhost");
-        jsonObject.put("port",4399);
         Thread t = new Thread(()->{
             try {
                 DatagramSocket socket = new DatagramSocket(4399);
@@ -76,7 +64,10 @@ public class GameServer {
         });
         t.setDaemon(true);
         t.start();
-        return jsonObject;
+    }
+
+    public static GameServer getGameServer(){
+        return server;
     }
 
 
@@ -97,6 +88,16 @@ public class GameServer {
             packet.setPort(user.getValue().port);
             socket.send(packet);
         }
+    }
+
+    public String createGameID(){
+        int i = 0;
+        while(gameIDs.containsKey(String.valueOf(i))){
+            i++;
+        }
+        games.put(String.valueOf(i),new Hashtable<>());
+        gameIDs.put(String.valueOf(i),3600);
+        return ""+i;
     }
 
 }

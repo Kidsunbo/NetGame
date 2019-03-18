@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 /**
  * Created by bxs863 on 26/02/19.
@@ -31,10 +32,24 @@ public class DataMessageHandler extends MessageHandler {
 
     private void processStartGameAnswer(JSONObject jsonObject, JSONObject response) {
         try {
-            JSONObject answer = new JSONObject();
-            answer.put("type", "start_game_answer");
-            answer.put("answer", jsonObject.getString("reply"));
-            new PrintWriter(Server.getInstance().getClients().get(jsonObject.getString("to_user")).getOutputStream(), true).println(answer.toString());
+            if (jsonObject.getString("reply").equals("yes")) {
+                JSONObject answer = new JSONObject();
+                answer.put("type", "start_game_answer");
+                answer.put("reply", "yes");
+                answer.put("users", Arrays.asList(jsonObject.getString("to_user"), jsonObject.getString("from_user")));
+                answer.put("game", jsonObject.getString("game"));
+                answer.put("gameID", GameServer.getGameServer().createGameID());
+                for (Object user : answer.getJSONArray("user").toList()) {
+                    String user_str = user.toString();
+                    new PrintWriter(Server.getInstance().getClients().get(user_str).getOutputStream(), true).println(answer.toString());
+                }
+            }
+            else{
+                JSONObject answer = new JSONObject();
+                answer.put("type", "start_game_answer");
+                answer.put("reply", "no");
+                new PrintWriter(Server.getInstance().getClients().get(jsonObject.getString("to_user")).getOutputStream(), true).println(answer.toString());
+            }
         }
         catch (IOException e){
             e.printStackTrace();
