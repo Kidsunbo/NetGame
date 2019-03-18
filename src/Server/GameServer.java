@@ -17,8 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class GameServer {
 
     private static GameServer server = new GameServer();
-    private Hashtable<String,User> users = new Hashtable<>();
-    private Hashtable<String,Hashtable<String,User>> games = new Hashtable<>();
+    private Hashtable<String,Hashtable<String,User>> games = new Hashtable<>(); // GameID || Username |User
     private Hashtable<String,Integer> gameIDs = new Hashtable<>();
 
     class User{
@@ -32,25 +31,27 @@ public class GameServer {
     }
 
     private GameServer(){
-        
 
+        Thread watcher = new Thread(()->{
+            while (true) {
+                for (Map.Entry<String, Integer> id : gameIDs.entrySet()) {
+                    id.setValue(id.getValue() - 1);
+                }
+                gameIDs.entrySet().removeIf(x -> x.getValue() <= 0);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        watcher.setDaemon(true);
+        watcher.start();
 
         Thread t = new Thread(()->{
             try {
                 DatagramSocket socket = new DatagramSocket(4399);
-                AtomicInteger time = new AtomicInteger(600); // This is just a way to avoid final or effective final
-                Timer timer = new Timer(true);
-                TimerTask task = new TimerTask() {
-                    @Override
-                    public void run() {
-                        time.decrementAndGet();
-                    }
-                };
-                timer.scheduleAtFixedRate(task,10000,1000);
                 while(true){
-                    if(time.get()<0){
-                        break;
-                    }
                     byte[] buf = new byte[1024];
                     DatagramPacket packet = new DatagramPacket(buf,buf.length);
                     socket.receive(packet);
@@ -74,15 +75,18 @@ public class GameServer {
     private void addOrUpdate(DatagramPacket packet){
         byte[] buf = packet.getData();
         JSONObject jsonObject = new JSONObject(new String(buf));
+        String gameID = jsonObject.getString("gameID");
         String username = jsonObject.getString("username");
-        users.put(username,new User(packet.getAddress(),packet.getPort()));
+        games.get(gameID).put(username,new User(packet.getAddress(),packet.getPort()));
+        gameIDs.put(gameID,3600);
     }
 
     private void sendToOthers(DatagramPacket packet, DatagramSocket socket) throws IOException {
         byte[] buf = packet.getData();
         JSONObject jsonObject = new JSONObject(new String(buf));
         String username = jsonObject.getString("username");
-        for(Map.Entry<String,User> user : users.entrySet()){
+        String gameID = jsonObject.getString("gameID");
+        for(Map.Entry<String,User> user : games.get(gameID).entrySet()){
             if(user.getKey().equals(username)) continue;
             packet.setAddress(user.getValue().address);
             packet.setPort(user.getValue().port);
