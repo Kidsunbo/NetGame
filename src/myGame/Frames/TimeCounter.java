@@ -66,6 +66,7 @@ public class TimeCounter implements Runnable{
 
             if (t == null) {
                 t = new Thread(this);
+                t.setDaemon(true);
                 t.start();
             }
 

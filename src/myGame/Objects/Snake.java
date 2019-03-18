@@ -248,7 +248,6 @@ public class Snake {
 
 
    public boolean isCollisionWithSnake(Snake snake) {
-       //System.out.println(snake);
         for (int i =0; i< snake.getLength();i++){
             if (getX() + getWidth() >= snake.getSnakeBody().getPointlist().get(i).getX() && getX() < snake.getSnakeBody().getPointlist().get(i).getX() + snake.getWidth()
                     && getY() + getHeight()  > snake.getSnakeBody().getPointlist().get(i).getY() && getY() < snake.getSnakeBody().getPointlist().get(i).getY() + snake.getHeight() ) {
