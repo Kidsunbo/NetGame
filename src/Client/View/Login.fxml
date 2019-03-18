@@ -22,7 +22,7 @@
             <Image url="@bg1.jpg" />
          </image>
       </ImageView>
-      <Pane fx:id="quitIcon" layoutX="40.0" layoutY="20.0" opacity="0.74" prefHeight="410.0" prefWidth="300.0" style="-fx-background-color: #000000;" onMouseClicked="#CloseBtnClick">
+      <Pane fx:id="quitIcon" layoutX="40.0" layoutY="20.0" opacity="0.74" prefHeight="410.0" prefWidth="300.0" style="-fx-background-color: #000000;">
          <children>
             <TextField fx:id="usernameInput" layoutX="71.0" layoutY="110.0" onKeyReleased="#keyPress" prefHeight="27.0" prefWidth="153.0" promptText="Username" style="-fx-background-color: #393E46;-fx-text-inner-color: white;" />
             <Text fontSmoothingType="LCD" layoutX="56.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Snake War" wrappingWidth="175.99999806284904">
@@ -55,7 +55,7 @@
                   <Font name="System Bold" size="13.0" />
                </font>
             </Button>
-            <ImageView fitHeight="29.0" fitWidth="22.0" layoutX="270.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="29.0" fitWidth="22.0" layoutX="270.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true"  onMouseClicked="#CloseBtnClick">
                <image>
                   <Image url="@quitIcon.png" />
                </image>

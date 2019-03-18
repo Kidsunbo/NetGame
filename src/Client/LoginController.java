@@ -17,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.json.JSONObject;
 
@@ -125,8 +126,12 @@ public class LoginController {
                                     time.cancel();
                                     time.purge();
                                     stage = (Stage) (root.getScene().getWindow());
+                                    stage.close();
+                                    stage = new Stage();
                                     loginScene = root.getScene();
+                                    stage.initStyle(StageStyle.DECORATED);
                                     stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/chatroom.fxml"))));
+                                    stage.show();
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
