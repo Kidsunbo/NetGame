@@ -22,10 +22,10 @@
             <Image url="@bg1.jpg" />
          </image>
       </ImageView>
-      <Pane fx:id="quitIcon" layoutX="40.0" layoutY="20.0" opacity="0.74" prefHeight="410.0" prefWidth="300.0" style="-fx-background-color: #000000;">
+      <Pane fx:id="quitIcon" layoutX="40.0" layoutY="20.0" opacity="0.74" prefHeight="410.0" prefWidth="300.0" style="-fx-background-color: #000000;" onMouseClicked="#CloseBtnClick">
          <children>
             <TextField fx:id="usernameInput" layoutX="71.0" layoutY="110.0" onKeyReleased="#keyPress" prefHeight="27.0" prefWidth="153.0" promptText="Username" style="-fx-background-color: #393E46;-fx-text-inner-color: white;" />
-            <Text fontSmoothingType="LCD" layoutX="45.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Snake War" wrappingWidth="175.99999806284904">
+            <Text fontSmoothingType="LCD" layoutX="56.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Snake War" wrappingWidth="175.99999806284904">
                <font>
                   <Font size="32.0" />
                </font>

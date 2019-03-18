@@ -76,7 +76,7 @@ public class SignupController {
                 jsonObject.put("username", usrnameTf.getText());
                 JSONObject result;
                 Client.getClient().sendMessage(jsonObject);
-                while ((result = Client.getClient().findNext("data_response")) == null) {
+                while ((result = Client.getClient().findNext("check_user_response")) == null) {
                     try {
                         Thread.sleep(10);
                     } catch (InterruptedException e) {
@@ -84,7 +84,6 @@ public class SignupController {
                     }
                 }
                 if (result.has("success")) {
-                    System.out.println(result.toString());
                     if (result.get("success").equals("yes") && !result.getBoolean("reply")) {
                         Platform.runLater(() -> {
                             checkLabel.setText("OK");
@@ -117,5 +116,9 @@ public class SignupController {
                 }
             });
         }
+    }
+
+    public void quitClicked(MouseEvent mouseEvent) {
+        Platform.exit();
     }
 }

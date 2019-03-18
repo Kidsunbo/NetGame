@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -49,7 +50,11 @@ public class ChatController {
         public void updateItem(String item, boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
-                setText(item);
+                if(item.charAt(0)=='0')
+                    this.setStyle("-fx-background-color: yellow");
+                else
+                    this.setStyle("-fx-background-color: green");
+                setText(item.substring(1));
             } else {
                 setGraphic(null);
             }
@@ -159,15 +164,37 @@ public class ChatController {
         usernameLabel.setText(username);
     }
 
-    private void processInvitation(JSONObject response) {
-        Platform.runLater(()->{MsgBoxController.display("Invitation",response.getString("message"));});
 
-        //Still need to change the thing
+    private void processInvitation(JSONObject invite) {
+//        Platform.runLater(()->{MsgBoxController.display("Invitation",response.getString("message"));});
+        String answer = "no";
+        Platform.runLater(()->{
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Invitation");
+            alert.setContentText(invite.getString("message"));
+
+        });
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type","data");
+        jsonObject.put("sub_type","start_game_answer");
+        jsonObject.put("from_user",invite.getString("to_user"));
+        jsonObject.put("to_user",invite.getString("from_user"));
+        jsonObject.put("game",invite.getString("game"));
+        jsonObject.put("reply",answer);
+        Client.getClient().sendMessage(jsonObject);
     }
 
     private void processStartGameAnswer(JSONObject response) {
-
+        if(response.getString("reply").equals("yes")){
+            ProcessBuilder p = new ProcessBuilder("java","-jar",response.getString("game")+".jar");
+            try {
+                p.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
 
     private void processStartGameResponse(JSONObject response) {
         //Do nothing
@@ -238,7 +265,7 @@ public class ChatController {
         for (Profile p : contactList.getItems()) {
             if (p.getUsername().equals(fromUser)) {
                 Platform.runLater(() -> {
-                    p.getListView().getItems().add(message);
+                    p.getListView().getItems().add("0"+message);
                     if (p.getUsername().equals(contactList.getSelectionModel().getSelectedItem().getUsername())) {
                         contactList.getItems().remove(p);
                         contactList.getItems().add(0, p);
@@ -246,6 +273,7 @@ public class ChatController {
                     } else {
                         contactList.getItems().remove(p);
                         contactList.getItems().add(0, p);
+                        scrollToBottom(p.getListView());
                     }
                 });
                 break;
@@ -274,7 +302,7 @@ public class ChatController {
     private void sendMessage(){
         String msg = inputArea.getText();
         Profile p = contactList.getSelectionModel().getSelectedItem();
-        chatArea.getItems().add(msg);
+        chatArea.getItems().add("1"+msg);
         inputArea.clear();
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type","forward");
@@ -283,7 +311,7 @@ public class ChatController {
         jsonObject.put("message",msg);
         jsonObject.put("from_user",username);
         es.execute(()->Client.getClient().sendMessage(jsonObject));
-
+        scrollToBottom(chatArea);
         contactList.getItems().remove(p);
         contactList.getItems().add(0,p);
         contactList.getSelectionModel().selectFirst();
@@ -319,6 +347,10 @@ public class ChatController {
             }
         }
         return offline.toArray(new Profile[0]);
+    }
+
+    private void scrollToBottom(ListView<String> listView){
+        Platform.runLater(()->listView.scrollTo(chatArea.getItems().size()-1));
     }
 
 }

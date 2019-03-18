@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -44,6 +45,9 @@ public class LoginController {
 
     @FXML
     private Pane root;
+
+    @FXML
+    private Pane quitIcon;
 
     @FXML
     private TextField usernameInput;
@@ -138,5 +142,9 @@ public class LoginController {
         if(!usernameInput.getText().isEmpty() && !passwordInput.getText().isEmpty()){
             loginBtn.setDisable(false);
         }
+    }
+
+    public void CloseBtnClick(MouseEvent mouseEvent) {
+        Platform.exit();
     }
 }

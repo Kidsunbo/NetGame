@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
@@ -15,7 +16,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("View/Login.fxml"));
         primaryStage.setTitle("Game World");
         Scene login = new Scene(root, 800, 450);
-
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setResizable(false);
         primaryStage.setScene(login);
         primaryStage.show();

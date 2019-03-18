@@ -19,6 +19,7 @@ public class GameServer {
     private static GameServer server = new GameServer();
     private Hashtable<String,User> users = new Hashtable<>();
 
+
     class User{
         public InetAddress address;
         public int port;
