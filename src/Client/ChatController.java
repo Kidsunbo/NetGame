@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import org.json.JSONObject;
 
 import javax.xml.soap.Text;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -61,6 +62,37 @@ public class ChatController {
                     this.setAlignment(Pos.CENTER_RIGHT);
                 }
                 setText(item.substring(1));
+            } else {
+                setGraphic(null);
+            }
+        }
+    }
+
+    class GameCell extends ListCell<File>{
+        @Override
+        public void updateItem(File item, boolean empty) {
+            super.updateItem(item, empty);
+            double picWidth = gameList.getPrefHeight()-10;
+            double picHeight = gameList.getPrefHeight()-10;
+            if (item != null && item.listFiles()!=null) {
+                String url = null;
+                for(File file : item.listFiles()){
+                    if(file.getName().endsWith("jpg")||file.getName().endsWith("jpeg")){
+                        url = file.getAbsolutePath();
+                    }
+                }
+                if(url!=null){
+                Image image = new Image(url);
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(picWidth);
+                imageView.setFitHeight(picHeight);
+                setGraphic(imageView);}
+                else{
+                    ImageView imageView = new ImageView("Client/View/logo.png");
+                    imageView.setFitWidth(picWidth);
+                    imageView.setFitHeight(picHeight);
+                    setGraphic(imageView);
+                }
             } else {
                 setGraphic(null);
             }
@@ -116,7 +148,7 @@ public class ChatController {
     @FXML
     private ListView<Profile> contactList;
     @FXML
-    private ListView<String> gameList;
+    private ListView<File> gameList;
     @FXML
     private TextArea inputArea;
     @FXML
@@ -136,33 +168,34 @@ public class ChatController {
                 (ov, old_val, new_val) -> {
                     if (old_val != null) {
                         old_val.getListView().setItems(chatArea.getItems());
-                        if(new_val!=null)
+                        if (new_val != null)
                             chatArea.setItems(new_val.getListView().getItems());
                         else
                             chatArea.setItems(old_val.getListView().getItems());
                     }
                 });
-        chatArea.setCellFactory(list->new MessageCell());
+        chatArea.setCellFactory(list -> new MessageCell());
+        gameList.setCellFactory(list -> new GameCell());
         es.execute(() -> {
             while (true) {
                 checkConnection();
                 JSONObject response;
-                if ( (response= Client.getClient().findNext("forward_new_message"))!=null) {
+                if ((response = Client.getClient().findNext("forward_new_message")) != null) {
                     processNewMessage(response);
                 }
-                if ((response= Client.getClient().findNext("forward_response"))!=null) {
+                if ((response = Client.getClient().findNext("forward_response")) != null) {
                     processResponse(response);
                 }
-                if ((response=Client.getClient().findNext("contact_list"))!=null){
+                if ((response = Client.getClient().findNext("contact_list")) != null) {
                     updateContactList(response);
                 }
-                if((response=Client.getClient().findNext("start_game_response"))!=null){
+                if ((response = Client.getClient().findNext("start_game_response")) != null) {
                     processStartGameResponse(response);
                 }
-                if((response=Client.getClient().findNext("start_game_answer"))!=null){
+                if ((response = Client.getClient().findNext("start_game_answer")) != null) {
                     processStartGameAnswer(response);
                 }
-                if((response=Client.getClient().findNext("invitation"))!=null){
+                if ((response = Client.getClient().findNext("invitation")) != null) {
                     processInvitation(response);
                 }
                 try {
@@ -173,6 +206,15 @@ public class ChatController {
             }
         });
         usernameLabel.setText(username);
+
+        File gamesDir = new File("./games/");
+        if (!gamesDir.exists())
+            gamesDir.mkdir();
+        File[] games = gamesDir.listFiles();
+        if (games != null) {
+            gameList.getItems().addAll(games);
+            gameList.refresh();
+        }
     }
 
 
@@ -197,11 +239,30 @@ public class ChatController {
 
     private void processStartGameAnswer(JSONObject response) {
         if(response.getString("reply").equals("yes")){
-            ProcessBuilder p = new ProcessBuilder("java","-jar",response.getString("game")+".jar","'"+response.toString()+"'");
-            try {
-                p.start();
-            } catch (IOException e) {
-                e.printStackTrace();
+            File gamesFile = new File("./games/");
+            File gameExcute = null;
+            File[] games = gamesFile.listFiles();
+            if(games!=null) {
+                for (File file : games) {
+                    if(file.getAbsolutePath().endsWith("jar")){
+                        gameExcute = file;
+                        break;
+                    }
+                }
+                if(gameExcute!=null){
+                    ProcessBuilder p = new ProcessBuilder("java","-jar",gameExcute.getAbsolutePath(),"'"+response.toString()+"'");
+                    try {
+                        p.start();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Platform.runLater(()->MsgBoxController.display("No","There is no such game"));
+                }
+            }
+            else{
+                Platform.runLater(()->MsgBoxController.display("No","There is no such game"));
             }
         }
         else{
@@ -222,7 +283,7 @@ public class ChatController {
         jsonObject.put("sub_type","start_game");
         jsonObject.put("first_user",username);
         jsonObject.put("second_user",contactList.getSelectionModel().getSelectedItem().getUsername());
-        jsonObject.put("game",gameList.getSelectionModel().getSelectedItem()==null?"snake":gameList.getSelectionModel().getSelectedItem());
+        jsonObject.put("game",gameList.getSelectionModel().getSelectedItem()==null?"snake":gameList.getSelectionModel().getSelectedItem().getName());
         es.execute(()->Client.getClient().sendMessage(jsonObject));
         MsgBoxController.display("Message has sent","You message has been sent");
 

@@ -52,7 +52,7 @@ public class GameServer {
             try {
                 DatagramSocket socket = new DatagramSocket(4399);
                 while(true){
-                    byte[] buf = new byte[1024];
+                    byte[] buf = new byte[1024*5];
                     DatagramPacket packet = new DatagramPacket(buf,buf.length);
                     socket.receive(packet);
                     addOrUpdate(packet);

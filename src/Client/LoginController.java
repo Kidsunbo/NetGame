@@ -4,6 +4,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -37,7 +38,9 @@ import java.util.concurrent.Future;
 public class LoginController {
     private Timer time;
     private Stage stage;
-    public static Scene loginScene = null;
+    static Scene loginScene = null;
+    static double xOffset;
+    static double yOffset;
     private ExecutorService es = Executors.newFixedThreadPool(5, r -> {
         Thread t = Executors.defaultThreadFactory().newThread(r);
         t.setDaemon(true);
@@ -85,6 +88,7 @@ public class LoginController {
             }
         };
         time.scheduleAtFixedRate(ts, 0, 10);
+
     }
 
 
@@ -93,7 +97,7 @@ public class LoginController {
         try {
             stage = (Stage)(root.getScene().getWindow());
             loginScene=root.getScene();
-            stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/Signup.fxml")),800,450));
+            stage.setScene(addDragFunction(new Scene(FXMLLoader.load(getClass().getResource("View/Signup.fxml")),800,450)));
         } catch (IOException e1) {
             e1.printStackTrace();
         }
@@ -151,5 +155,17 @@ public class LoginController {
 
     public void CloseBtnClick(MouseEvent mouseEvent) {
         Platform.exit();
+    }
+
+    static Scene addDragFunction(Scene scene){
+        scene.setOnMousePressed(event -> {
+            LoginController.xOffset = scene.getWindow().getX() - event.getScreenX();
+            LoginController.yOffset = scene.getWindow().getY() - event.getScreenY();
+        });
+        scene.setOnMouseDragged(event -> {
+            scene.getWindow().setX(event.getScreenX() + LoginController.xOffset);
+            scene.getWindow().setY(event.getScreenY() + LoginController.yOffset);
+        });
+        return scene;
     }
 }
