@@ -26,7 +26,7 @@ public class Snake {
     private String userName;
     private double initX, initY;
 
-    public Snake(double x, double y,Node node) {
+    public Snake(double x, double y,Node node ) {
         this.initX = x;
         this.x=x;
         this.initY = y;
@@ -37,7 +37,7 @@ public class Snake {
         this.length = Constants.DEFAULT_LENGTH;
         this.node = node;
         Score = 0;
-        this.snakeBody = snakeBody;
+
 
     }
 
@@ -247,11 +247,11 @@ public class Snake {
     }
 
 
-   public boolean isCollisionWithSnake(SnakeBody snakeBody) {
-    //   System.out.println(snakeBody);
-        for (int i =0; i< snakeBody.getLength();i++){
-            if (getX() + getWidth() >= snakeBody.getPointlist().get(i).getX() && getX() < snakeBody.getPointlist().get(i).getX() + snakeBody.getWidth()
-                    && getY() + getHeight()  > snakeBody.getPointlist().get(i).getY() && getY() < snakeBody.getPointlist().get(i).getY() + snakeBody.getHeight() ) {
+   public boolean isCollisionWithSnake(Snake snake) {
+       //System.out.println(snake);
+        for (int i =0; i< snake.getLength();i++){
+            if (getX() + getWidth() >= snake.getSnakeBody().getPointlist().get(i).getX() && getX() < snake.getSnakeBody().getPointlist().get(i).getX() + snake.getWidth()
+                    && getY() + getHeight()  > snake.getSnakeBody().getPointlist().get(i).getY() && getY() < snake.getSnakeBody().getPointlist().get(i).getY() + snake.getHeight() ) {
                 return true;
             }
         }
@@ -266,13 +266,14 @@ public class Snake {
         this.userName = userName;
     }
 
-   // public SnakeBody getSnakeBody() {
-    //    return this.snakeBody;
-   // }
 
-   // public void setSnakeBody(SnakeBody snakeBody) {
-    //    this.snakeBody = snakeBody;
-    //}
+    public SnakeBody getSnakeBody() {
+        return this.snakeBody;
+    }
+
+    public void setSnakeBody(SnakeBody snakeBody) {
+        this.snakeBody = snakeBody;
+    }
 
     public double getX() {
         return x;

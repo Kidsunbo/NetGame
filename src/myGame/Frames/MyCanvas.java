@@ -63,11 +63,13 @@ public class MyCanvas extends Canvas {
         snakeA.setUserName("DongdongSnake");  // Update the userName here
       //  snakeB.setUserName("ChangeCode!");
         snakeBodyA.initBody();
+        snakeA.setSnakeBody(snakeBodyA);
 
         snakeB.setColor(Color.YELLOW);
         snakeB.setUserName("SunBoSnake");  // Update the userName here
         //  snakeB.setUserName("ChangeCode!");
         snakeBodyB.initBody();
+        snakeB.setSnakeBody(snakeBodyB);
 
         initTimeLine(gc);
 //        drawStart();
@@ -277,25 +279,28 @@ public class MyCanvas extends Canvas {
 
         node.draw(gc);
         timeCounter.draw(gc);
+
+        if(snakeA.isCollisionWithSnake(snakeB)){snakeA.rebirth();snakeBodyA.initBody();}
+        if(snakeB.isCollisionWithSnake(snakeA)){snakeB.rebirth();snakeBodyB.initBody();}
     }
   /*update all the objects information
   * */
     public  void  update(){
         if (timeCounter.getTime()<=0) {this.setGameState(Constants.GameState.TIMEOUT); }
-        snakeBodyA.update();
+
         snakeA.update();
+        snakeBodyA.update();
         if (snakeA.isGetNode()) {node.update();}
         if (snakeA.isReachBorder()){snakeA.rebirth(); snakeBodyA.initBody();}
 
 
-        snakeBodyB.update();
+
         snakeB.update();
+        snakeBodyB.update();
         if (snakeB.isGetNode()) {node.update();}
         if (snakeB.isReachBorder()){snakeB.rebirth(); snakeBodyB.initBody();} // 后期把两条蛇和食物的信息更新放在这
         root.getChildren().remove(label);
 
-        if(snakeA.isCollisionWithSnake(snakeBodyB)){snakeA.rebirth();snakeBodyA.initBody();}
-        if(snakeB.isCollisionWithSnake(snakeBodyA)){snakeB.rebirth();snakeBodyB.initBody();}
     }
 
 
