@@ -219,22 +219,19 @@ public class ChatController {
 
 
     private void processInvitation(JSONObject invite) {
-//        Platform.runLater(()->{MsgBoxController.display("Invitation",response.getString("message"));});
-        String answer = "no";
         Platform.runLater(()->{
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Invitation");
-            alert.setContentText(invite.getString("message"));
-            alert.showAndWait();
+            String answer = "no";
+            answer = MsgBox2Controller.display("Invitation",invite.getString("message"));
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("type","data");
+            jsonObject.put("sub_type","start_game_answer");
+            jsonObject.put("from_user",invite.getString("to_user"));
+            jsonObject.put("to_user",invite.getString("from_user"));
+            jsonObject.put("game",invite.getString("game"));
+            jsonObject.put("reply",answer);
+            Client.getClient().sendMessage(jsonObject);
         });
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("type","data");
-        jsonObject.put("sub_type","start_game_answer");
-        jsonObject.put("from_user",invite.getString("to_user"));
-        jsonObject.put("to_user",invite.getString("from_user"));
-        jsonObject.put("game",invite.getString("game"));
-        jsonObject.put("reply",answer);
-        Client.getClient().sendMessage(jsonObject);
+
     }
 
     private void processStartGameAnswer(JSONObject response) {
@@ -285,7 +282,7 @@ public class ChatController {
         jsonObject.put("second_user",contactList.getSelectionModel().getSelectedItem().getUsername());
         jsonObject.put("game",gameList.getSelectionModel().getSelectedItem()==null?"snake":gameList.getSelectionModel().getSelectedItem().getName());
         es.execute(()->Client.getClient().sendMessage(jsonObject));
-        MsgBoxController.display("Message has sent","You message has been sent");
+        Platform.runLater(()->MsgBoxController.display("Message has sent","You message has been sent"));
 
     }
 
@@ -428,5 +425,9 @@ public class ChatController {
         Platform.runLater(()->listView.scrollTo(chatArea.getItems().size()-1));
     }
 
+    @FXML
+    private void quit(MouseEvent event){
+        Platform.exit();
+    }
 }
 

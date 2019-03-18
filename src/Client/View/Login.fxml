@@ -22,9 +22,9 @@
             <Image url="@bg1.jpg" />
          </image>
       </ImageView>
-      <Pane layoutX="40.0" layoutY="20.0" opacity="0.74" prefHeight="410.0" prefWidth="300.0" style="-fx-background-color: #000000;">
+      <Pane fx:id="quitIcon" layoutX="40.0" layoutY="20.0" opacity="0.7" prefHeight="410.0" prefWidth="300.0" style="-fx-background-color: #000000;">
          <children>
-            <TextField fx:id="usernameInput" layoutX="71.0" layoutY="110.0" onKeyReleased="#keyPress" prefHeight="27.0" prefWidth="153.0" promptText="Username" style="-fx-background-color: #393E46;-fx-text-inner-color: white;" />
+            <TextField fx:id="usernameInput" layoutX="66.0" layoutY="130.0" onKeyReleased="#keyPress" prefHeight="27.0" prefWidth="165.0" promptText="Username" style="-fx-background-color: #393E46;-fx-text-inner-color: white;" />
             <Text fontSmoothingType="LCD" layoutX="56.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Snake War" wrappingWidth="175.99999806284904">
                <font>
                   <Font size="32.0" />
@@ -38,24 +38,24 @@
                   </RadialGradient>
                </fill>
             </Text>
-            <Label layoutX="84.0" layoutY="218.0" prefHeight="20.0" prefWidth="83.0" text="Server Status" textFill="#eeeeee">
+            <Label layoutX="85.0" layoutY="223.0" prefHeight="20.0" prefWidth="83.0" text="Server Status" textFill="#eeeeee">
                <font>
                   <Font size="11.0" />
                </font>
             </Label>
-            <Circle fx:id="connectCircle" fill="RED" layoutX="172.0" layoutY="229.0" radius="4.0" stroke="RED" strokeType="INSIDE" />
+            <Circle fx:id="connectCircle" fill="RED" layoutX="179.0" layoutY="233.0" radius="4.0" stroke="RED" strokeType="INSIDE" />
       
-                  <PasswordField fx:id="passwordInput" layoutX="65.0" layoutY="166.0" onKeyReleased="#keyPress" prefHeight="27.0" prefWidth="154.0" promptText="password" style="-fx-background-color: #393E46;-fx-text-inner-color: white;" />
-            <Line endX="88.5" layoutX="141.0" layoutY="192.0" startX="-75.0" stroke="#ededed" />
-            <Line endX="88.5" layoutX="142.0" layoutY="137.0" startX="-75.0" stroke="#eeeeee" />
-            <Label disable="true" layoutX="63.0" layoutY="87.0" text="Username" textFill="#eed200" />
-            <Label disable="true" layoutX="65.0" layoutY="149.0" text="Password" textFill="#fff30c" />
-            <Button fx:id="loginBtn" disable="true" layoutX="69.0" layoutY="266.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onAction="#loginAction" opacity="0.64" prefHeight="27.0" prefWidth="154.0" style="-fx-background-color: #aa6633;" text="Sign in" textFill="#f5f5f5">
+                  <PasswordField fx:id="passwordInput" layoutX="66.0" layoutY="180.0" onKeyReleased="#keyPress" prefHeight="27.0" prefWidth="165.0" promptText="password" style="-fx-background-color: #393E46;-fx-text-inner-color: white;" />
+            <Line endX="82.0" layoutX="150.0" layoutY="210.0" startX="-82.0" stroke="#ffe523" />
+            <Line endX="82.0" layoutX="150.0" layoutY="160.0" startX="-82.0" stroke="#ff9771" />
+            <Label disable="true" layoutX="75.0" layoutY="115.0" text="Username" textFill="#ff6512" />
+            <Label disable="true" layoutX="75.0" layoutY="165.0" text="Password" textFill="#ffe310" />
+            <Button fx:id="loginBtn" layoutX="69.0" layoutY="266.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onAction="#loginAction" prefHeight="27.0" prefWidth="154.0" style="-fx-background-color: #dd5833;" text="Sign in" textFill="#f5f5f5">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
             </Button>
-            <ImageView fitHeight="29.0" fitWidth="22.0" layoutX="270.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true"  onMouseClicked="#CloseBtnClick">
+            <ImageView fitHeight="29.0" fitWidth="22.0" layoutX="270.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#CloseBtnClick">
                <image>
                   <Image url="@quitIcon.png" />
                </image>

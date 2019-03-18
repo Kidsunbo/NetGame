@@ -133,8 +133,8 @@ public class LoginController {
                                     stage.close();
                                     stage = new Stage();
                                     loginScene = root.getScene();
-                                    stage.initStyle(StageStyle.DECORATED);
-                                    stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("View/chatroom.fxml"))));
+                                    stage.initStyle(StageStyle.TRANSPARENT);
+                                    stage.setScene(addDragFunction(new Scene(FXMLLoader.load(getClass().getResource("View/chatroom.fxml")))));
                                     stage.show();
                                 } catch (IOException e) {
                                     e.printStackTrace();
