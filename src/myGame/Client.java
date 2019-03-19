@@ -11,14 +11,21 @@ import java.net.*;
 public class Client {
 
     class Message{
-        public long time=0;
-        public String message = "{}";
+        private long time=0;
+        private String message = "{}";
 
         public void setNewMessage(long time,String message){
             if(time>this.time){
                 this.time = time;
                 this.message = message;
             }
+        }
+
+        public String getMessage() {
+            return message;
+        }
+        public JSONObject getMessageAsJson(){
+            return new JSONObject(message);
         }
     }
 
@@ -28,6 +35,8 @@ public class Client {
     private InetAddress serverIP;
     private int serverPort;
     private static Client client = null;
+    private String gameID = "";
+    private String username = "";
 
     public static Client getClient(){
         if(client==null){
@@ -58,7 +67,7 @@ public class Client {
 
     }
 
-    public String receive(){
+    private String receive(){
         byte[] buf = new byte[5*1024];
         DatagramPacket packet = new DatagramPacket(buf,buf.length);
         try {
@@ -70,8 +79,12 @@ public class Client {
     }
 
     public void sendMessage(String msg){
+        JSONObject jsonObject = new JSONObject(msg);
+        jsonObject.put("gameID",gameID);
+        jsonObject.put("username",username);
+        String message = jsonObject.toString();
         Thread t = new Thread(() -> {
-            DatagramPacket packet = new DatagramPacket(msg.getBytes(),msg.getBytes().length,serverIP, serverPort);
+            DatagramPacket packet = new DatagramPacket(message.getBytes(),message.getBytes().length,serverIP, serverPort);
             try {
                 socket.send(packet);
             } catch (IOException e) {
@@ -82,5 +95,15 @@ public class Client {
         t.start();
     }
 
+    public Message getNewMessage() {
+        return newMessage;
+    }
 
+    public void setGameID(String gameID) {
+        this.gameID = gameID;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }
