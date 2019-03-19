@@ -19,14 +19,13 @@ public class GameStage extends Application {
     public  Stage stage = new Stage();
     public  Group root;
     public  LinkedList<Light.Point> list = new LinkedList<Light.Point>();
-    public MyCanvas gameCanvas;
+    public static MyCanvas gameCanvas;
     public InfoPane gameInfo;
     Scene waitingScene, StartGameScene;
+    public static boolean isMaster;
 
     @Override
     public void start(Stage primaryStage)  {
-        /*Canvas canvas = new Canvas(Constants.WIDTH, Constants.HEIGHT);
-        GraphicsContext graphic = canvas.getGraphicsContext2D();*/
 
         this.stage = primaryStage;
         stage.setResizable(false);
@@ -43,25 +42,24 @@ public class GameStage extends Application {
         gameCanvas.initial();
 
         // Waiting Screen Setup
-        gameInfo = new InfoPane(stage,StartGameScene);
+        gameInfo = new InfoPane(stage,StartGameScene,gameCanvas);
         gameInfo.setUser1Info("Greg","10", "5");
         gameInfo.setUser2Info("ShengDong","10","5");
         gameInfo.initialize();
         waitingScene = new Scene(gameInfo.gameInfo);
         primaryStage.setScene(waitingScene);
-
-
         primaryStage.show();
     }
 
-
     public static void main(String[] args) {
-//        myGame.Client.getClient().setGameID(args[0]);
-//        myGame.Client.getClient().setUsername(args[1]);
-
+        myGame.Client.getClient().setGameID(args[0]);
+        myGame.Client.getClient().setUsername(args[1]);    // 1 is username; 2 is mastername
+        isMaster = args[1].equals(args[2]);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type","register");
         myGame.Client.getClient().sendMessage(jsonObject.toString());
+        gameCanvas.setMaster(isMaster);
+        gameCanvas.setUsername(args[1]);
         launch(args);
     }
 }

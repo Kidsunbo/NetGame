@@ -41,7 +41,6 @@ public class Node {
 
         this.setX((int)(30 + Math.random() * (Constants.WIDTH-60)));
         this.setY((int)(30 + Math.random() * (Constants.HEIGHT-60)));
-        this.setVisible(true);
 
 
         // random colour that will always be a light colour, eg > 0.3
@@ -50,9 +49,7 @@ public class Node {
         double green = random.nextFloat() / 2f + 0.3;
         double blue = random.nextFloat() / 2f + 0.3;
 
-//        int red = (int)(100 + Math.random() * 255) % 1;
-//        int green =(int) (100 + Math.random() * 255) % 1;
-//        int blue = (int) (100 + Math.random() * 255) % 1;
+
 
         this.color = Color.color(red, green, blue);
     }

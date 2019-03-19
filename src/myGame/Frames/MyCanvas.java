@@ -47,6 +47,10 @@ public class MyCanvas extends Canvas {
     private Constants.GameState gameState;
     private Group root;
     private Label label;
+    private  boolean isMaster;
+    private String username;
+
+
 
 
     public MyCanvas(Group root){
@@ -61,41 +65,61 @@ public class MyCanvas extends Canvas {
         gc = this.getGraphicsContext2D();
         timeCounter = new TimeCounter(Constants.GameDuration);
 
-        snakeA = new Snake(Constants.userAX,Constants.userAY,node);
-        snakeB = new Snake(Constants.userBX,Constants.userBY,node);
-        snakeBodyA = new SnakeBody(snakeA);
-        snakeBodyB = new SnakeBody(snakeB);
+        if(isMaster()){
+            snakeA = new Snake(Constants.userAX,Constants.userAY,node);
+            snakeBodyA = new SnakeBody(snakeA);
+            snakeA.setColor(Color.BLUE);
+            snakeA.setUserName(username);  // Update the userName here
+            snakeBodyA.initBody();
+            snakeA.setSnakeBody(snakeBodyA);
 
-        snakeA.setColor(Color.BLUE);
-        snakeA.setUserName("DongdongSnake");  // Update the userName here
-      //  snakeB.setUserName("ChangeCode!");
-        snakeBodyA.initBody();
-        snakeA.setSnakeBody(snakeBodyA);
+            snakeB = new Snake(Constants.userBX,Constants.userBY,node);
+            snakeBodyB = new SnakeBody(snakeB);
+            snakeB.setColor(Color.YELLOW);
+            snakeB.setUserName("SunBoSnake");  // Update the userName here  +++++++++++++++
+            snakeBodyB.initBody();
+            snakeB.setSnakeBody(snakeBodyB);
 
-        snakeB.setColor(Color.YELLOW);
-        snakeB.setUserName("SunBoSnake");  // Update the userName here
-        //  snakeB.setUserName("ChangeCode!");
-        snakeBodyB.initBody();
-        snakeB.setSnakeBody(snakeBodyB);
+        }
+         else{
+            snakeA = new Snake(Constants.userBX,Constants.userBY,node);
+            snakeBodyA = new SnakeBody(snakeA);
+            snakeA.setColor(Color.YELLOW);
+            snakeA.setUserName("SunBoSnake");  // Update the userName here  +++++++++++++++
+            snakeBodyA.initBody();
+            snakeA.setSnakeBody(snakeBodyA);
+
+            snakeB = new Snake(Constants.userAX,Constants.userAY,node);
+            snakeBodyB = new SnakeBody(snakeB);
+            snakeB.setColor(Color.BLUE);
+            snakeB.setUserName(username);  // Update the userName here
+            snakeBodyB.initBody();
+            snakeB.setSnakeBody(snakeBodyB);
+
+        }
+
 
         initTimeLine(gc);
 //        drawStart();
         setGameState(Constants.GameState.RUN);
-        start();
+
     }
 
 
-    public void onKeyPressed(KeyEvent event){
+    public void onKeyPressed(KeyEvent event){        //+++++++++++++++++++++++++++++++++++ send
         KeyCode key = event.getCode();
         // change the gamestate into Puase when player press SPACE key and back when user press SPACE key again
         if(this.getGameState() == Constants.GameState.RUN){
             if(key==KeyCode.SPACE){
                 setGameState(Constants.GameState.PAUSE);
-                timeCounter.stopTimer();
+                timeCounter.stopTimer();  //+++++++
             }
             else if(key == KeyCode.ESCAPE){
                     setGameState(Constants.GameState.TIMEOUT);
+                    if(isMaster)
                     timeCounter.setTime(0);
+
+                    else {} //+++++++++++++++++
             }
             else{
                 snakeA.onKeyPressed(event);
@@ -126,7 +150,7 @@ public class MyCanvas extends Canvas {
                 if (getGameState() == Constants.GameState.RUN){
                     draw(gc);
                     update();
-                    drawScoreBoard();
+
                 } else if (getGameState() == Constants.GameState.PAUSE){
                     drawPause(gc);
                 } else if (getGameState() == Constants.GameState.TIMEOUT){
@@ -142,7 +166,8 @@ public class MyCanvas extends Canvas {
      */
     public void start() {
         timeline.play();
-        timeCounter.start();
+        if(isMaster){
+        timeCounter.start();}
     }
 
     /**
@@ -237,33 +262,59 @@ public class MyCanvas extends Canvas {
 
         snakeBodyB.draw(gc);
         snakeB.drawSnake(gc);
-
         node.draw(gc);
         timeCounter.draw(gc);
-
         if(snakeA.isCollisionWithSnake(snakeB)){snakeA.rebirth();snakeBodyA.initBody();}
-        if(snakeB.isCollisionWithSnake(snakeA)){snakeB.rebirth();snakeBodyB.initBody();}
+        //if(snakeB.isCollisionWithSnake(snakeA)){snakeB.rebirth();snakeBodyB.initBody();}
+
+        drawScoreBoard();
     }
+
   /*update all the objects information
   * */
     public  void  update(){
-        if (timeCounter.getTime()<=0) {this.setGameState(Constants.GameState.TIMEOUT); }
 
-        snakeA.update();
-        snakeBodyA.update();
-        if (snakeA.isGetNode()) {node.update();}
-        if (snakeA.isReachBorder()){snakeA.rebirth(); snakeBodyA.initBody();}
-        JSONObject jsonObject = snakeToJSON(snakeA);
-        myGame.Client.getClient().sendMessage(jsonObject.toString());
+        if(isMaster){
+             if (timeCounter.getTime()<=0) {this.setGameState(Constants.GameState.TIMEOUT);  }
+            snakeA.update();
+            snakeBodyA.update();
+            if (snakeA.isGetNode()) {node.update();}
+            if (snakeA.isReachBorder()){snakeA.rebirth(); snakeBodyA.initBody();}
+            JSONObject jsonObject = snakeToJSON(snakeA);
+            myGame.Client.getClient().sendMessage(jsonObject.toString());
+
+            JSONObject snakeBJson = myGame.Client.getClient().getNewMessage().getMessageAsJson();
+            snakeB.setX(getX(snakeBJson));
+            snakeB.setY(getY(snakeBJson));
+            snakeB.setDirection(getDirection(snakeBJson));
+            snakeBodyB.setPointlist(getSnakeBody(snakeBJson));
+
+            root.getChildren().remove(label); // gengxin fenshu++++++++++++++++++++++++++++++++++++++++++++
+        }
+        else{
+
+            timeCounter.setTime();
+            node.setX();                //         gengxin timer he node xinxi +++++++++++++
+            node.setY();
+
+            snakeA.update();
+            snakeBodyA.update();    // keyi jia panduan shifou he wangluo zhong de yizhi ++++++++
+            if (snakeA.isGetNode()) {node.update();}
+            if (snakeA.isReachBorder()){snakeA.rebirth(); snakeBodyA.initBody();}
+            JSONObject jsonObject = snakeToJSON(snakeA);
+            myGame.Client.getClient().sendMessage(jsonObject.toString());
 
 
-//        JSONObject snakeBJson = myGame.Client.getClient().getNewMessage().getMessageAsJson();
-//        snakeB.setX(getX(snakeBJson));
-//        snakeB.setY(getY(snakeBJson));
-//        snakeB.setDirection(getDirection(snakeBJson));
-//        snakeBodyB.setPointlist(getSnakeBody(snakeBJson));
-        System.out.println("hey");
-        root.getChildren().remove(label);
+            JSONObject snakeBJson = myGame.Client.getClient().getNewMessage().getMessageAsJson();
+            snakeB.setX(getX(snakeBJson));
+            snakeB.setY(getY(snakeBJson));
+            snakeB.setDirection(getDirection(snakeBJson));
+            snakeBodyB.setPointlist(getSnakeBody(snakeBJson));
+
+            root.getChildren().remove(label); // gengxin fenshu++++++++++++++++++++++++++++++++++++++++++++
+
+        }
+
 
     }
 
@@ -320,4 +371,18 @@ public class MyCanvas extends Canvas {
         return p;
     }
 
+    public void setMaster(boolean isMaster){
+        this.isMaster = isMaster;
+    }
+    public  boolean isMaster(){
+        return this.isMaster;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
 }

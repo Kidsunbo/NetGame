@@ -35,6 +35,7 @@ public class InfoPane {
     private Circle user1Circle, user2Circle;
     private String username1, totalGames1, gamesWon1;
     private String username2, totalGames2, gamesWon2;
+    private MyCanvas myCanvas;
 
     // reference to games stage and scene
     private Stage stage;
@@ -47,12 +48,13 @@ public class InfoPane {
     private Font font = new Font("Impact", 30);
 
 
-    public InfoPane(Stage stage, Scene scene) {
+    public InfoPane(Stage stage, Scene scene,MyCanvas myCanvas) {
        this.gameInfo = new Pane();
        gameInfo.setMinSize(Constants.WIDTH ,Constants.HEIGHT);
        this.stage = stage;
        this.scene = scene;
        gameInfo.setStyle("-fx-background-color: #393E46");
+       this.myCanvas=myCanvas;
     }
 
     public void initialize() {
@@ -66,7 +68,7 @@ public class InfoPane {
         // Create Buttons to let the game know each player is ready
         user1Button = new Button();
         user1Button.setLayoutX(user1X + 50);
-        user1Button.setLayoutY(user1Y);
+        user1Button.setLayoutY(user1Y);                            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         user1Button.setPrefWidth(buttonWidth);
         user1Button.setPrefHeight(buttonHeight);
         user1Button.setStyle("-fx-background-color: #00ADB5; -fx-border-width: 5px; " +
@@ -85,23 +87,29 @@ public class InfoPane {
         // if both players are ready start game
         user1Button.setOnAction(e -> {
             user1Ready = true;
+
             user1Button.setStyle("-fx-background-color: Green; -fx-font-weight: Bold; -fx-font-size: 28; ");
             user1Button.setDisable(true);
             user1Button.setText("Waiting");
+
+
             if (user1Ready && user2Ready) {
                 stage.setScene(scene);
+                myCanvas.start();
             }
         });
 
-//        user2Button.setOnAction(e -> {
-//            user2Ready = true;
-//            user2Button.setStyle("-fx-background-color: Green; -fx-font-weight: Bold; -fx-font-size: 28; ");
-//            user2Button.setDisable(true);
-//            user2Button.setText("Waiting");
-//            if (user1Ready && user2Ready) {
-//                stage.setScene(scene);
-//            }
-//        });
+        user2Button.setOnAction(e -> {
+            user2Ready = true;
+            user2Button.setStyle("-fx-background-color: Green; -fx-font-weight: Bold; -fx-font-size: 28; ");
+            user2Button.setDisable(true);
+            user2Button.setText("Waiting");
+            if (user1Ready && user2Ready) {
+                stage.setScene(scene);
+                myCanvas.start();
+
+            }
+       });
 
 
 
