@@ -11,11 +11,11 @@ import java.util.Calendar;
  */
 public class Client {
 
-    class Message{
+    public class Message{
         private long time=0;
         private String message = "{}";
 
-        public void setNewMessage(long time,String message){
+        public synchronized void setNewMessage(long time,String message){
             if(time>this.time){
                 this.time = time;
                 this.message = message;

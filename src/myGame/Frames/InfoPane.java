@@ -93,15 +93,15 @@ public class InfoPane {
             }
         });
 
-        user2Button.setOnAction(e -> {
-            user2Ready = true;
-            user2Button.setStyle("-fx-background-color: Green; -fx-font-weight: Bold; -fx-font-size: 28; ");
-            user2Button.setDisable(true);
-            user2Button.setText("Waiting");
-            if (user1Ready && user2Ready) {
-                stage.setScene(scene);
-            }
-        });
+//        user2Button.setOnAction(e -> {
+//            user2Ready = true;
+//            user2Button.setStyle("-fx-background-color: Green; -fx-font-weight: Bold; -fx-font-size: 28; ");
+//            user2Button.setDisable(true);
+//            user2Button.setText("Waiting");
+//            if (user1Ready && user2Ready) {
+//                stage.setScene(scene);
+//            }
+//        });
 
 
 

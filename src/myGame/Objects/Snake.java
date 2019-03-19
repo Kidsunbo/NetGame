@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 import myGame.Frames.Constants;
 
 public class Snake {
-  protected enum DIRECTIONS {
+  public enum DIRECTIONS {
       DIR_UP, DIR_DOWN, DIR_LEFT, DIR_RIGHT, DIR_LEFTUP, DIR_LEFTDOWN, DIR_RIGHTUP, DIR_RIGHTDOWN
     }
     private double x;

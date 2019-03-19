@@ -5,10 +5,12 @@ import javafx.scene.effect.Light;
 import myGame.Frames.Constants;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SnakeBody {
 
-    private LinkedList<Light.Point> pointlist = new LinkedList<Light.Point>();
+    private LinkedList<Light.Point> pointlist = new LinkedList<>();
     private  Snake snake ;
     private boolean visible;
     private double x;
@@ -99,6 +101,13 @@ public class SnakeBody {
         return pointlist;
     }
 
+    public LinkedList<String> getPointlistForN(){
+        LinkedList<String> result = new LinkedList<>();
+        List<String> l = pointlist.stream().map(this::pointToString).collect(Collectors.toList());
+        result.addAll(l);
+        return result;
+    }
+
     public void setPointlist(LinkedList<Light.Point> pointlist) {
         this.pointlist = pointlist;
     }
@@ -142,4 +151,12 @@ public class SnakeBody {
     public void setWidth(double width) {
         this.width = width;
     }
+
+    public String pointToString(Light.Point p){
+        String str = "";
+        str = String.valueOf(p.getX())+" "+String.valueOf(p.getY());
+        return str;
+    }
+
+
 }

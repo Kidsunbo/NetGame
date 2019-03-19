@@ -9,6 +9,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.Light;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -19,6 +20,12 @@ import javafx.util.Duration;
 import myGame.Objects.Node;
 import myGame.Objects.Snake;
 import myGame.Objects.SnakeBody;
+import org.json.JSONObject;
+import sun.awt.image.ImageWatched;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -103,17 +110,7 @@ public class MyCanvas extends Canvas {
         }
     }
 
-/*
 
-    public void onKeyReleased(KeyEvent event) {
-       snakeA.onKeyReleased(event);
-    }
-   public void onMouseMoved(MouseEvent event) {
-        for (SObject wObject : mObjects) {
-            wObject.onMouseMoved(event);
-        }
-    }
-*/
 
 
     public void initTimeLine( GraphicsContext gc) {
@@ -177,42 +174,6 @@ public class MyCanvas extends Canvas {
         }
     }
 
-//    public  void drawStart() {
-//
-//        Label label = new Label("Are You Ready?");
-//        label.setLayoutX(Constants.WIDTH / 2 - 300);
-//        label.setLayoutY(Constants.HEIGHT / 2 - 250);
-//        label.setStyle("-fx-font: 80 arial; -fx-font-weight: bold; -fx-text-fill: Gray;  ");
-//        root.getChildren().add(label);
-//
-//        Button button = new Button();
-//        button.setText("Start Now!");
-//        button.setLayoutX(Constants.WIDTH / 2 - 75);
-//        button.setLayoutY(Constants.HEIGHT / 2 - 50);
-//        button.setMinWidth(150);
-//        button.setMinHeight(70);
-//        button.setStyle("-fx-font: 24 arial; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: #ff4e4e; -fx-background-radius: 20; ");
-//        root.getChildren().add(button);
-//
-//        Label label2 = new Label(" In the Game you can: \n Use SPACE to pause the game \n And SPACE again to back");
-//        label2.setLayoutX(Constants.WIDTH / 2 - 150);
-//        label2.setLayoutY(Constants.HEIGHT  - 250);
-//        label2.setStyle("-fx-font: 20 arial; -fx-font-weight: bold; -fx-text-fill: Gray;  ");
-//        root.getChildren().add(label2);
-//
-//        button.setOnMouseClicked(event ->{
-//                setGameState(Constants.GameState.READY);
-//                setGameState(Constants.GameState.RUN);
-//                root.getChildren().remove(button);
-//                root.getChildren().remove(label);
-//                root.getChildren().remove(label2);
-//                start();
-//
-//        });
-//
-//
-//
-//    }
 
     public void drawScoreBoard(){
         String InfoA = String.format("%-14s", snakeA.getUserName())+": "+ snakeA.getScore();
@@ -292,18 +253,16 @@ public class MyCanvas extends Canvas {
         snakeBodyA.update();
         if (snakeA.isGetNode()) {node.update();}
         if (snakeA.isReachBorder()){snakeA.rebirth(); snakeBodyA.initBody();}
+        JSONObject jsonObject = snakeToJSON(snakeA);
+        myGame.Client.getClient().sendMessage(jsonObject.toString());
 
 
-
-//        snakeB.update();
-//        snakeBodyB.update();
-//        if (snakeB.isGetNode()) {node.update();}
-//        if (snakeB.isReachBorder()){snakeB.rebirth(); snakeBodyB.initBody();} // 后期把两条蛇和食物的信息更新放在这
-        
-//        snakeB.setX();
-//        snakeB.setY();
-//        snakeB.setDirection();
-//        snakeBodyB.setPointlist();
+//        JSONObject snakeBJson = myGame.Client.getClient().getNewMessage().getMessageAsJson();
+//        snakeB.setX(getX(snakeBJson));
+//        snakeB.setY(getY(snakeBJson));
+//        snakeB.setDirection(getDirection(snakeBJson));
+//        snakeBodyB.setPointlist(getSnakeBody(snakeBJson));
+        System.out.println("hey");
         root.getChildren().remove(label);
 
     }
@@ -319,42 +278,46 @@ public class MyCanvas extends Canvas {
 
     }
 
-    public Snake getSnakeA() {
-        return snakeA;
+    public JSONObject snakeToJSON(Snake snake){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("direction",snake.getDirection());
+        jsonObject.put("snake_body",snake.getSnakeBody().getPointlistForN());
+        jsonObject.put("x",snake.getX());
+        jsonObject.put("y",snake.getY());
+        jsonObject.put("score",snake.getScore());
+        return jsonObject;
     }
 
-    public Snake getSnakeB() {
-        return snakeB;
+    public double getX(JSONObject jsonObject){
+        return jsonObject.getDouble("x");
     }
 
-    public Node getNode() {
-        return node;
+    public double getY(JSONObject jsonObject){
+        return jsonObject.getDouble("y");
     }
 
-    public GraphicsContext getGc() {
-        return gc;
+    public int getScore(JSONObject jsonObject){
+        return jsonObject.getInt("score");
     }
 
-    public void setSnakeA(Snake snakeA) {
-        this.snakeA = snakeA;
+    public LinkedList<Light.Point> getSnakeBody(JSONObject jsonObject){
+        List<Object> sb = jsonObject.getJSONArray("snake_body").toList();
+        List<Light.Point> temp = sb.stream().map(x->stringToPoint(String.valueOf(x))).collect(Collectors.toList());
+        LinkedList<Light.Point> result = new LinkedList<>();
+        result.addAll(temp);
+        return result;
     }
 
-    public void setSnakeB(Snake snakeB) {
-        this.snakeB = snakeB;
+    public Snake.DIRECTIONS getDirection(JSONObject jsonObject){
+        return Snake.DIRECTIONS.valueOf(jsonObject.getString("direction"));
     }
 
-    public void setNode(Node node) {
-        this.node = node;
+    public Light.Point stringToPoint(String str){
+        String[] s = str.split(" ");
+        Light.Point p = new Light.Point();
+        p.setX(Double.valueOf(s[0]));
+        p.setY(Double.valueOf(s[1]));
+        return p;
     }
 
-    public void setGc(GraphicsContext gc) {
-        this.gc = gc;
-    }
-    public SnakeBody getSnakeBody() {
-        return snakeBodyA;
-    }
-
-    public void setSnakeBody(SnakeBody snakeBody) {
-        this.snakeBodyA = snakeBody;
-    }
 }

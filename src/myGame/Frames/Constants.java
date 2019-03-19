@@ -8,10 +8,6 @@ package myGame.Frames;
  */
 public class Constants {
 	public enum GameState{READY, PAUSE, RUN, TIMEOUT};
-	public enum DIRECTIONS {
-
-		DIR_UP, DIR_DOWN, DIR_LEFT, DIR_RIGHT, DIR_LEFTUP, DIR_LEFTDOWN, DIR_RIGHTUP, DIR_RIGHTDOWN
-	};
 
 	/**
 	 * The size of the stage
