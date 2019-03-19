@@ -2,6 +2,7 @@ package myGame.Frames;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -23,8 +24,12 @@ import myGame.Objects.SnakeBody;
 import org.json.JSONObject;
 import sun.awt.image.ImageWatched;
 
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 
@@ -106,20 +111,17 @@ public class MyCanvas extends Canvas {
     }
 
 
-    public void onKeyPressed(KeyEvent event){        //+++++++++++++++++++++++++++++++++++ send
+    public void onKeyPressed(KeyEvent event){
         KeyCode key = event.getCode();
         // change the gamestate into Puase when player press SPACE key and back when user press SPACE key again
         if(this.getGameState() == Constants.GameState.RUN){
             if(key==KeyCode.SPACE){
                 setGameState(Constants.GameState.PAUSE);
-                timeCounter.stopTimer();  //+++++++
+                timeCounter.stopTimer();
             }
             else if(key == KeyCode.ESCAPE){
                     setGameState(Constants.GameState.TIMEOUT);
-                    if(isMaster)
                     timeCounter.setTime(0);
-
-                    else {} //+++++++++++++++++
             }
             else{
                 snakeA.onKeyPressed(event);
@@ -147,14 +149,26 @@ public class MyCanvas extends Canvas {
                 gc.clearRect(0, 0, getWidth(), getHeight());
                 drawGridding(gc);
 
-                if (getGameState() == Constants.GameState.RUN){
-                    draw(gc);
-                    update();
+                JSONObject jsonObject = myGame.Client.getClient().getNewMessage().getMessageAsJson();
+                if(jsonObject.has("time") && Calendar.getInstance().getTimeInMillis()-jsonObject.getLong("time")>5000) {
+                    drawTimeout(gc);
+                }
+                else {
+                    if (jsonObject.has("gameState") && Constants.GameState.valueOf(jsonObject.getString("gameState")) == Constants.GameState.RUN) {
+                        if (getGameState() == Constants.GameState.RUN) {
+                            draw(gc);
+                            update();
 
-                } else if (getGameState() == Constants.GameState.PAUSE){
-                    drawPause(gc);
-                } else if (getGameState() == Constants.GameState.TIMEOUT){
-                   drawTimeout(gc);
+                        } else if (getGameState() == Constants.GameState.PAUSE) {
+                            drawPause(gc);
+                        } else if (getGameState() == Constants.GameState.TIMEOUT) {
+                            drawTimeout(gc);
+                        }
+                    } else if (jsonObject.has("gameState") && Constants.GameState.valueOf(jsonObject.getString("gameState")) == Constants.GameState.PAUSE) {
+                        drawPause(gc);
+                    } else if (jsonObject.has("gameState") && Constants.GameState.valueOf(jsonObject.getString("gameState")) == Constants.GameState.TIMEOUT) {
+                        drawTimeout(gc);
+                    }
                 }
         });
         timeline.getKeyFrames().add(keyFrame);
@@ -165,6 +179,7 @@ public class MyCanvas extends Canvas {
      * start the update timeline
      */
     public void start() {
+        InfoPane.t.interrupt();
         timeline.play();
         if(isMaster){
         timeCounter.start();}
@@ -248,7 +263,9 @@ public class MyCanvas extends Canvas {
         button.setStyle("-fx-font: 24 arial; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: #ff4e4e; -fx-background-radius: 20; ");
         root.getChildren().add(button);
 
-        button.setOnMouseClicked(event -> { });
+        button.setOnMouseClicked(event -> {
+            System.exit(snakeA.getScore()>snakeB.getScore()?1:0);
+        });
 
     }
 
@@ -288,18 +305,16 @@ public class MyCanvas extends Canvas {
             snakeB.setY(getY(snakeBJson));
             snakeB.setDirection(getDirection(snakeBJson));
             snakeBodyB.setPointlist(getSnakeBody(snakeBJson));
-
-            root.getChildren().remove(label); // gengxin fenshu++++++++++++++++++++++++++++++++++++++++++++
+            snakeB.setScore(getScore(snakeBJson));
+            snakeB.setUserName(getUsername(snakeBJson));
+            if(snakeB.isGetNode()){node.update();}
+            root.getChildren().remove(label);
         }
         else{
 
-            timeCounter.setTime();
-            node.setX();                //         gengxin timer he node xinxi +++++++++++++
-            node.setY();
-
             snakeA.update();
-            snakeBodyA.update();    // keyi jia panduan shifou he wangluo zhong de yizhi ++++++++
-            if (snakeA.isGetNode()) {node.update();}
+            snakeBodyA.update();
+//            if (snakeA.isGetNode()) {node.update();}
             if (snakeA.isReachBorder()){snakeA.rebirth(); snakeBodyA.initBody();}
             JSONObject jsonObject = snakeToJSON(snakeA);
             myGame.Client.getClient().sendMessage(jsonObject.toString());
@@ -310,8 +325,14 @@ public class MyCanvas extends Canvas {
             snakeB.setY(getY(snakeBJson));
             snakeB.setDirection(getDirection(snakeBJson));
             snakeBodyB.setPointlist(getSnakeBody(snakeBJson));
+            snakeB.setScore(getScore(snakeBJson));
+            snakeB.setUserName(getUsername(snakeBJson));
+            timeCounter.setTime(getTimeCounter(snakeBJson));
+            node.setX(getNodeX(snakeBJson));
+            node.setY(getNodeY(snakeBJson));
 
-            root.getChildren().remove(label); // gengxin fenshu++++++++++++++++++++++++++++++++++++++++++++
+
+            root.getChildren().remove(label);
 
         }
 
@@ -336,6 +357,10 @@ public class MyCanvas extends Canvas {
         jsonObject.put("x",snake.getX());
         jsonObject.put("y",snake.getY());
         jsonObject.put("score",snake.getScore());
+        jsonObject.put("gameState",this.gameState.toString());
+        jsonObject.put("nodeX",node.getX());
+        jsonObject.put("nodeY",node.getY());
+        jsonObject.put("timeCounter",timeCounter.getTime());
         return jsonObject;
     }
 
@@ -350,6 +375,12 @@ public class MyCanvas extends Canvas {
     public int getScore(JSONObject jsonObject){
         return jsonObject.getInt("score");
     }
+
+    int getNodeX(JSONObject jsonObject){return jsonObject.getInt("nodeX");}
+    int getNodeY(JSONObject jsonObject){ return  jsonObject.getInt("nodeY");}
+    int getTimeCounter(JSONObject jsonObject){return jsonObject.getInt("timeCounter");}
+    String getUsername(JSONObject jsonObject){return jsonObject.getString("username");}
+
 
     public LinkedList<Light.Point> getSnakeBody(JSONObject jsonObject){
         List<Object> sb = jsonObject.getJSONArray("snake_body").toList();

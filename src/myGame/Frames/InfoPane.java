@@ -1,6 +1,7 @@
 package myGame.Frames;
 
 import Server.GameServer;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
@@ -19,6 +20,10 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import myGame.Objects.Snake;
+import org.json.JSONObject;
+
+import java.util.Calendar;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -30,8 +35,6 @@ import myGame.Objects.Snake;
 public class InfoPane {
     private Snake snakeA;
     private Snake snakeB;
-    private boolean user1Ready = false;
-    private boolean user2Ready = false;
     private Button user1Button, user2Button;
     private Circle user1Circle, user2Circle;
     private String username1, totalGames1, gamesWon1;
@@ -45,17 +48,22 @@ public class InfoPane {
     Pane gameInfo;
 
     private int buttonWidth = 200;
-    private  int buttonHeight = 50;
+    private int buttonHeight = 50;
     private Font font = new Font("Impact", 30);
 
 
-    public InfoPane(Stage stage, Scene scene,MyCanvas myCanvas) {
-       this.gameInfo = new Pane();
-       gameInfo.setMinSize(Constants.WIDTH ,Constants.HEIGHT);
-       this.stage = stage;
-       this.scene = scene;
-       gameInfo.setStyle("-fx-background-color: #393E46");
-       this.myCanvas=myCanvas;
+    public static Thread t;
+    public AtomicBoolean user1isReady = new AtomicBoolean(false);
+    public AtomicBoolean user2isReady = new AtomicBoolean(false);
+
+
+    public InfoPane(Stage stage, Scene scene, MyCanvas myCanvas) {
+        this.gameInfo = new Pane();
+        gameInfo.setMinSize(Constants.WIDTH, Constants.HEIGHT);
+        this.stage = stage;
+        this.scene = scene;
+        gameInfo.setStyle("-fx-background-color: #393E46");
+        this.myCanvas = myCanvas;
     }
 
     public void initialize() {
@@ -73,7 +81,7 @@ public class InfoPane {
         user1Button.setPrefWidth(buttonWidth);
         user1Button.setPrefHeight(buttonHeight);
         user1Button.setStyle("-fx-background-color: #00ADB5; -fx-border-width: 5px; " +
-                "-fx-text-fill: White; -fx-font-weight: Bold; -fx-font-size: 28" );
+                "-fx-text-fill: White; -fx-font-weight: Bold; -fx-font-size: 28");
         user1Button.setText("Ready");
 
         user2Button = new Button();
@@ -82,37 +90,55 @@ public class InfoPane {
         user2Button.setPrefWidth(buttonWidth);
         user2Button.setPrefHeight(buttonHeight);
         user2Button.setStyle("-fx-background-color: #00ADB5; -fx-border-width: 5px; " +
-                "-fx-text-fill: White; -fx-font-weight: Bold; -fx-font-size: 28" );
+                "-fx-text-fill: White; -fx-font-weight: Bold; -fx-font-size: 28");
         user2Button.setText("Ready");
 
         // if both players are ready start game
         user1Button.setOnAction(e -> {
-            user1Ready = true;
 
+            user1isReady.set(true);
             user1Button.setStyle("-fx-background-color: Green; -fx-font-weight: Bold; -fx-font-size: 28; ");
             user1Button.setDisable(true);
             user1Button.setText("Waiting");
 
 
-            if (user1Ready && user2Ready) {
+            if (user1isReady.get() && user2isReady.get()) {
                 stage.setScene(scene);
                 myCanvas.start();
             }
-            GameStage.isReady.set(true);
         });
 
-        user2Button.setOnAction(e -> {
-            user2Ready = true;
-            user2Button.setStyle("-fx-background-color: Green; -fx-font-weight: Bold; -fx-font-size: 28; ");
-            user2Button.setDisable(true);
-            user2Button.setText("Waiting");
-            if (user1Ready && user2Ready) {
-                stage.setScene(scene);
-                myCanvas.start();
-
+        t = new Thread(() -> {
+            while (true) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("isReady", user1isReady.get());
+                myGame.Client.getClient().sendMessage(jsonObject.toString());
+                JSONObject message = new JSONObject(myGame.Client.getClient().getNewMessage().getMessageAsJson());
+                if(message.has("time")&& Calendar.getInstance().getTimeInMillis()-jsonObject.getLong("time")>5000){
+                    System.exit(0);
+                }
+                snakeB.setUserName(message.has("username")?message.getString("username"):"no name");
+                if (message.has("isReady") && message.getBoolean("isReady")) {
+                    user2isReady.set(true);
+                    user2Button.setStyle("-fx-background-color: Green; -fx-font-weight: Bold; -fx-font-size: 28; ");
+                    user2Button.setDisable(true);
+                    user2Button.setText("Waiting");
+                    if (user1isReady.get() && user2isReady.get()) {
+                        Platform.runLater(() -> {
+                            stage.setScene(scene);
+                            myCanvas.start();
+                        });
+                    }
+                }
+                try {
+                    Thread.sleep(80);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-       });
-
+        });
+        t.setDaemon(true);
+        t.start();
 
 
         // Users info goes here
@@ -122,13 +148,13 @@ public class InfoPane {
         Text gamesWonA = new Text("Games Won: " + gamesWon1 + "\n");
 
         userNameA.setFont(font);
-        userNameA.setFill(Color.rgb(255,255,255));
+        userNameA.setFill(Color.rgb(255, 255, 255));
         totalGamesA.setFont(font);
-        totalGamesA.setFill(Color.rgb(255,255,255));
+        totalGamesA.setFill(Color.rgb(255, 255, 255));
         gamesWonA.setFont(font);
-        gamesWonA.setFill(Color.rgb(255,255,255));
+        gamesWonA.setFill(Color.rgb(255, 255, 255));
 
-        TextFlow textBoxA = new TextFlow(userNameA,totalGamesA,gamesWonA);
+        TextFlow textBoxA = new TextFlow(userNameA, totalGamesA, gamesWonA);
         textBoxA.setTextAlignment(TextAlignment.CENTER);
         textBoxA.setPrefSize(400, 0);
         textBoxA.setLayoutX(100);
@@ -143,13 +169,13 @@ public class InfoPane {
         Text gamesWonB = new Text("Games Won: " + gamesWon2 + "\n");
 
         userNameB.setFont(font);
-        userNameB.setFill(Color.rgb(255,255,255));
+        userNameB.setFill(Color.rgb(255, 255, 255));
         totalGamesB.setFont(font);
-        totalGamesB.setFill(Color.rgb(255,255,255));
+        totalGamesB.setFill(Color.rgb(255, 255, 255));
         gamesWonB.setFont(font);
-        gamesWonB.setFill(Color.rgb(255,255,255));
+        gamesWonB.setFill(Color.rgb(255, 255, 255));
 
-        TextFlow textBoxB = new TextFlow(userNameB,totalGamesB,gamesWonB);
+        TextFlow textBoxB = new TextFlow(userNameB, totalGamesB, gamesWonB);
         textBoxB.setTextAlignment(TextAlignment.CENTER);
         textBoxB.setPrefSize(400, 100);
         textBoxB.setLayoutX(gameInfo.getMinWidth() / 2);
@@ -164,7 +190,7 @@ public class InfoPane {
         displayGameRules();
 
         // add to pane
-        gameInfo.getChildren().addAll(user1Button,user2Button,textBoxA,textBoxB);
+        gameInfo.getChildren().addAll(user1Button, user2Button, textBoxA, textBoxB);
     }
 
     void setUser1Info(String username, String totalGames, String gamesWon) {
@@ -172,6 +198,7 @@ public class InfoPane {
         totalGames1 = totalGames;
         gamesWon1 = gamesWon;
     }
+
     void setUser2Info(String username, String totalGames, String gamesWon) {
         username2 = username;
         totalGames2 = totalGames;
@@ -184,7 +211,7 @@ public class InfoPane {
         Text gameTitle = new Text("Greedy Snake");
         gameTitle.setFont(titleFont);
         gameTitle.setLayoutX(Constants.WIDTH / 2 - 230);
-        gameTitle.setLayoutY( 80);
+        gameTitle.setLayoutY(80);
         gameTitle.setTextAlignment(TextAlignment.CENTER);
         gameTitle.setFill(Color.WHITE);
 

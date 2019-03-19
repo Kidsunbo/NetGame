@@ -25,8 +25,6 @@ public class GameStage extends Application {
     Scene waitingScene, StartGameScene;
     public static boolean isMaster;
 
-    public static Thread t;
-    public static AtomicBoolean isReady = new AtomicBoolean(false);
 
     @Override
     public void start(Stage primaryStage)  {
@@ -52,34 +50,19 @@ public class GameStage extends Application {
         gameInfo.initialize();
         waitingScene = new Scene(gameInfo.gameInfo);
         primaryStage.setScene(waitingScene);
-
-        t = new Thread(()->{
-            while(true){
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("isReady",isReady.get());
-                myGame.Client.getClient().sendMessage(jsonObject.toString());
-                try {
-                    Thread.sleep(80);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        t.setDaemon(true);
-        t.start();
         primaryStage.show();
     }
 
     public static void main(String[] args) {
-        myGame.Client.getClient().setGameID(args[0]);
-        myGame.Client.getClient().setUsername(args[1]);    // 1 is username; 2 is mastername
-        isMaster = args[1].equals(args[2]);
+//        myGame.Client.getClient().setGameID(args[0]);
+//        myGame.Client.getClient().setUsername(args[1]);    // 1 is username; 2 is mastername
+//        isMaster = args[1].equals(args[2]);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type","register");
         myGame.Client.getClient().sendMessage(jsonObject.toString());
-        gameCanvas.setMaster(isMaster);
-        gameCanvas.setUsername(args[1]);
+//        gameCanvas.setMaster(isMaster);
+//        gameCanvas.setUsername(args[1]);
         launch(args);
     }
 }
