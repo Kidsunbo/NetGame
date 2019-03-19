@@ -16,6 +16,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import org.json.JSONObject;
 
 import javax.xml.soap.Text;
@@ -59,8 +60,9 @@ public class ChatController {
                     label.setMinWidth(chatArea.getWidth()/10);
                     label.setPrefWidth(chatArea.getWidth()/2);
                     label.setWrapText(true);
-                    this.setStyle("-fx-background-color: yellow");
-                    label.setStyle("-fx-background-color: yellow");
+                    this.setStyle("-fx-background-color: #222831");
+                    label.setStyle("-fx-background-color: #222831");
+                    label.setTextFill(Color.WHITE);
                     label.setAlignment(Pos.CENTER_LEFT);
                     label.setWrapText(true);
                     label.setMaxWidth(chatArea.getPrefWidth()/2);
@@ -73,10 +75,11 @@ public class ChatController {
                     label.setMinWidth(chatArea.getWidth()/10);
                     label.setPrefWidth(chatArea.getWidth()/2);
                     label.setWrapText(true);
-                    this.setStyle("-fx-background-color: yellow");
-                    label.setStyle("-fx-background-color: yellow");
+                    this.setStyle("-fx-background-color: #393e46");
+                    label.setStyle("-fx-background-color: #393e46");
                     label.setAlignment(Pos.CENTER_RIGHT);
                     label.setWrapText(true);
+                    label.setTextFill(Color.WHITE);
                     label.setMaxWidth(chatArea.getPrefWidth()/2);
                     hBox = new HBox(10);
                     hBox.setAlignment(Pos.CENTER_RIGHT);
@@ -109,9 +112,11 @@ public class ChatController {
                 imageView.setFitHeight(picHeight);
                 setGraphic(imageView);}
                 else{
-                    ImageView imageView = new ImageView("Client/View/logo.png");
+                    ImageView imageView = new ImageView("Client/View/logo.jpg");
                     imageView.setFitWidth(picWidth);
                     imageView.setFitHeight(picHeight);
+                    imageView.setOpacity(1);
+                    this.setOpacity(1);
                     setGraphic(imageView);
                 }
             } else {
@@ -124,6 +129,7 @@ public class ChatController {
         private final String username;
         private ImageView icon;
         private HBox item = new HBox(5);
+        private Label label;
         private ListView<String> listView = new ListView<>();
 
         public Profile(String username){
@@ -134,7 +140,8 @@ public class ChatController {
             item.getChildren().add(icon);
             VBox vBox = new VBox();
             vBox.setSpacing(0);
-            Label label = new Label(username);
+            label = new Label(username);
+            label.setTextFill(Color.WHITE);
             label.setStyle("-fx-font-weight: bold");
             vBox.getChildren().add(label);
             item.getChildren().add(vBox);
@@ -147,6 +154,10 @@ public class ChatController {
 
         public String getUsername() {
             return username;
+        }
+
+        public void setLabelColor(Color color){
+            label.setTextFill(color);
         }
 
         public ListView<String> getListView() {
@@ -189,10 +200,15 @@ public class ChatController {
                 (ov, old_val, new_val) -> {
                     if (old_val != null) {
                         old_val.getListView().setItems(chatArea.getItems());
-                        if (new_val != null)
+                        if (new_val != null) {
                             chatArea.setItems(new_val.getListView().getItems());
-                        else
+                            old_val.setLabelColor(Color.WHITE);
+                            new_val.setLabelColor(Color.BLACK);
+                        }
+                        else {
                             chatArea.setItems(old_val.getListView().getItems());
+                            old_val.setLabelColor(Color.WHITE);
+                        }
                     }
                 });
         chatArea.setCellFactory(list -> new MessageCell());
@@ -396,6 +412,7 @@ public class ChatController {
 
     private void sendMessage(){
         String msg = inputArea.getText();
+        if(msg.trim().equals("")) return;
         Profile p = contactList.getSelectionModel().getSelectedItem();
         chatArea.getItems().add("1"+msg);
         inputArea.clear();

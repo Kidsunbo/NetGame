@@ -4,9 +4,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
@@ -18,29 +23,119 @@
             <Image url="@bg1.jpg" />
          </image>
       </ImageView>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" height="458.0" layoutX="677.0" layoutY="-8.0" opacity="0.78" stroke="BLACK" strokeType="INSIDE" width="133.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" height="450.0" layoutX="2.0" opacity="0.78" stroke="BLACK" strokeType="INSIDE" width="155.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="450.0" layoutX="680.0" opacity="0.8" stroke="BLACK" strokeType="INSIDE" width="120.0">
+         <fill>
+            <LinearGradient endX="0.9088729016786571" endY="1.0" startX="0.24460431654676262" startY="1.0">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="#eb4d4d" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </fill></Rectangle>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" height="450.0" layoutX="2.0" opacity="0.8" stroke="BLACK" strokeType="INSIDE" width="155.0">
+         <fill>
+            <LinearGradient endX="0.031175059952038287" endY="0.7793764988009593" startX="0.7601918465227819" startY="0.7769784172661872">
+               <stops>
+                  <Stop color="BLACK" />
+                  <Stop color="#eb4d4d" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </fill></Rectangle>
       <Label layoutX="104.0" layoutY="88.0" textFill="#00adb5" />
-      <ListView fx:id="gameList" layoutX="158.0" layoutY="6.0" opacity="0.7" orientation="HORIZONTAL" prefHeight="57.0" prefWidth="519.0" style="-fx-background-color: #393e46;" />
-      <ListView fx:id="chatArea" layoutX="331.0" layoutY="69.0" opacity="0.7" prefHeight="200.0" prefWidth="348.0" style="-fx-background-color: #ffffff;" />
+      <ListView fx:id="gameList" id="gameListView" layoutX="158.0" layoutY="6.0" opacity="0.7" orientation="HORIZONTAL" prefHeight="57.0" prefWidth="519.0" style="-fx-background-color: #000000;" stylesheets="@listStyle.css" />
+      <ListView fx:id="chatArea" layoutX="331.0" layoutY="69.0" opacity="0.7" prefHeight="249.0" prefWidth="348.0" style="-fx-background-color: #000000;" stylesheets="@listStyle.css" />
 
-      <TextArea fx:id="inputArea" layoutX="331.0" layoutY="294.0" onKeyReleased="#sendByKeyboard" opacity="0.7" prefHeight="122.0" prefWidth="348.0" style="-fx-background-color: #393E46;" wrapText="true" />
-      <Button fx:id="startBtn" layoutX="418.0" layoutY="382.0" mnemonicParsing="false" onMouseClicked="#startNewGame" prefHeight="17.0" prefWidth="92.0" style="-fx-background-color: #00adb5;" text="Start game" textFill="#eeeeee" />
-      <Button fx:id="sendBtn" layoutX="546.0" layoutY="382.0" mnemonicParsing="false" onMouseClicked="#sendMessage" prefHeight="27.0" prefWidth="92.0" style="-fx-background-color: #00adb5;" text="Send message" textFill="#eeeeee" />
-      <Label fx:id="usernameLabel" layoutX="19.0" layoutY="114.0" prefHeight="29.0" prefWidth="119.0" text="Username" textFill="#f82929">
+      <TextArea fx:id="inputArea" layoutX="331.0" layoutY="321.0" onKeyReleased="#sendByKeyboard" opacity="0.7" prefHeight="122.0" prefWidth="348.0" style="-fx-background-color: #393E46;" wrapText="true" />
+      <Label fx:id="usernameLabel" layoutX="19.0" layoutY="125.0" prefHeight="29.0" prefWidth="119.0" text="Username" textFill="#ffc8c8">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <ListView fx:id="contactList" layoutX="158.0" layoutY="69.0" opacity="0.59" prefHeight="347.0" prefWidth="168.0" style="-fx-background-color: #ffffff;" />
+      <ListView fx:id="contactList" layoutX="158.0" layoutY="69.0" opacity="0.7" prefHeight="371.0" prefWidth="168.0" style="-fx-background-color: #000000;" stylesheets="@listStyle.css" />
       <ImageView fitHeight="88.0" fitWidth="109.0" layoutX="19.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="29.0" fitWidth="23.0" layoutX="775.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#quit">
+      <ImageView fitHeight="29.0" fitWidth="23.0" layoutX="775.0" layoutY="3.0" onMouseClicked="#quit" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@quitIcon.png" />
+            <Image url="@MenuIcon/backIcon.png" />
          </image>
       </ImageView>
-      <Line endX="109.0" layoutX="38.0" layoutY="169.0" opacity="0.95" startX="-26.0" stroke="#ff0d0d" strokeWidth="1.4" visible="false" />
-      <Line endX="109.0" layoutX="38.0" layoutY="212.0" startX="-26.0" stroke="#ff420f" strokeWidth="1.4" visible="false" />
+      <Line endX="109.0" layoutX="62.0" layoutY="267.0" opacity="0.95" startX="-26.0" stroke="#ff0d0d" strokeWidth="1.4" visible="false" />
       <Line endX="109.0" layoutX="37.0" layoutY="256.0" opacity="0.8" startX="-26.0" stroke="#fcdf03" strokeWidth="1.4" visible="false" />
+      <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="20.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@icon/icon1.jpg" />
+         </image>
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant color="#feffa8" />
+               </light>
+            </Lighting>
+         </effect>
+      </ImageView>
+      <Button alignment="CENTER_RIGHT" layoutY="229.0" mnemonicParsing="false" opacity="0.2" prefHeight="38.0" prefWidth="155.0" style="-fx-background-color: #000000;" textAlignment="RIGHT" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button alignment="CENTER_RIGHT" layoutY="275.0" mnemonicParsing="false" opacity="0.22" prefHeight="38.0" prefWidth="155.0" style="-fx-background-color: #000000;" text=" " textAlignment="RIGHT" textFill="#ff7700">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button alignment="CENTER_RIGHT" layoutY="323.0" mnemonicParsing="false" opacity="0.2" prefHeight="38.0" prefWidth="155.0" style="-fx-background-color: #000000;" textAlignment="RIGHT" textFill="#f86c6c">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Line endX="109.0" layoutX="38.0" layoutY="271.0" opacity="0.63" startX="-30.0" stroke="#ff420f" strokeWidth="1.4" visible="false" />
+      <Line endX="109.0" layoutX="38.0" layoutY="319.0" opacity="0.7" startX="-30.0" stroke="#ff420f" strokeWidth="1.4" visible="false" />
+      <Label disable="true" layoutX="63.0" layoutY="237.0" opacity="0.7" text="Profile" textFill="#fcdddd">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label disable="true" layoutX="68.0" layoutY="283.0" opacity="0.7" text="Shop" textFill="#ffd7d7">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label disable="true" layoutX="60.0" layoutY="331.0" opacity="0.7" text="Setting" textFill="#f8c1c9">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="57.0" fitWidth="31.0" layoutX="638.0" layoutY="409.0" onMouseClicked="#sendMessage" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@MenuIcon/sendMsg.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="29.0" fitWidth="31.0" layoutX="599.0" layoutY="410.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@MenuIcon/emoji.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="33.0" fitWidth="40.0" layoutX="550.0" layoutY="408.0" onMouseClicked="#startNewGame" pickOnBounds="true" preserveRatio="true" rotate="42.3">
+         <image>
+            <Image url="@MenuIcon/startGame.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="23.0" fitWidth="23.0" layoutX="24.0" layoutY="331.0" opacity="0.7" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@MenuIcon/setting.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="23.0" fitWidth="23.0" layoutX="24.0" layoutY="283.0" opacity="0.7" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@MenuIcon/ShopIcon.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="23.0" fitWidth="23.0" layoutX="24.0" layoutY="237.0" opacity="0.7" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@MenuIcon/profile.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>
