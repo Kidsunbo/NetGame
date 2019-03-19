@@ -38,6 +38,7 @@ public class GameServer {
                     id.setValue(id.getValue() - 1);
                 }
                 gameIDs.entrySet().removeIf(x -> x.getValue() <= 0);
+                games.entrySet().removeIf(x->!gameIDs.containsKey(x.getKey()));
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
