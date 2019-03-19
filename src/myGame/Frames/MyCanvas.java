@@ -295,10 +295,15 @@ public class MyCanvas extends Canvas {
 
 
 
-        snakeB.update();
-        snakeBodyB.update();
-        if (snakeB.isGetNode()) {node.update();}
-        if (snakeB.isReachBorder()){snakeB.rebirth(); snakeBodyB.initBody();} // 后期把两条蛇和食物的信息更新放在这
+//        snakeB.update();
+//        snakeBodyB.update();
+//        if (snakeB.isGetNode()) {node.update();}
+//        if (snakeB.isReachBorder()){snakeB.rebirth(); snakeBodyB.initBody();} // 后期把两条蛇和食物的信息更新放在这
+        
+//        snakeB.setX();
+//        snakeB.setY();
+//        snakeB.setDirection();
+//        snakeBodyB.setPointlist();
         root.getChildren().remove(label);
 
     }

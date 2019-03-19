@@ -247,10 +247,12 @@ public class ChatController {
                     }
                 }
                 if(gameExcute!=null){
-                    ProcessBuilder p = new ProcessBuilder("java","-jar",gameExcute.getAbsolutePath(),"'"+response.toString()+"'");
                     try {
-                        p.start();
-                    } catch (IOException e) {
+                        Process p =Runtime.getRuntime().exec(String.format("java -jar %s %s %s",gameExcute.getAbsolutePath(),response.getString("gameID"),username));
+                        p.waitFor();
+                        int score = p.exitValue();
+
+                    } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
                 }

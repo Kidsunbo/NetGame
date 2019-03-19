@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Calendar;
 
 /**
  * Created by sxy777 on 18/03/19.
@@ -58,7 +59,7 @@ public class Client {
             while(true){
                 String msg = receive();
                 JSONObject jsonObject = new JSONObject(msg);
-                long timeStamp = Long.valueOf(jsonObject.getString("time"));
+                long timeStamp = jsonObject.getLong("time");
                 newMessage.setNewMessage(timeStamp,msg);
             }
         });
@@ -82,6 +83,7 @@ public class Client {
         JSONObject jsonObject = new JSONObject(msg);
         jsonObject.put("gameID",gameID);
         jsonObject.put("username",username);
+        jsonObject.put("time", Calendar.getInstance().getTimeInMillis());
         String message = jsonObject.toString();
         Thread t = new Thread(() -> {
             DatagramPacket packet = new DatagramPacket(message.getBytes(),message.getBytes().length,serverIP, serverPort);

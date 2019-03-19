@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.effect.Light;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.json.JSONObject;
+
 import java.util.LinkedList;
 
 public class GameStage extends Application {
@@ -53,5 +55,13 @@ public class GameStage extends Application {
     }
 
 
-    public static void main(String[] args) { launch(args); }
+    public static void main(String[] args) {
+        myGame.Client.getClient().setGameID(args[0]);
+        myGame.Client.getClient().setUsername(args[1]);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type","register");
+        myGame.Client.getClient().sendMessage(jsonObject.toString());
+        launch(args);
+    }
 }
