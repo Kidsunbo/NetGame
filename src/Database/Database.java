@@ -115,10 +115,9 @@ public class Database {
             }
         }
         else{
-            System.out.println("NOOOOOOO");
+            System.out.println("Table doesn't exist.");
         }
     }
-
 
 
     /**

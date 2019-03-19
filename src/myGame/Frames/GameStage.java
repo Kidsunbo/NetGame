@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import org.json.JSONObject;
 
 import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameStage extends Application {
 //    private enum GameState{READY, PAUSE, RUN, TIMEOUT};
@@ -23,6 +24,9 @@ public class GameStage extends Application {
     public InfoPane gameInfo;
     Scene waitingScene, StartGameScene;
     public static boolean isMaster;
+
+    public static Thread t;
+    public static AtomicBoolean isReady = new AtomicBoolean(false);
 
     @Override
     public void start(Stage primaryStage)  {
@@ -48,6 +52,21 @@ public class GameStage extends Application {
         gameInfo.initialize();
         waitingScene = new Scene(gameInfo.gameInfo);
         primaryStage.setScene(waitingScene);
+
+        t = new Thread(()->{
+            while(true){
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("isReady",isReady.get());
+                myGame.Client.getClient().sendMessage(jsonObject.toString());
+                try {
+                    Thread.sleep(80);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.setDaemon(true);
+        t.start();
         primaryStage.show();
     }
 
@@ -55,6 +74,7 @@ public class GameStage extends Application {
         myGame.Client.getClient().setGameID(args[0]);
         myGame.Client.getClient().setUsername(args[1]);    // 1 is username; 2 is mastername
         isMaster = args[1].equals(args[2]);
+
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type","register");
         myGame.Client.getClient().sendMessage(jsonObject.toString());

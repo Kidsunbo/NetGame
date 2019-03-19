@@ -1,5 +1,6 @@
 package myGame.Frames;
 
+import Server.GameServer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
@@ -97,6 +98,7 @@ public class InfoPane {
                 stage.setScene(scene);
                 myCanvas.start();
             }
+            GameStage.isReady.set(true);
         });
 
         user2Button.setOnAction(e -> {
