@@ -52,16 +52,37 @@ public class ChatController {
         @Override
         public void updateItem(String item, boolean empty) {
             super.updateItem(item, empty);
+            HBox hBox;
             if (item != null) {
                 if(item.charAt(0)=='0') {
+                    Label label = new Label(item.substring(1));
+                    label.setMinWidth(chatArea.getWidth()/10);
+                    label.setPrefWidth(chatArea.getWidth()/2);
+                    label.setWrapText(true);
                     this.setStyle("-fx-background-color: yellow");
-                    this.setAlignment(Pos.CENTER_LEFT);
+                    label.setStyle("-fx-background-color: yellow");
+                    label.setAlignment(Pos.CENTER_LEFT);
+                    label.setWrapText(true);
+                    label.setMaxWidth(chatArea.getPrefWidth()/2);
+                    hBox = new HBox(10);
+                    hBox.setAlignment(Pos.CENTER_LEFT);
+                    hBox.getChildren().addAll(label);
                 }
                 else {
-                    this.setStyle("-fx-background-color: pink");
-                    this.setAlignment(Pos.CENTER_RIGHT);
+                    Label label = new Label(item.substring(1));
+                    label.setMinWidth(chatArea.getWidth()/10);
+                    label.setPrefWidth(chatArea.getWidth()/2);
+                    label.setWrapText(true);
+                    this.setStyle("-fx-background-color: yellow");
+                    label.setStyle("-fx-background-color: yellow");
+                    label.setAlignment(Pos.CENTER_RIGHT);
+                    label.setWrapText(true);
+                    label.setMaxWidth(chatArea.getPrefWidth()/2);
+                    hBox = new HBox(10);
+                    hBox.setAlignment(Pos.CENTER_RIGHT);
+                    hBox.getChildren().addAll(label);
                 }
-                setText(item.substring(1));
+                setGraphic(hBox);
             } else {
                 setGraphic(null);
             }
@@ -236,19 +257,19 @@ public class ChatController {
 
     private void processStartGameAnswer(JSONObject response) {
         if(response.getString("reply").equals("yes")){
-            File gamesFile = new File("./games/");
+            File gamesFile = new File("./games/"+response.getString("game")+"/");
             File gameExcute = null;
             File[] games = gamesFile.listFiles();
             if(games!=null) {
                 for (File file : games) {
-                    if(file.getAbsolutePath().endsWith("jar")){
+                    if(file.getAbsolutePath().endsWith("jar")||file.canExecute()){
                         gameExcute = file;
                         break;
                     }
                 }
                 if(gameExcute!=null){
                     try {
-                        Process p =Runtime.getRuntime().exec(String.format("java -jar %s %s %s",gameExcute.getAbsolutePath(),response.getString("gameID"),username));
+                        Process p =Runtime.getRuntime().exec(String.format("java -jar %s %s %s %s",gameExcute.getAbsolutePath(),response.getString("gameID"),username, response.getString("master")));
                         p.waitFor();
                         int score = p.exitValue();
 
