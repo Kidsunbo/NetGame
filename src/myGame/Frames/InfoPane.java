@@ -108,12 +108,11 @@ public class InfoPane {
             user1Button.setStyle("-fx-background-color: Green; -fx-font-weight: Bold; -fx-font-size: 28; ");
             user1Button.setDisable(true);
             user1Button.setText("Waiting");
-
-
-            if (user1isReady.get() && user2isReady.get()) {
-                stage.setScene(scene);
-                myCanvas.start();
-            }
+//            if (user1isReady.get() && user2isReady.get()) {
+//
+//                stage.setScene(scene);
+//                myCanvas.start();
+//            }
         });
 
         Thread t = new Thread(() -> {
@@ -122,7 +121,6 @@ public class InfoPane {
                 jsonObject.put("isReady", user1isReady.get());
                 myGame.Client.getClient().sendMessage(jsonObject.toString());
                 JSONObject message = myGame.Client.getClient().getNewMessage().getMessageAsJson();
-                System.out.println(message);
                 if(message.has("time")&& Calendar.getInstance().getTimeInMillis()-message.getLong("time")>5000){
                     System.exit(0);
                 }

@@ -16,6 +16,7 @@ public class Client {
         private String message = "{}";
 
         public synchronized void setNewMessage(long time,String message){
+            System.out.println(">>>>>>>"+message);
             if(time>this.time){
                 this.time = time;
                 this.message = message;
@@ -80,6 +81,7 @@ public class Client {
     }
 
     public void sendMessage(String msg){
+        System.out.println("<<<<<<<"+msg);
         JSONObject jsonObject = new JSONObject(msg);
         jsonObject.put("gameID",gameID);
         jsonObject.put("username",username);

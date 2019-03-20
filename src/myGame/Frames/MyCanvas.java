@@ -150,6 +150,10 @@ public class MyCanvas extends Canvas {
                 drawGridding(gc);
 
                 JSONObject jsonObject = myGame.Client.getClient().getNewMessage().getMessageAsJson();
+//                draw(gc);
+//                update();
+                JSONObject jsonObject1 = snakeToJSON(snakeA);
+                myGame.Client.getClient().sendMessage(jsonObject1.toString());
                 if(jsonObject.has("time") && Calendar.getInstance().getTimeInMillis()-jsonObject.getLong("time")>5000) {
                     drawTimeout(gc);
                 }
@@ -290,7 +294,7 @@ public class MyCanvas extends Canvas {
   /*update all the objects information
   * */
     public  void  update(){
-
+        System.out.println("I am here!");
         if(isMaster){
              if (timeCounter.getTime()<=0) {this.setGameState(Constants.GameState.TIMEOUT);  }
             snakeA.update();
@@ -327,6 +331,7 @@ public class MyCanvas extends Canvas {
             snakeBodyB.setPointlist(getSnakeBody(snakeBJson));
             snakeB.setScore(getScore(snakeBJson));
             snakeB.setUserName(getUsername(snakeBJson));
+            snakeB.setLength(snakeBodyB.getLength());
             timeCounter.setTime(getTimeCounter(snakeBJson));
             node.setX(getNodeX(snakeBJson));
             node.setY(getNodeY(snakeBJson));
@@ -361,6 +366,7 @@ public class MyCanvas extends Canvas {
         jsonObject.put("nodeX",node.getX());
         jsonObject.put("nodeY",node.getY());
         jsonObject.put("timeCounter",timeCounter.getTime());
+        jsonObject.put("length",snake.getLength());
         return jsonObject;
     }
 
@@ -380,7 +386,7 @@ public class MyCanvas extends Canvas {
     int getNodeY(JSONObject jsonObject){ return  jsonObject.getInt("nodeY");}
     int getTimeCounter(JSONObject jsonObject){return jsonObject.getInt("timeCounter");}
     String getUsername(JSONObject jsonObject){return jsonObject.getString("username");}
-
+    int getLength(JSONObject jsonObject){return jsonObject.getInt("length");}
 
     public LinkedList<Light.Point> getSnakeBody(JSONObject jsonObject){
         List<Object> sb = jsonObject.getJSONArray("snake_body").toList();
