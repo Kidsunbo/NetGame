@@ -113,6 +113,7 @@ public class InfoPane {
                 jsonObject.put("isReady", user1isReady.get());
                 myGame.Client.getClient().sendMessage(jsonObject.toString());
                 JSONObject message = myGame.Client.getClient().getNewMessage().getMessageAsJson();
+
                 if(message.has("time")&& Calendar.getInstance().getTimeInMillis()-message.getLong("time")>5000){
                     System.exit(0);
                 }

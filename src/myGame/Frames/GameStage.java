@@ -48,8 +48,8 @@ public class GameStage extends Application {
 
         // Waiting Screen Setup
         gameInfo = new InfoPane(stage,StartGameScene,gameCanvas);
-        gameInfo.setUser1Info("Greg","10", "5");
-        gameInfo.setUser2Info("ShengDong","10","5");
+        gameInfo.setUser1Info("","0", "0");
+        gameInfo.setUser2Info("","0","0");
         gameInfo.initialize();
         waitingScene = new Scene(gameInfo.gameInfo);
         primaryStage.setScene(waitingScene);

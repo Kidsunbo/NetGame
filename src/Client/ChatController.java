@@ -278,18 +278,16 @@ public class ChatController {
             File[] games = gamesFile.listFiles();
             if(games!=null) {
                 for (File file : games) {
-                    if(file.getAbsolutePath().endsWith("jar") && file.getName().split("\\.")[0].equals(response.getString("game"))){
+                    if(file.getName().endsWith(".sh")){
                         gameExcute = file;
                         break;
                     }
                 }
                 if(gameExcute!=null){
                     try {
-                        Process p =Runtime.getRuntime().exec(String.format("java -jar %s %s %s %s",gameExcute.getAbsolutePath(),response.getString("gameID"),username, response.getString("master")));
-                        p.waitFor();
-                        int score = p.exitValue();
-
-                    } catch (IOException | InterruptedException e) {
+//                        Process p =Runtime.getRuntime().exec(String.format("java -jar %s %s %s %s",gameExcute.getAbsolutePath(),response.getString("gameID"),username, response.getString("master")));
+                        Runtime.getRuntime().exec(String.format("bash %s %s %s %s",gameExcute.getAbsolutePath(),response.getString("gameID"),username, response.getString("master")));
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
