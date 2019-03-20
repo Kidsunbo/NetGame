@@ -294,14 +294,29 @@ public class MyCanvas extends Canvas {
   /*update all the objects information
   * */
     public  void  update(){
-        System.out.println("I am here!");
+
+
+
         if(isMaster){
-             if (timeCounter.getTime()<=0) {this.setGameState(Constants.GameState.TIMEOUT);  }
+
+            JSONObject snakeBJson = myGame.Client.getClient().getNewMessage().getMessageAsJson();
+            snakeB.setX(getX(snakeBJson));
+            snakeB.setY(getY(snakeBJson));
+            snakeB.setDirection(getDirection(snakeBJson));
+            snakeBodyB.setPointlist(getSnakeBody(snakeBJson));
+            snakeB.setScore(getScore(snakeBJson));
+            snakeB.setUserName(getUsername(snakeBJson));
+            if(node.getX()!= getNodeX(snakeBJson))
+                node.setX(getNodeX(snakeBJson));
+            if(node.getY()!=getNodeY(snakeBJson))
+                node.setY(getNodeY(snakeBJson));
+
+
+            if (timeCounter.getTime()<=0) {this.setGameState(Constants.GameState.TIMEOUT);  }
             if (snakeA.isGetNode()) {
                  node.update();
-                node.update();
-                snakeA.setLength(snakeA.getLength()+1);
-                snakeA.setScore(snakeA.getScore()+1);
+                 snakeA.setLength(snakeA.getLength()+1);
+                 snakeA.setScore(snakeA.getScore()+1);
                 snakeBodyA.update();  }
             if (snakeA.isReachBorder()){snakeA.rebirth(); snakeBodyA.initBody();}
             snakeA.update();
@@ -309,35 +324,14 @@ public class MyCanvas extends Canvas {
             JSONObject jsonObject = snakeToJSON(snakeA,snakeB);
             myGame.Client.getClient().sendMessage(jsonObject.toString());
 
-
-            JSONObject snakeBJson = myGame.Client.getClient().getNewMessage().getMessageAsJson();
-            snakeB.setX(getX(snakeBJson));
-            snakeB.setY(getY(snakeBJson));
-            snakeB.setDirection(getDirection(snakeBJson));
-            snakeBodyB.setPointlist(getSnakeBody(snakeBJson));
-            snakeB.setScore(getScore(snakeBJson));
-            snakeB.setUserName(getUsername(snakeBJson));
-            if(snakeB.isGetNode()){
-                node.update();
-                snakeB.setLength(snakeB.getLength()+1);
-                snakeB.setScore(snakeB.getScore()+1);
-                snakeBodyB.update();
-            }
             if(snakeA.isCollisionWithSnake(snakeB)){snakeA.rebirth();snakeBodyA.initBody();}
-            if(snakeB.isCollisionWithSnake(snakeA)){snakeB.rebirth();snakeBodyB.initBody();}
             root.getChildren().remove(label);
+
         }
         else{
+
+
             JSONObject snakeBJson = myGame.Client.getClient().getNewMessage().getMessageAsJson();
-            snakeA.update();
-            snakeBodyA.update();
-            snakeA.setLength(getLength(snakeBJson));
-//            if (snakeA.isGetNode()) {node.update();}
-//            if (snakeA.isReachBorder()){snakeA.rebirth(); snakeBodyA.initBody();}
-            JSONObject jsonObject = snakeToJSON(snakeA,snakeB);
-            myGame.Client.getClient().sendMessage(jsonObject.toString());
-
-
             snakeB.setX(getX(snakeBJson));
             snakeB.setY(getY(snakeBJson));
             snakeB.setDirection(getDirection(snakeBJson));
@@ -345,8 +339,27 @@ public class MyCanvas extends Canvas {
             snakeB.setScore(getScore(snakeBJson));
             snakeB.setUserName(getUsername(snakeBJson));
             timeCounter.setTime(getTimeCounter(snakeBJson));
+
             node.setX(getNodeX(snakeBJson));
             node.setY(getNodeY(snakeBJson));
+
+
+
+
+             if(snakeA.isCollisionWithSnake(snakeB)){snakeA.rebirth();snakeBodyA.initBody();}
+            if (snakeA.isGetNode()) {
+                node.update();
+                snakeA.setLength(snakeA.getLength()+1);
+                snakeA.setScore(snakeA.getScore()+1);
+                snakeBodyA.update();  }
+            if (snakeA.isReachBorder()){snakeA.rebirth(); snakeBodyA.initBody();}
+                 snakeA.update();
+                 snakeBodyA.update();
+
+
+            JSONObject jsonObject = snakeToJSON(snakeA,snakeB);           //  doufa danshi xvyao shenmo qv shenmo++++++++++++
+            myGame.Client.getClient().sendMessage(jsonObject.toString());
+
 
             root.getChildren().remove(label);
 

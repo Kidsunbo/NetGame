@@ -42,7 +42,7 @@ public class Client {
 
     public static Client getClient(){
         if(client==null){
-            client = new Client("localhost",4399);
+            client = new Client("147.188.195.222",4399);
         }
         return client;
     }
