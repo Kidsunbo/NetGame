@@ -179,7 +179,7 @@ public class MyCanvas extends Canvas {
      * start the update timeline
      */
     public void start() {
-        InfoPane.t.interrupt();
+        InfoPane.stopThread.set(true);
         timeline.play();
         if(isMaster){
         timeCounter.start();}

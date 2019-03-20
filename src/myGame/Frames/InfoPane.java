@@ -40,7 +40,7 @@ public class InfoPane {
     private String username1, totalGames1, gamesWon1;
     private String username2, totalGames2, gamesWon2;
     private MyCanvas myCanvas;
-
+    public static AtomicBoolean stopThread = new AtomicBoolean(false);
     // reference to games stage and scene
     private Stage stage;
     private Scene scene;
@@ -51,8 +51,6 @@ public class InfoPane {
     private int buttonHeight = 50;
     private Font font = new Font("Impact", 30);
 
-
-    public static Thread t;
     public AtomicBoolean user1isReady = new AtomicBoolean(false);
     public AtomicBoolean user2isReady = new AtomicBoolean(false);
 
@@ -118,7 +116,7 @@ public class InfoPane {
             }
         });
 
-        t = new Thread(() -> {
+        Thread t = new Thread(() -> {
             while (true) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("isReady", user1isReady.get());
@@ -132,8 +130,10 @@ public class InfoPane {
                 if (message.has("isReady") && message.getBoolean("isReady")) {
                     user2isReady.set(true);
                     user2Button.setStyle("-fx-background-color: Green; -fx-font-weight: Bold; -fx-font-size: 28; ");
-                    user2Button.setDisable(true);
-                    user2Button.setText("Waiting");
+                    Platform.runLater(()->{
+                        user2Button.setDisable(true);
+                        user2Button.setText("Waiting");
+                    });
                     if (user1isReady.get() && user2isReady.get()) {
                         Platform.runLater(() -> {
                             stage.setScene(scene);
@@ -145,6 +145,9 @@ public class InfoPane {
                     Thread.sleep(80);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }
+                if(stopThread.get()){
+                    break;
                 }
             }
         });
