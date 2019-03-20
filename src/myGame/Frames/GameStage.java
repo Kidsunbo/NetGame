@@ -24,6 +24,7 @@ public class GameStage extends Application {
     public InfoPane gameInfo;
     Scene waitingScene, StartGameScene;
     public static boolean isMaster;
+    private static String username;
 
 
     @Override
@@ -37,6 +38,8 @@ public class GameStage extends Application {
 
         // Game Setup
         gameCanvas = new MyCanvas(root);
+        gameCanvas.setMaster(isMaster);
+        gameCanvas.setUsername(username);
         root.getChildren().add(gameCanvas);
         StartGameScene = new Scene(root);
         StartGameScene.setFill(Color.rgb(60,60,60));
@@ -54,15 +57,16 @@ public class GameStage extends Application {
     }
 
     public static void main(String[] args) {
-//        myGame.Client.getClient().setGameID(args[0]);
-//        myGame.Client.getClient().setUsername(args[1]);    // 1 is username; 2 is mastername
-//        isMaster = args[1].equals(args[2]);
+        System.out.println(args.length);
+        myGame.Client.getClient().setGameID(args[0]);
+        myGame.Client.getClient().setUsername(args[1]);    // 1 is username; 2 is mastername
+        isMaster = args[1].equals(args[2]);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type","register");
         myGame.Client.getClient().sendMessage(jsonObject.toString());
-//        gameCanvas.setMaster(isMaster);
-//        gameCanvas.setUsername(args[1]);
+        username = args[1];
+
         launch(args);
     }
 }

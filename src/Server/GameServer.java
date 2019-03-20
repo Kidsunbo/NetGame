@@ -64,7 +64,8 @@ public class GameServer {
                 e.printStackTrace();
             }
         });
-        t.setDaemon(true);
+//        t.setDaemon(true);
+        t.setDaemon(false);
         t.start();
     }
 
@@ -103,6 +104,10 @@ public class GameServer {
         games.put(String.valueOf(i),new Hashtable<>());
         gameIDs.put(String.valueOf(i),3600);
         return ""+i;
+    }
+
+    public static void main(String[] args){
+        System.out.println(GameServer.getGameServer().createGameID());
     }
 
 }

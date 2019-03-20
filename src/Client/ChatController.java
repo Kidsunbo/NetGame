@@ -278,7 +278,7 @@ public class ChatController {
             File[] games = gamesFile.listFiles();
             if(games!=null) {
                 for (File file : games) {
-                    if(file.getAbsolutePath().endsWith("jar") && file.getName().equals(response.getString("game"))){
+                    if(file.getAbsolutePath().endsWith("jar") && file.getName().split("\\.")[0].equals(response.getString("game"))){
                         gameExcute = file;
                         break;
                     }

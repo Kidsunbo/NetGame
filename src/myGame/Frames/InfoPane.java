@@ -67,12 +67,22 @@ public class InfoPane {
     }
 
     public void initialize() {
-        double user1X = gameInfo.getMinWidth() / 2 - 350;
-        double user1Y = gameInfo.getMinHeight() / 2;
-
-        double user2X = gameInfo.getMinWidth() / 2 + 150;
-        double user2Y = gameInfo.getMinHeight() / 2;
-
+        double user1X;
+        double user1Y;
+        double user2X;
+        double user2Y;
+        if(!GameStage.isMaster) {
+            user1X = gameInfo.getMinWidth() / 2 - 350;
+            user1Y = gameInfo.getMinHeight() / 2;
+            user2X = gameInfo.getMinWidth() / 2 + 150;
+            user2Y = gameInfo.getMinHeight() / 2;
+        }
+        else{
+            user2X = gameInfo.getMinWidth() / 2 - 350;
+            user2Y = gameInfo.getMinHeight() / 2;
+            user1X = gameInfo.getMinWidth() / 2 + 150;
+            user1Y = gameInfo.getMinHeight() / 2;
+        }
 
         // Create Buttons to let the game know each player is ready
         user1Button = new Button();
@@ -113,11 +123,12 @@ public class InfoPane {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("isReady", user1isReady.get());
                 myGame.Client.getClient().sendMessage(jsonObject.toString());
-                JSONObject message = new JSONObject(myGame.Client.getClient().getNewMessage().getMessageAsJson());
-                if(message.has("time")&& Calendar.getInstance().getTimeInMillis()-jsonObject.getLong("time")>5000){
+                JSONObject message = myGame.Client.getClient().getNewMessage().getMessageAsJson();
+                System.out.println(message);
+                if(message.has("time")&& Calendar.getInstance().getTimeInMillis()-message.getLong("time")>5000){
                     System.exit(0);
                 }
-                snakeB.setUserName(message.has("username")?message.getString("username"):"no name");
+//                snakeB.setUserName(message.has("username")?message.getString("username"):"no name");
                 if (message.has("isReady") && message.getBoolean("isReady")) {
                     user2isReady.set(true);
                     user2Button.setStyle("-fx-background-color: Green; -fx-font-weight: Bold; -fx-font-size: 28; ");
