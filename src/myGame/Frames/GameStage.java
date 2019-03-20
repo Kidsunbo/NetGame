@@ -24,7 +24,7 @@ public class GameStage extends Application {
     public InfoPane gameInfo;
     Scene waitingScene, StartGameScene;
     public static boolean isMaster;
-    private static String username;
+    public static String username;
 
 
     @Override
@@ -45,11 +45,13 @@ public class GameStage extends Application {
         StartGameScene.setFill(Color.rgb(60,60,60));
         StartGameScene.setOnKeyPressed(event -> gameCanvas.onKeyPressed(event));
         gameCanvas.initial();
-
         // Waiting Screen Setup
         gameInfo = new InfoPane(stage,StartGameScene,gameCanvas);
         gameInfo.setUser1Info("","0", "0");
         gameInfo.setUser2Info("","0","0");
+      //  gameInfo.setUser1Info("Greg","0", "0");
+      //  gameInfo.setUser2Info("ShengDon","0","0");
+        gameInfo.setMaster(isMaster);
         gameInfo.initialize();
         waitingScene = new Scene(gameInfo.gameInfo);
         primaryStage.setScene(waitingScene);
