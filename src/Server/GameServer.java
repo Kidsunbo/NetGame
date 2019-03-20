@@ -1,15 +1,12 @@
 package Server;
 
-import javafx.collections.FXCollections;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.MulticastSocket;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by bxs863 on 16/03/19.
@@ -106,6 +103,8 @@ public class GameServer {
         return ""+i;
     }
 
+
+    // This is just for debugging
     public static void main(String[] args){
         System.out.println(GameServer.getGameServer().createGameID());
     }
