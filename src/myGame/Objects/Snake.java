@@ -239,8 +239,7 @@ public class Snake {
     public boolean isGetNode(){
         if (getX() + getWidth() > node.getX() && getX() < node.getX() + node.getWidth()
                 && getY() + getHeight()  > node.getY() && getY() < node.getY() + node.getHeight()){
-            this.setLength(getLength()+1);
-            this.setScore(getScore()+1);
+
             return true;
         }
         return false;

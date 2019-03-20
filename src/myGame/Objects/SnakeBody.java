@@ -47,11 +47,24 @@ public class SnakeBody {
   * and the Last Point in the list will be removed
  * */
     public void draw(GraphicsContext gc) {
+        gc.setFill(snake.getColor());
+        for (Light.Point point : pointlist) {
+            gc.fillOval(point.getX(), point.getY(), getWidth(), getHeight());
+        }
+    }
+
+    public void update() {
+
+        if (!isVisible()) {
+            initBody();
+            setVisible(true);
+            return;
+        }
 
         Light.Point firstPoi = pointlist.getFirst();
         // 位移已经达到一个身位再进行处理
-        if (firstPoi.getX() + Constants.DISTANCE <= getX() || firstPoi.getX() - Constants.DISTANCE >= getX()
-                || firstPoi.getY() + Constants.DISTANCE <= getY() || firstPoi.getY() - Constants.DISTANCE >= getY()) {
+        if (firstPoi.getX() + Constants.DISTANCE <= snake.getX() || firstPoi.getX() - Constants.DISTANCE >= snake.getX()
+                || firstPoi.getY() + Constants.DISTANCE <= snake.getY() || firstPoi.getY() - Constants.DISTANCE >= snake.getY()) {
             Light.Point poi = new Light.Point();
             poi.setX(getX());
             poi.setY(getY());
@@ -66,19 +79,6 @@ public class SnakeBody {
             }
         }
 
-        gc.setFill(snake.getColor());
-        for (Light.Point point : pointlist) {
-            gc.fillOval(point.getX(), point.getY(), getWidth(), getHeight());
-        }
-    }
-
-    public void update() {
-
-        if (!isVisible()) {
-            initBody();
-            setVisible(true);
-            return;
-        }
     }
 
     public int getLength() {

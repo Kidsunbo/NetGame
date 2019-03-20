@@ -285,7 +285,7 @@ public class MyCanvas extends Canvas {
         snakeB.drawSnake(gc);
         node.draw(gc);
         timeCounter.draw(gc);
-        if(snakeA.isCollisionWithSnake(snakeB)){snakeA.rebirth();snakeBodyA.initBody();}
+
         //if(snakeB.isCollisionWithSnake(snakeA)){snakeB.rebirth();snakeBodyB.initBody();}
 
         drawScoreBoard();
@@ -297,12 +297,18 @@ public class MyCanvas extends Canvas {
         System.out.println("I am here!");
         if(isMaster){
              if (timeCounter.getTime()<=0) {this.setGameState(Constants.GameState.TIMEOUT);  }
+            if (snakeA.isGetNode()) {
+                 node.update();
+                node.update();
+                snakeA.setLength(snakeA.getLength()+1);
+                snakeA.setScore(snakeA.getScore()+1);
+                snakeBodyA.update();  }
+            if (snakeA.isReachBorder()){snakeA.rebirth(); snakeBodyA.initBody();}
             snakeA.update();
             snakeBodyA.update();
-            if (snakeA.isGetNode()) {node.update();}
-            if (snakeA.isReachBorder()){snakeA.rebirth(); snakeBodyA.initBody();}
             JSONObject jsonObject = snakeToJSON(snakeA,snakeB);
             myGame.Client.getClient().sendMessage(jsonObject.toString());
+
 
             JSONObject snakeBJson = myGame.Client.getClient().getNewMessage().getMessageAsJson();
             snakeB.setX(getX(snakeBJson));
@@ -311,7 +317,14 @@ public class MyCanvas extends Canvas {
             snakeBodyB.setPointlist(getSnakeBody(snakeBJson));
             snakeB.setScore(getScore(snakeBJson));
             snakeB.setUserName(getUsername(snakeBJson));
-            if(snakeB.isGetNode()){node.update();}
+            if(snakeB.isGetNode()){
+                node.update();
+                snakeB.setLength(snakeB.getLength()+1);
+                snakeB.setScore(snakeB.getScore()+1);
+                snakeBodyB.update();
+            }
+            if(snakeA.isCollisionWithSnake(snakeB)){snakeA.rebirth();snakeBodyA.initBody();}
+            if(snakeB.isCollisionWithSnake(snakeA)){snakeB.rebirth();snakeBodyB.initBody();}
             root.getChildren().remove(label);
         }
         else{
@@ -320,7 +333,7 @@ public class MyCanvas extends Canvas {
             snakeBodyA.update();
             snakeA.setLength(getLength(snakeBJson));
 //            if (snakeA.isGetNode()) {node.update();}
-            if (snakeA.isReachBorder()){snakeA.rebirth(); snakeBodyA.initBody();}
+//            if (snakeA.isReachBorder()){snakeA.rebirth(); snakeBodyA.initBody();}
             JSONObject jsonObject = snakeToJSON(snakeA,snakeB);
             myGame.Client.getClient().sendMessage(jsonObject.toString());
 
@@ -334,7 +347,6 @@ public class MyCanvas extends Canvas {
             timeCounter.setTime(getTimeCounter(snakeBJson));
             node.setX(getNodeX(snakeBJson));
             node.setY(getNodeY(snakeBJson));
-
 
             root.getChildren().remove(label);
 
