@@ -81,7 +81,7 @@ public class MyCanvas extends Canvas {
             snakeB = new Snake(Constants.userBX,Constants.userBY,node);
             snakeBodyB = new SnakeBody(snakeB);
             snakeB.setColor(Color.YELLOW);
-            snakeB.setUserName("SunBoSnake");  // Update the userName here  +++++++++++++++
+            snakeB.setUserName("");  // Update the userName here  +++++++++++++++
             snakeBodyB.initBody();
             snakeB.setSnakeBody(snakeBodyB);
 
@@ -90,7 +90,7 @@ public class MyCanvas extends Canvas {
             snakeA = new Snake(Constants.userBX,Constants.userBY,node);
             snakeBodyA = new SnakeBody(snakeA);
             snakeA.setColor(Color.YELLOW);
-            snakeA.setUserName("SunBoSnake");  // Update the userName here  +++++++++++++++
+            snakeA.setUserName("");  // Update the userName here  +++++++++++++++
             snakeBodyA.initBody();
             snakeA.setSnakeBody(snakeBodyA);
 
@@ -171,6 +171,7 @@ public class MyCanvas extends Canvas {
                     } else if (jsonObject.has("gameState") && Constants.GameState.valueOf(jsonObject.getString("gameState")) == Constants.GameState.PAUSE) {
                         drawPause(gc);
                     } else if (jsonObject.has("gameState") && Constants.GameState.valueOf(jsonObject.getString("gameState")) == Constants.GameState.TIMEOUT) {
+                         this.stop();
                         drawTimeout(gc);
                     }
                 }
@@ -201,6 +202,7 @@ public class MyCanvas extends Canvas {
      */
     public void stop() {
         timeline.stop();
+
     }
 
 
@@ -219,39 +221,39 @@ public class MyCanvas extends Canvas {
     }
 
 
-    public void drawScoreBoard(){
-        String InfoA = String.format("%-14s", snakeA.getUserName())+": "+ snakeA.getScore();
-        String InfoB = String.format("%-14s", snakeB.getUserName())+": "+ snakeB.getScore();
+    public void drawScoreBoard(String usernameA, String usernameB){
+        String InfoA = String.format("%-14s", usernameA)+": "+ snakeA.getScore();
+        String InfoB = String.format("%-14s", usernameB)+": "+ snakeB.getScore();
         // Username 从网络得到，顺便加成固定长度(空格大小和字体大小不一样，所以显示的长度还是不一样)
 
         label = new Label(InfoA+"\n"+ InfoB);
         label.setLayoutX(Constants.WIDTH - 300);
         label.setLayoutY(Constants.HEIGHT - 800);
-        label.setStyle("-fx-font: 30 arial; -fx-font-weight: bold; -fx-text-fill: Gray;  ");
+        label.setStyle("-fx-font: 25 arial; -fx-font-weight: bold; -fx-text-fill: Gray;  ");
         root.getChildren().add(label);
     }
 
     public void drawPause(GraphicsContext gc){
-        gc.setFont(Font.font("Impact", FontWeight.BOLD, 120));
+        gc.setFont(Font.font("Impact", FontWeight.BOLD, 80));
         gc.setFill(Color.YELLOW);
         gc.fillText("Game Paused", Constants.WIDTH/2 - 320, Constants.HEIGHT/2 -100);
-        gc.setFont(Font.font("Impact", FontWeight.BOLD, 60));
+        gc.setFont(Font.font("Impact", FontWeight.BOLD, 40));
         gc.setFill(Color.GREEN);
         gc.fillText("Press Space again to back", Constants.WIDTH / 2 - 300, Constants.HEIGHT / 2 + 20);
-        gc.setFont(Font.font("Impact", FontWeight.BOLD, 60));
+        gc.setFont(Font.font("Impact", FontWeight.BOLD, 40));
         gc.setFill(Color.RED);
         gc.fillText("Press Esc to Give up", Constants.WIDTH/2 - 220, Constants.HEIGHT/2 + 120);
 
     }
 
     public  void drawTimeout(GraphicsContext gc){
-        String winningMessage = "End of Game";
+        String winningMessage = "Game Over";
         if (snakeA.getScore() > snakeB.getScore()){
-            winningMessage += "\n" + snakeA.getUserName() + " is Winner";
-            winningMessage += "\n Score       " + snakeA.getScore();
+            winningMessage += "\n " + snakeA.getUserName() + "you are Winner!";
+            winningMessage += "\n Score:       " + snakeA.getScore();
         } else {
-            winningMessage +="\n"+ snakeB.getUserName() + " is Winner";
-            winningMessage += "\n Score       " + snakeB.getScore();
+            winningMessage +="\n "+ snakeA.getUserName() + " you are loser";
+            winningMessage += "\n Score:       " + snakeA.getScore();
         }
 
         gc.setFont(Font.font("Times", FontWeight.BOLD, 40));
@@ -271,6 +273,7 @@ public class MyCanvas extends Canvas {
             System.exit(snakeA.getScore()>snakeB.getScore()?1:0);
         });
 
+          this.stop();
     }
 
 
@@ -278,6 +281,7 @@ public class MyCanvas extends Canvas {
     * draw everything into the canvas
     * */
     public void draw(GraphicsContext gc){
+        root.getChildren().remove(label);
         snakeBodyA.draw(gc);
         snakeA.drawSnake(gc);
 
@@ -288,14 +292,12 @@ public class MyCanvas extends Canvas {
 
         //if(snakeB.isCollisionWithSnake(snakeA)){snakeB.rebirth();snakeBodyB.initBody();}
 
-        drawScoreBoard();
+
     }
 
   /*update all the objects information
   * */
     public  void  update(){
-
-
 
         if(isMaster){
 
@@ -320,14 +322,14 @@ public class MyCanvas extends Canvas {
                  snakeA.setScore(snakeA.getScore()+1);
                 snakeBodyA.update();  }
             if (snakeA.isReachBorder()){snakeA.rebirth(); snakeBodyA.initBody();}
+            snakeA.setUserName(username);
             snakeA.update();
             snakeBodyA.update();
             JSONObject jsonObject = snakeToJSON(snakeA,snakeB);
             myGame.Client.getClient().sendMessage(jsonObject.toString());
 
             if(snakeA.isCollisionWithSnake(snakeB)){snakeA.rebirth();snakeBodyA.initBody();}
-            root.getChildren().remove(label);
-
+            drawScoreBoard(getUsername(snakeBJson),snakeA.getUserName());
         }
         else{
 
@@ -344,9 +346,6 @@ public class MyCanvas extends Canvas {
             node.setX(getNodeX(snakeBJson));
             node.setY(getNodeY(snakeBJson));
 
-
-
-
              if(snakeA.isCollisionWithSnake(snakeB)){snakeA.rebirth();snakeBodyA.initBody();}
              if (snakeA.isGetNode()) {
                 node.update();
@@ -360,9 +359,7 @@ public class MyCanvas extends Canvas {
 
             JSONObject jsonObject = snakeToJSON(snakeA,snakeB);           //  doufa danshi xvyao shenmo qv shenmo++++++++++++
             myGame.Client.getClient().sendMessage(jsonObject.toString());
-
-
-            root.getChildren().remove(label);
+            drawScoreBoard(this.username,getUsername(snakeBJson));
 
         }
 

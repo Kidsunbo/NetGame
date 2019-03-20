@@ -44,6 +44,7 @@ public class InfoPane {
     // reference to games stage and scene
     private Stage stage;
     private Scene scene;
+    private boolean master;
 
     Pane gameInfo;
 
@@ -85,7 +86,7 @@ public class InfoPane {
         // Create Buttons to let the game know each player is ready
         user1Button = new Button();
         user1Button.setLayoutX(user1X + 50);
-        user1Button.setLayoutY(user1Y);                            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        user1Button.setLayoutY(user1Y);
         user1Button.setPrefWidth(buttonWidth);
         user1Button.setPrefHeight(buttonHeight);
         user1Button.setStyle("-fx-background-color: #00ADB5; -fx-border-width: 5px; " +
@@ -114,13 +115,16 @@ public class InfoPane {
 //                myCanvas.start();
 //            }
         });
-
-        Thread t = new Thread(() -> {
+        Text userNameB = new Text("User Name: " + username2 + "\n");
+           Thread t = new Thread(() -> {
             while (true) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("isReady", user1isReady.get());
                 myGame.Client.getClient().sendMessage(jsonObject.toString());
                 JSONObject message = myGame.Client.getClient().getNewMessage().getMessageAsJson();
+                    System.out.println(message);
+                if(message.has("username"))
+                    Platform.runLater(()->{userNameB.setText("User Name: " +message.getString("username")+"\n");});
                 if(message.has("time")&& Calendar.getInstance().getTimeInMillis()-message.getLong("time")>5000){
                     System.exit(0);
                 }
@@ -135,6 +139,7 @@ public class InfoPane {
                     if (user1isReady.get() && user2isReady.get()) {
                         Platform.runLater(() -> {
                             stage.setScene(scene);
+                            myCanvas.setUsername(GameStage.username);
                             myCanvas.start();
                         });
                     }
@@ -154,7 +159,13 @@ public class InfoPane {
 
 
         // Users info goes here
+             totalGames1 ="0";
+             totalGames2 ="0";
+             gamesWon1 = "0";
+             gamesWon2 = "0";
 
+
+        username1= GameStage.username;
         Text userNameA = new Text("User Name: " + username1 + "\n");
         Text totalGamesA = new Text("Total Games: " + totalGames1 + "\n");
         Text gamesWonA = new Text("Games Won: " + gamesWon1 + "\n");
@@ -176,7 +187,7 @@ public class InfoPane {
         textBoxA.setStyle("-fx-background-color: rgb(48, 48, 48)");
         textBoxA.setLineSpacing(40);
 
-        Text userNameB = new Text("User Name: " + username2 + "\n");
+
         Text totalGamesB = new Text("Total Games: " + totalGames2 + "\n");
         Text gamesWonB = new Text("Games Won: " + gamesWon2 + "\n");
 
@@ -216,7 +227,44 @@ public class InfoPane {
         totalGames2 = totalGames;
         gamesWon2 = gamesWon;
     }
+  public void setUsername1(String username1){
+        this.username1=username1;
+  }
+  public void setUsername2(String username2){
+      this.username2= username2;
+  }
 
+    public void setGamesWon1(String gamesWon1) {
+        this.gamesWon1 = gamesWon1;
+    }
+
+    public String getGamesWon1() {
+        return gamesWon1;
+    }
+
+    public void setGamesWon2(String gamesWon2) {
+        this.gamesWon2 = gamesWon2;
+    }
+
+    public String getGamesWon2() {
+        return gamesWon2;
+    }
+
+    public void setTotalGames1(String totalGames1) {
+        this.totalGames1 = totalGames1;
+    }
+
+    public void setTotalGames2(String totalGames2) {
+        this.totalGames2 = totalGames2;
+    }
+
+    public String getTotalGames1() {
+        return totalGames1;
+    }
+
+    public String getTotalGames2() {
+        return totalGames2;
+    }
 
     private void displayGameRules() {
         Font titleFont = new Font("Impact", 82);
@@ -254,5 +302,12 @@ public class InfoPane {
         gameRulesField.setLayoutX(Constants.WIDTH / 2 - 290);
         gameRulesField.setLayoutY(Constants.HEIGHT / 2 - 275);
         gameInfo.getChildren().addAll(gameRulesField, gameTitle);
+    }
+
+    public void setMaster(boolean master) {
+        this.master = master;
+    }
+    public boolean isMaster(){
+        return this.master;
     }
 }
