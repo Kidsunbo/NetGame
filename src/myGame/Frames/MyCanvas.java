@@ -306,6 +306,7 @@ public class MyCanvas extends Canvas {
             snakeBodyB.setPointlist(getSnakeBody(snakeBJson));
             snakeB.setScore(getScore(snakeBJson));
             snakeB.setUserName(getUsername(snakeBJson));
+
             if(node.getX()!= getNodeX(snakeBJson))
                 node.setX(getNodeX(snakeBJson));
             if(node.getY()!=getNodeY(snakeBJson))
@@ -347,7 +348,7 @@ public class MyCanvas extends Canvas {
 
 
              if(snakeA.isCollisionWithSnake(snakeB)){snakeA.rebirth();snakeBodyA.initBody();}
-            if (snakeA.isGetNode()) {
+             if (snakeA.isGetNode()) {
                 node.update();
                 snakeA.setLength(snakeA.getLength()+1);
                 snakeA.setScore(snakeA.getScore()+1);
