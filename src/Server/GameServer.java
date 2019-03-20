@@ -53,6 +53,7 @@ public class GameServer {
                     byte[] buf = new byte[1024*5];
                     DatagramPacket packet = new DatagramPacket(buf,buf.length);
                     socket.receive(packet);
+                    System.out.println(new String(packet.getData()));
                     addOrUpdate(packet);
                     sendToOthers(packet,socket);
 
