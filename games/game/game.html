@@ -3,7 +3,7 @@
 <script>
     function launchApplication(jnlpfile) {
         dtjava.launch(            {
-                url : 'NetGame.jnlp'
+                url : 'game.jnlp'
             },
             {
                 javafx : '8.0+'
@@ -15,11 +15,11 @@
 </script>
 
 <script>
-    function javafxEmbedNetGame_id() {
+    function javafxEmbedgame_id() {
         dtjava.embed(
             {
-                id : 'NetGame_id',
-                url : 'NetGame.jnlp',
+                id : 'game_id',
+                url : 'game.jnlp',
                 placeholder : 'javafx-app-placeholder',
                 width : '600',
                 height : '400'
@@ -31,12 +31,12 @@
         );
     }
     <!-- Embed FX application into web page once page is loaded -->
-    dtjava.addOnloadCallback(javafxEmbedNetGame_id);
+    dtjava.addOnloadCallback(javafxEmbedgame_id);
 </script>
 
 </head><body>
-<h2>Test page for <b>NetGame</b></h2>
-  <b>Webstart:</b> <a href='NetGame.jnlp' onclick="return launchApplication('NetGame.jnlp');">click to launch this app as webstart</a><br><hr><br>
+<h2>Test page for <b>game</b></h2>
+  <b>Webstart:</b> <a href='game.jnlp' onclick="return launchApplication('game.jnlp');">click to launch this app as webstart</a><br><hr><br>
 
   <!-- Applet will be inserted here -->
   <div id='javafx-app-placeholder'></div>

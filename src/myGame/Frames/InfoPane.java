@@ -117,7 +117,7 @@ public class InfoPane {
 
                 if(message.has("username"))
                     Platform.runLater(()->{userNameB.setText("User Name: " +message.getString("username")+"\n");});
-                if(message.has("time")&& Calendar.getInstance().getTimeInMillis()-message.getLong("time")>5000){
+                if(message.has("time")&& Calendar.getInstance().getTimeInMillis()-message.getLong("time")>20000){
                     System.exit(0);
                 }
 //                snakeB.setUserName(message.has("username")?message.getString("username"):"no name");
