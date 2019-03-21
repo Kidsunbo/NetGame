@@ -1,23 +1,18 @@
 package Client;
 
-import Server.MessageHandler;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 
 
 /**
@@ -52,21 +47,21 @@ public class MsgBoxController {
 
 
     public static void display(String title, String content) {
-            try {
-                Stage stage = new Stage();
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.setResizable(false);
-                FXMLLoader loader = new FXMLLoader(MsgBoxController.class.getResource("View/MsgBox.fxml"));
-                Parent calcRoot = loader.load();
-                MsgBoxController controller = loader.getController();
-                controller.setTitle(title);
-                controller.setContext(content);
-                Scene scene = new Scene(calcRoot);
-                stage.setScene(scene);
-                stage.showAndWait();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            FXMLLoader loader = new FXMLLoader(MsgBoxController.class.getResource("View/MsgBox.fxml"));
+            Parent calcRoot = loader.load();
+            MsgBoxController controller = loader.getController();
+            controller.setTitle(title);
+            controller.setContext(content);
+            Scene scene = new Scene(calcRoot);
+            stage.setScene(scene);
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void quit(MouseEvent mouseEvent) {

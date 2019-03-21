@@ -6,7 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
+/**
+ * Created by bxs863 on 02/03/19.
+ */
 public class Main extends Application {
 
 

@@ -14,7 +14,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
@@ -32,6 +34,70 @@ import java.util.stream.Collectors;
  * Created by bxs863 on 06/03/19.
  */
 public class ChatController {
+
+
+    public Button profileBtn;
+    public Label profileLb;
+    public Button settingBtn;
+    public Label settingLb;
+    public Button shopBtn;
+    public Label shopLb;
+    public Pane chatPane;
+    public GridPane profilePane;
+    public GridPane shopPane;
+    public GridPane settingPane;
+
+    public void backToChat(MouseEvent event) {
+        profileBtn.setStyle("-fx-background-color:#000000");
+        profileLb.setStyle("-fx-text-fill:#ffd7d7");
+        shopBtn.setStyle("-fx-background-color:#000000");
+        shopLb.setStyle("-fx-text-fill:#ffd7d7");
+        settingBtn.setStyle("-fx-background-color:#000000");
+        settingLb.setStyle("-fx-text-fill:#ffd7d7");
+        chatPane.setVisible(true);
+        profilePane.setVisible(false);
+        shopPane.setVisible(false);
+        settingPane.setVisible(false);
+    }
+
+    public void goProfilePage(MouseEvent event) {
+        profileBtn.setStyle("-fx-background-color:#eb4d4d");
+        profileLb.setStyle("-fx-text-fill:#ffa600");
+        shopBtn.setStyle("-fx-background-color:#000000");
+        shopLb.setStyle("-fx-text-fill:#ffd7d7");
+        settingBtn.setStyle("-fx-background-color:#000000");
+        settingLb.setStyle("-fx-text-fill:#ffd7d7");
+        chatPane.setVisible(false);
+        profilePane.setVisible(true);
+        shopPane.setVisible(false);
+        settingPane.setVisible(false);
+    }
+
+    public void goSettingPage(MouseEvent event) {
+        profileBtn.setStyle("-fx-background-color:#000000");
+        profileLb.setStyle("-fx-text-fill:#ffd7d7");
+        shopBtn.setStyle("-fx-background-color:#000000");
+        shopLb.setStyle("-fx-text-fill:#ffd7d7");
+        settingBtn.setStyle("-fx-background-color:#eb4d4d");
+        settingLb.setStyle("-fx-text-fill:#ffa600");
+        chatPane.setVisible(false);
+        profilePane.setVisible(false);
+        shopPane.setVisible(false);
+        settingPane.setVisible(true);
+    }
+
+    public void goShopPage(MouseEvent event) {
+        profileBtn.setStyle("-fx-background-color:#000000");
+        profileLb.setStyle("-fx-text-fill:#ffd7d7");
+        shopBtn.setStyle("-fx-background-color:#eb4d4d");
+        shopLb.setStyle("-fx-text-fill:#ffa600");
+        settingBtn.setStyle("-fx-background-color:#000000");
+        settingLb.setStyle("-fx-text-fill:#ffd7d7");
+        chatPane.setVisible(false);
+        profilePane.setVisible(false);
+        shopPane.setVisible(true);
+        settingPane.setVisible(false);
+    }
 
 
     //INNER CLASS

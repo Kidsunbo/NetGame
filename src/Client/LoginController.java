@@ -25,6 +25,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
+/**
+ * Created by bxs863 on 02/03/19.
+ */
 public class LoginController {
     private Timer time;
     private Stage stage;

@@ -62,7 +62,7 @@
             </ImageView>
          </children>
       </Pane>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#222831" height="50.0" layoutX="31.0" layoutY="347.0" stroke="BLACK" strokeType="INSIDE" width="301.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#222831" height="50.0" layoutX="39.0" layoutY="347.0" stroke="BLACK" strokeType="INSIDE" width="301.0" />
       <Text fill="#eeeeee" layoutX="56.0" layoutY="375.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Don't have an account?" wrappingWidth="200" />
       <Button fx:id="signupBtn" layoutX="219.0" layoutY="357.0" onAction="#signUpAction" style="-fx-background-color: #222831;" text="Sign up" textFill="#e10909" />
    </children>

@@ -54,6 +54,7 @@ public class MyCanvas extends Canvas {
     private Label label;
     private  boolean isMaster;
     private String username;
+    private boolean flag;
 
 
 
@@ -389,6 +390,8 @@ public class MyCanvas extends Canvas {
         jsonObject.put("nodeY",node.getY());
         jsonObject.put("timeCounter",timeCounter.getTime());
         jsonObject.put("length",snakeB.getLength());
+        jsonObject.put("flag",flag);
+
         return jsonObject;
     }
 
@@ -409,6 +412,7 @@ public class MyCanvas extends Canvas {
     int getTimeCounter(JSONObject jsonObject){return jsonObject.getInt("timeCounter");}
     String getUsername(JSONObject jsonObject){return jsonObject.getString("username");}
     int getLength(JSONObject jsonObject){return jsonObject.getInt("length");}
+    boolean getFlag(JSONObject jsonObject){return jsonObject.getBoolean("flag");}
 
     public LinkedList<Light.Point> getSnakeBody(JSONObject jsonObject){
         List<Object> sb = jsonObject.getJSONArray("snake_body").toList();

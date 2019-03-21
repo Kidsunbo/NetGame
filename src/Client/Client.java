@@ -17,6 +17,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+
+/**
+ * Created by bxs863 on 27/02/19.
+ */
 public class Client {
     private static Client client = null;
 
