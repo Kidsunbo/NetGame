@@ -283,11 +283,10 @@ public class ChatController {
                         break;
                     }
                 }
-                System.out.println(response);
+                System.out.println(gameExcute);
                 if(gameExcute!=null){
                     try {
 //                        Process p =Runtime.getRuntime().exec(String.format("java -jar %s %s %s %s",gameExcute.getAbsolutePath(),response.getString("gameID"),username, response.getString("master")));
-
                         Runtime.getRuntime().exec(String.format("bash %s %s %s %s",gameExcute.getAbsolutePath(),response.getString("gameID"),username, response.getString("master")));
                     } catch (IOException e) {
                         e.printStackTrace();
