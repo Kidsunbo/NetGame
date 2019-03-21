@@ -287,20 +287,20 @@ public class ChatController {
                 if(gameExcute!=null){
                     try {
                         Process p =Runtime.getRuntime().exec(String.format("java -jar %s %s %s %s",gameExcute.getAbsolutePath(),response.getString("gameID"),username, response.getString("master")));
-                        BufferedReader pp = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                        Thread tt = new Thread(()->{
-                            while(true) {
-                                try {
-                                    System.out.println(">>>>>" + pp.readLine());
-                                    Thread.sleep(1000);
-
-                                } catch (IOException | InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                        tt.setDaemon(true);
-                        tt.start();
+//                        BufferedReader pp = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//                        Thread tt = new Thread(()->{
+//                            while(true) {
+//                                try {
+//                                    System.out.println(">>>>>" + pp.readLine());
+//                                    Thread.sleep(1000);
+//
+//                                } catch (IOException | InterruptedException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                        tt.setDaemon(true);
+//                        tt.start();
 
 //                        Runtime.getRuntime().exec(String.format("bash %s %s %s %s",gameExcute.getAbsolutePath(),response.getString("gameID"),username, response.getString("master")));
                     } catch (IOException e) {
