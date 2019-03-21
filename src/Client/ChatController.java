@@ -100,7 +100,7 @@ public class ChatController {
             if (item != null && item.listFiles()!=null) {
                 String url = null;
                 for(File file : item.listFiles()){
-                    if(file.getName().endsWith("jpg")||file.getName().endsWith("jpeg")){
+                    if(file.getName().endsWith("jpg")||file.getName().endsWith("jpeg")||file.getName().endsWith("png")){
                         url = file.getAbsolutePath();
                     }
                 }
@@ -251,6 +251,9 @@ public class ChatController {
             gameList.getItems().addAll(games);
             gameList.refresh();
         }
+        if(gameList.getItems().size()>0){
+            gameList.getSelectionModel().selectFirst();
+        }
     }
 
 
@@ -272,37 +275,22 @@ public class ChatController {
 
     private void processStartGameAnswer(JSONObject response) {
         if(response.getString("reply").equals("yes")){
-            File gamesFile = new File("./games/"+response.getString("game")+"/");
+            File gamesFile = new File("games/"+response.getString("game")+"/");
             File gameExcute = null;
             File[] games = gamesFile.listFiles();
             if(games!=null) {
                 for (File file : games) {
-                    if(file.getName().endsWith(".jar") && file.getName().startsWith(response.getString("game"))){
-//                    if(file.getName().endsWith(".sh")){
+//                    if(file.getName().endsWith(".jar") && file.getName().startsWith(response.getString("game"))){
+                    if(file.getName().endsWith(".sh")){
                         gameExcute = file;
                         break;
                     }
                 }
-                System.out.println(response);
                 if(gameExcute!=null){
                     try {
-                        Process p =Runtime.getRuntime().exec(String.format("java -jar %s %s %s %s",gameExcute.getAbsolutePath(),response.getString("gameID"),username, response.getString("master")));
-//                        BufferedReader pp = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//                        Thread tt = new Thread(()->{
-//                            while(true) {
-//                                try {
-//                                    System.out.println(">>>>>" + pp.readLine());
-//                                    Thread.sleep(1000);
-//
-//                                } catch (IOException | InterruptedException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        });
-//                        tt.setDaemon(true);
-//                        tt.start();
-
-//                        Runtime.getRuntime().exec(String.format("bash %s %s %s %s",gameExcute.getAbsolutePath(),response.getString("gameID"),username, response.getString("master")));
+                        ProcessBuilder p = new ProcessBuilder("bash",gameExcute.getAbsolutePath(),response.getString("gameID"),username, response.getString("master"));
+                        p.inheritIO();
+                        Process pp = p.start();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -333,7 +321,7 @@ public class ChatController {
         jsonObject.put("sub_type","start_game");
         jsonObject.put("first_user",username);
         jsonObject.put("second_user",contactList.getSelectionModel().getSelectedItem().getUsername());
-        jsonObject.put("game",gameList.getSelectionModel().getSelectedItem()==null?"snake":gameList.getSelectionModel().getSelectedItem().getName());
+        jsonObject.put("game",gameList.getSelectionModel().getSelectedItem()==null?"null":gameList.getSelectionModel().getSelectedItem().getName());
         es.execute(()->Client.getClient().sendMessage(jsonObject));
         Platform.runLater(()->MsgBoxController.display("Message has sent","You message has been sent"));
 

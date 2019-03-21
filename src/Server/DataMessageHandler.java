@@ -39,7 +39,6 @@ public class DataMessageHandler extends MessageHandler {
                 answer.put("users", Arrays.asList(jsonObject.getString("to_user"), jsonObject.getString("from_user")));
                 answer.put("game", jsonObject.getString("game"));
                 String gid = GameServer.getGameServer().createGameID();
-                System.out.println(gid);
                 answer.put("gameID",gid );
 //                answer.put("gameID", "0");
                 for (Object user : answer.getJSONArray("users").toList()) {

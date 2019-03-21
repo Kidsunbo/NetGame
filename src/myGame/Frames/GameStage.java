@@ -58,7 +58,6 @@ public class GameStage extends Application {
     }
 
     public static void main(String[] args) {
-        System.out.println(args.length);
         myGame.Client.getClient().setGameID(args[0]);
         myGame.Client.getClient().setUsername(args[1]);    // 1 is username; 2 is mastername
         isMaster = args[1].equals(args[2]);
