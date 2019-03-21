@@ -48,7 +48,7 @@ public class GameServer {
 
         Thread t = new Thread(()->{
             try {
-                DatagramSocket socket = new DatagramSocket(4399);
+                DatagramSocket socket = new DatagramSocket(4333);
                 while(true){
                     byte[] buf = new byte[1024*5];
                     DatagramPacket packet = new DatagramPacket(buf,buf.length);
