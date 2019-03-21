@@ -46,11 +46,11 @@
             <Circle fx:id="connectCircle" fill="RED" layoutX="179.0" layoutY="233.0" radius="4.0" stroke="RED" strokeType="INSIDE" />
       
                   <PasswordField fx:id="passwordInput" layoutX="66.0" layoutY="180.0" onKeyReleased="#keyPress" prefHeight="27.0" prefWidth="165.0" promptText="password" style="-fx-background-color: #393E46;-fx-text-inner-color: white;" />
-            <Line endX="82.0" layoutX="150.0" layoutY="210.0" startX="-82.0" stroke="#ffe523" />
-            <Line endX="82.0" layoutX="150.0" layoutY="160.0" startX="-82.0" stroke="#ff9771" />
+            <Line endX="82.0" layoutX="150.0" opacity="0.8" disable="true" layoutY="210.0" startX="-82.0" stroke="#ffe523" />
+            <Line endX="82.0" layoutX="150.0" opacity="0.8" disable="true" layoutY="160.0" startX="-82.0" stroke="#ff9771" />
             <Label disable="true" layoutX="75.0" layoutY="115.0" text="Username" textFill="#ff6512" />
             <Label disable="true" layoutX="75.0" layoutY="165.0" text="Password" textFill="#ffe310" />
-            <Button fx:id="loginBtn" layoutX="69.0" layoutY="266.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onAction="#loginAction" prefHeight="27.0" prefWidth="154.0" style="-fx-background-color: #dd5833;" text="Sign in" textFill="#f5f5f5">
+            <Button fx:id="loginBtn"  layoutX="69.0" layoutY="266.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onAction="#loginAction" prefHeight="27.0" prefWidth="154.0" style="-fx-background-color: #dd5833;" text="Sign in" textFill="#f5f5f5">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>

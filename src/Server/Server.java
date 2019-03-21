@@ -45,25 +45,54 @@ public class Server {
     }
 
     private static void broadServerIP(){
+        try {
+        MulticastSocket socket = new MulticastSocket();
+        InetAddress mip = InetAddress.getByName("230.0.0.1");
+        socket.joinGroup(mip);
         Thread t = new Thread(()->{
+
             try {
-                MulticastSocket socket = new MulticastSocket();
-                InetAddress mip = InetAddress.getByName("230.0.0.1");
-                socket.joinGroup(mip);
                 while (true) {
                     InetAddress inetAddress = InetAddress.getLocalHost();
-                    String ipAndPort = inetAddress.getHostAddress()+":"+port;
+                    String ipAndPort = inetAddress.getHostAddress() + ":" + port;
                     byte[] buf = ipAndPort.getBytes();
-                    DatagramPacket packet = new DatagramPacket(buf,buf.length,mip,12345);
+                    DatagramPacket packet = new DatagramPacket(buf, buf.length, mip, 12345);
                     socket.send(packet);
                     Thread.sleep(1000);
                 }
-            } catch (IOException | InterruptedException e) {
+            }
+            catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
+
         });
         t.setDaemon(true);
         t.start();
+
+        t = new Thread(()->{
+                try {
+                    while (true) {
+                        byte[] buf = new byte[512];
+                        DatagramPacket packet = new DatagramPacket(buf, buf.length);
+                        socket.receive(packet);
+                        String temp = new String(buf);
+                        if(!InetAddress.getLocalHost().getHostAddress().equals(temp.split(":")[0])){
+                            System.exit(0);
+                        }
+                        Thread.sleep(1000);
+                    }
+                }
+                catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            });
+            t.setDaemon(true);
+            t.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
