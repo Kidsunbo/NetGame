@@ -7,7 +7,12 @@ import java.net.*;
 import java.util.Calendar;
 
 /**
- *use this class to define some Json format and message translation rules
+
+ * This is the client class for Game part
+ * This class will keep the newest message and keep refreshing the message as soon as possible.
+ * It also use
+ * @author bxs863
+ *
  */
 public class Client {
 
@@ -16,7 +21,6 @@ public class Client {
         private String message = "{}";
 
         public synchronized void setNewMessage(long time,String message){
-            System.out.println(">>>>>>>"+message);
             if(time>this.time){
                 this.time = time;
                 this.message = message;
@@ -34,26 +38,24 @@ public class Client {
 
     DatagramSocket socket;
     private Message newMessage = new Message();
-    private InetAddress serverIP;
-    private int serverPort;
     private static Client client = null;
     private String gameID = "";
     private String username = "";
+    private String ip = "localhost";
+    private int port = 4399;
 
     public static Client getClient(){
         if(client==null){
-            client = new Client("localhost",4333);
+            client = new Client();
         }
         return client;
     }
 
-    private Client(String ip,int serverPort) {
+    private Client() {
+        refreshIpAndPort();
         try {
             socket = new DatagramSocket();
-            serverIP = InetAddress.getByName(ip);
-            this.serverPort = serverPort;
-
-        } catch (SocketException | UnknownHostException e) {
+        } catch (SocketException e) {
             e.printStackTrace();
         }
         Thread t = new Thread(() -> {
@@ -69,6 +71,35 @@ public class Client {
 
     }
 
+    /**
+     *
+     */
+    private void refreshIpAndPort(){
+        Thread t = new Thread(()->{
+            try {
+                MulticastSocket socket = new MulticastSocket(12345);
+                socket.joinGroup(InetAddress.getByName("230.0.0.1"));
+                while(true) {
+                    byte[] buf = new byte[512];
+                    DatagramPacket packet = new DatagramPacket(buf, buf.length);
+                    socket.receive(packet);
+                    String[] ipAndPort = new String(buf).split(":");
+                    ip = ipAndPort[0];
+                    port = Integer.valueOf(ipAndPort[1].trim());
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        t.setDaemon(true);
+        t.start();
+    }
+
     private String receive(){
         byte[] buf = new byte[5*1024];
         DatagramPacket packet = new DatagramPacket(buf,buf.length);
@@ -81,15 +112,14 @@ public class Client {
     }
 
     public void sendMessage(String msg){
-        System.out.println("<<<<<<<"+msg);
         JSONObject jsonObject = new JSONObject(msg);
         jsonObject.put("gameID",gameID);
         jsonObject.put("username",username);
         jsonObject.put("time", Calendar.getInstance().getTimeInMillis());
         String message = jsonObject.toString();
         Thread t = new Thread(() -> {
-            DatagramPacket packet = new DatagramPacket(message.getBytes(),message.getBytes().length,serverIP, serverPort);
             try {
+                DatagramPacket packet = new DatagramPacket(message.getBytes(),message.getBytes().length, InetAddress.getByName(ip), port);
                 socket.send(packet);
             } catch (IOException e) {
                 e.printStackTrace();

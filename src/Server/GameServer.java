@@ -48,12 +48,11 @@ public class GameServer {
 
         Thread t = new Thread(()->{
             try {
-                DatagramSocket socket = new DatagramSocket(4333);
+                DatagramSocket socket = new DatagramSocket(Server.getPort());
                 while(true){
                     byte[] buf = new byte[1024*5];
                     DatagramPacket packet = new DatagramPacket(buf,buf.length);
                     socket.receive(packet);
-                    System.out.println(new String(packet.getData()));
                     addOrUpdate(packet);
                     sendToOthers(packet,socket);
 
@@ -102,12 +101,6 @@ public class GameServer {
         games.put(String.valueOf(i),new Hashtable<>());
         gameIDs.put(String.valueOf(i),60);
         return ""+i;
-    }
-
-
-    // This is just for debugging
-    public static void main(String[] args){
-        System.out.println(GameServer.getGameServer().createGameID());
     }
 
 }

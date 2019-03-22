@@ -2,10 +2,14 @@ package Client;
 
 import org.json.JSONObject;
 
+import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.net.Socket;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
@@ -13,6 +17,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+
+/**
+ * Created by bxs863 on 27/02/19.
+ */
 public class Client {
     private static Client client = null;
 
@@ -21,6 +29,8 @@ public class Client {
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
+    private static String ip = "localhost";
+    private static int port = 4399;
     private ExecutorService es = Executors.newFixedThreadPool(5, r -> {
         Thread t = Executors.defaultThreadFactory().newThread(r);
         t.setDaemon(true);
@@ -31,20 +41,46 @@ public class Client {
 
     public static Client getClient(){
         if(client == null){
-            client = new Client("localhost",4399);
+            client = new Client();
         }
         return client;
     }
 
-    private Client(String ip, int port) {
+    private static void refreshIpAndPort(){
+        Thread t = new Thread(()->{
+            try {
+                MulticastSocket socket = new MulticastSocket(12345);
+                socket.joinGroup(InetAddress.getByName("230.0.0.1"));
+                while(true) {
+                    byte[] buf = new byte[512];
+                    DatagramPacket packet = new DatagramPacket(buf, buf.length);
+                    socket.receive(packet);
+                    String[] ipAndPort = new String(buf).split(":");
+                    ip = ipAndPort[0];
+                    port = Integer.valueOf(ipAndPort[1].trim());
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        t.setDaemon(true);
+        t.start();
+    }
+    private Client() {
         es.execute(()->{
-            tryToConnect(ip,port);
+            tryToConnect();
             while(true){
                 try {
                     String messageStr = in.readLine();
                     if(messageStr==null){
                         connected.set(false);
-                        tryToConnect(ip,port);
+                        tryToConnect();
+                        Thread.sleep(100);
                         continue;
                     }
                     if(messageQueue.size()>=1000){
@@ -55,12 +91,15 @@ public class Client {
                     messageQueue.add(new JSONObject(messageStr));
                 } catch (IOException e) {
                     System.out.println("Something wrong when reading message from server.");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         });
     }
 
-    private void tryToConnect(String ip,int port) {
+    private void tryToConnect() {
+        refreshIpAndPort();
         while(!connected.get()) {
             try {
                 socket = new Socket(ip, port);
@@ -68,7 +107,6 @@ public class Client {
                 out = new PrintWriter(socket.getOutputStream(), true);
                 connected.set(true);
             } catch (IOException e) {
-                System.out.println("Server is offline... Try to connect again.");
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e1) {

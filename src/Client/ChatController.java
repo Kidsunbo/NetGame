@@ -14,7 +14,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
@@ -32,6 +34,70 @@ import java.util.stream.Collectors;
  * Created by bxs863 on 06/03/19.
  */
 public class ChatController {
+
+
+    public Button profileBtn;
+    public Label profileLb;
+    public Button settingBtn;
+    public Label settingLb;
+    public Button shopBtn;
+    public Label shopLb;
+    public Pane chatPane;
+    public GridPane profilePane;
+    public GridPane shopPane;
+    public GridPane settingPane;
+
+    public void backToChat(MouseEvent event) {
+        profileBtn.setStyle("-fx-background-color:#000000");
+        profileLb.setStyle("-fx-text-fill:#ffd7d7");
+        shopBtn.setStyle("-fx-background-color:#000000");
+        shopLb.setStyle("-fx-text-fill:#ffd7d7");
+        settingBtn.setStyle("-fx-background-color:#000000");
+        settingLb.setStyle("-fx-text-fill:#ffd7d7");
+        chatPane.setVisible(true);
+        profilePane.setVisible(false);
+        shopPane.setVisible(false);
+        settingPane.setVisible(false);
+    }
+
+    public void goProfilePage(MouseEvent event) {
+        profileBtn.setStyle("-fx-background-color:#eb4d4d");
+        profileLb.setStyle("-fx-text-fill:#ffa600");
+        shopBtn.setStyle("-fx-background-color:#000000");
+        shopLb.setStyle("-fx-text-fill:#ffd7d7");
+        settingBtn.setStyle("-fx-background-color:#000000");
+        settingLb.setStyle("-fx-text-fill:#ffd7d7");
+        chatPane.setVisible(false);
+        profilePane.setVisible(true);
+        shopPane.setVisible(false);
+        settingPane.setVisible(false);
+    }
+
+    public void goSettingPage(MouseEvent event) {
+        profileBtn.setStyle("-fx-background-color:#000000");
+        profileLb.setStyle("-fx-text-fill:#ffd7d7");
+        shopBtn.setStyle("-fx-background-color:#000000");
+        shopLb.setStyle("-fx-text-fill:#ffd7d7");
+        settingBtn.setStyle("-fx-background-color:#eb4d4d");
+        settingLb.setStyle("-fx-text-fill:#ffa600");
+        chatPane.setVisible(false);
+        profilePane.setVisible(false);
+        shopPane.setVisible(false);
+        settingPane.setVisible(true);
+    }
+
+    public void goShopPage(MouseEvent event) {
+        profileBtn.setStyle("-fx-background-color:#000000");
+        profileLb.setStyle("-fx-text-fill:#ffd7d7");
+        shopBtn.setStyle("-fx-background-color:#eb4d4d");
+        shopLb.setStyle("-fx-text-fill:#ffa600");
+        settingBtn.setStyle("-fx-background-color:#000000");
+        settingLb.setStyle("-fx-text-fill:#ffd7d7");
+        chatPane.setVisible(false);
+        profilePane.setVisible(false);
+        shopPane.setVisible(true);
+        settingPane.setVisible(false);
+    }
 
 
     //INNER CLASS
@@ -100,7 +166,7 @@ public class ChatController {
             if (item != null && item.listFiles()!=null) {
                 String url = null;
                 for(File file : item.listFiles()){
-                    if(file.getName().endsWith("jpg")||file.getName().endsWith("jpeg")){
+                    if(file.getName().endsWith("jpg")||file.getName().endsWith("jpeg")||file.getName().endsWith("png")){
                         url = file.getAbsolutePath();
                     }
                 }
@@ -251,6 +317,9 @@ public class ChatController {
             gameList.getItems().addAll(games);
             gameList.refresh();
         }
+        if(gameList.getItems().size()>0){
+            gameList.getSelectionModel().selectFirst();
+        }
     }
 
 
@@ -272,37 +341,22 @@ public class ChatController {
 
     private void processStartGameAnswer(JSONObject response) {
         if(response.getString("reply").equals("yes")){
-            File gamesFile = new File("./games/"+response.getString("game")+"/");
+            File gamesFile = new File("games/"+response.getString("game")+"/");
             File gameExcute = null;
             File[] games = gamesFile.listFiles();
             if(games!=null) {
                 for (File file : games) {
-                    if(file.getName().endsWith(".jar") && file.getName().startsWith(response.getString("game"))){
-//                    if(file.getName().endsWith(".sh")){
+//                    if(file.getName().endsWith(".jar") && file.getName().startsWith(response.getString("game"))){
+                    if(file.getName().endsWith(".sh")){
                         gameExcute = file;
                         break;
                     }
                 }
-                System.out.println(response);
                 if(gameExcute!=null){
                     try {
-                        Process p =Runtime.getRuntime().exec(String.format("java -jar %s %s %s %s",gameExcute.getAbsolutePath(),response.getString("gameID"),username, response.getString("master")));
-//                        BufferedReader pp = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//                        Thread tt = new Thread(()->{
-//                            while(true) {
-//                                try {
-//                                    System.out.println(">>>>>" + pp.readLine());
-//                                    Thread.sleep(1000);
-//
-//                                } catch (IOException | InterruptedException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        });
-//                        tt.setDaemon(true);
-//                        tt.start();
-
-//                        Runtime.getRuntime().exec(String.format("bash %s %s %s %s",gameExcute.getAbsolutePath(),response.getString("gameID"),username, response.getString("master")));
+                        ProcessBuilder p = new ProcessBuilder("bash",gameExcute.getAbsolutePath(),response.getString("gameID"),username, response.getString("master"));
+                        p.inheritIO();
+                        Process pp = p.start();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -333,7 +387,7 @@ public class ChatController {
         jsonObject.put("sub_type","start_game");
         jsonObject.put("first_user",username);
         jsonObject.put("second_user",contactList.getSelectionModel().getSelectedItem().getUsername());
-        jsonObject.put("game",gameList.getSelectionModel().getSelectedItem()==null?"snake":gameList.getSelectionModel().getSelectedItem().getName());
+        jsonObject.put("game",gameList.getSelectionModel().getSelectedItem()==null?"null":gameList.getSelectionModel().getSelectedItem().getName());
         es.execute(()->Client.getClient().sendMessage(jsonObject));
         Platform.runLater(()->MsgBoxController.display("Message has sent","You message has been sent"));
 

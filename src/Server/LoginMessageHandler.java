@@ -30,12 +30,10 @@ public class LoginMessageHandler extends MessageHandler {
                 Server.getInstance().getClients().put(this.jsonObject.getString("username"),socket);
                 sendNewContactList();
             }
-            System.out.println(response);
         }
         catch (Exception e){
 
         }
-        System.out.println(response.toString());
         return response.toString();
     }
 

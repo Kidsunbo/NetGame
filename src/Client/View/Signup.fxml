@@ -33,7 +33,7 @@
             </Label>
             <TextField fx:id="usrnameTf" layoutX="66.0" layoutY="130.0" onKeyReleased="#keyRelease" opacity="0.94" prefWidth="165.0" promptText="Username" style="-fx-background-color: #393E46;-fx-text-inner-color: white;" />
             <Label fx:id="checkLabel" layoutX="203.0" layoutY="135.0" text="No" textFill="#FF0000" />
-            <Line endX="82.0" fill="#ff6512" layoutX="150.0" layoutY="160.0" startX="-82.0" stroke="#f8b062" />
+            <Line endX="82.0" opacity="0.9" fill="#ff6512" layoutX="150.0" layoutY="160.0" startX="-82.0" stroke="#f8b062" />
             <Label disable="true" layoutX="75.0" layoutY="165.0" text="Password" textFill="#ffe310" />
             <Label layoutX="140.0" layoutY="165.0" prefHeight="23.0" prefWidth="1.0" text="*" textFill="#d62006">
                <font>
@@ -41,7 +41,7 @@
                </font>
             </Label>
             <PasswordField fx:id="pwdField" layoutX="66.0" layoutY="180.0" onKeyReleased="#pwdkeyRelease" prefHeight="27.0" prefWidth="165.0" promptText="Password" style="-fx-background-color: #393E46;-fx-text-inner-color: white;" />
-            <Line endX="82.0" fill="#ffe437" layoutX="150.0" layoutY="210.0" startX="-82.0" stroke="#e8ce3b" />
+            <Line endX="82.0" opacity="0.9" fill="#ffe437" layoutX="150.0" layoutY="210.0" startX="-82.0" stroke="#e8ce3b" />
             <Label disable="true" layoutX="75.0" layoutY="215.0" text="Confirm Password" textFill="#e4d47c" />
             <Label layoutX="192.0" layoutY="215.0" prefHeight="23.0" prefWidth="1.0" text="*" textFill="#d62006">
                <font>
@@ -49,7 +49,7 @@
                </font>
             </Label>
             <PasswordField fx:id="pwdAgainField" layoutX="66.0" layoutY="230.0" onKeyReleased="#pwdkeyRelease" prefHeight="27.0" prefWidth="165.0" promptText="Password Again" style="-fx-background-color: #393E46;-fx-text-inner-color: white;" />
-            <Line endX="82.0" fill="#e8dd99" layoutX="150.0" layoutY="255.0" startX="-82.0" stroke="#e8dd99" />
+            <Line endX="82.0" opacity="0.9" fill="#e8dd99" layoutX="150.0" layoutY="255.0" startX="-82.0" stroke="#e8dd99" />
             <RadioButton fx:id="radBtn" layoutX="86.0" layoutY="330.0" mnemonicParsing="false" onAction="#radioButtonChanged" text=" I have read and agree " textFill="#eeeeee">
                <font>
                   <Font size="10.0" />
@@ -60,7 +60,7 @@
                   <Font size="11.0" />
                </font>
             </Hyperlink>
-            <Button fx:id="signupBtn" layoutX="80.0" layoutY="280.0" mnemonicParsing="false" onAction="#signUpAction" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #dd5833;" text="Sign up now" textFill="#eeeeee">
+            <Button fx:id="signupBtn" disable="true" layoutX="80.0" layoutY="280.0" mnemonicParsing="false" onAction="#signUpAction" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: #dd5833;" text="Sign up now" textFill="#eeeeee">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>

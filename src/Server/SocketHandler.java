@@ -36,7 +36,6 @@ public class SocketHandler extends Thread {
                     closeSocket();
                     break;
                 }
-                System.out.println(line);
                 String responce = MessageHandler.getMessageHandler(line,socket).process();
                 out.println(responce);
             }
