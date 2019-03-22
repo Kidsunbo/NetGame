@@ -2,11 +2,14 @@ package myGame.Frames;
 
 
 /**
- *
+ *This class is used to store the constants which would be used during the game process, like the width and height of the stage
  * @author Shengdong Yan
  * @version 2019-03-07
  */
 public class Constants {
+	/**
+	 * The four kinds of game states
+	 */
 	public enum GameState{READY, PAUSE, RUN, TIMEOUT};
 
 	/**
@@ -23,7 +26,7 @@ public class Constants {
 	public static final int DISTANCE = 8;
 
 	/*
-	* The defualt birth palce of Snake.
+	* The defualt birth palce of Snake. Here userAX means the x,y values of the master player's birth place.
 	* */
 	public static final int userAX = WIDTH * 3 / 4;
 	public static final int userAY = HEIGHT - 150;

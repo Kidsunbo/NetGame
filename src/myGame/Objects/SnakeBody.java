@@ -20,7 +20,11 @@ public class SnakeBody {
     private int length;
 
 
-
+    /**
+     *This class is used to generate the snake body, which is stored as a linked list
+     * @author Shengdong Yan
+     * @version 2019-03-07
+     */
     public SnakeBody(Snake snake){
 
          this.snake = snake;
@@ -62,7 +66,7 @@ public class SnakeBody {
         }
 
         Light.Point firstPoi = pointlist.getFirst();
-        // 位移已经达到一个身位再进行处理
+
         if (firstPoi.getX() + Constants.DISTANCE <= snake.getX() || firstPoi.getX() - Constants.DISTANCE >= snake.getX()
                 || firstPoi.getY() + Constants.DISTANCE <= snake.getY() || firstPoi.getY() - Constants.DISTANCE >= snake.getY()) {
             Light.Point poi = new Light.Point();

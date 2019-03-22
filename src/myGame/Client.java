@@ -7,6 +7,7 @@ import java.net.*;
 import java.util.Calendar;
 
 /**
+
  * This is the client class for Game part
  * This class will keep the newest message and keep refreshing the message as soon as possible.
  * It also use

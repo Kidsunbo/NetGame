@@ -34,7 +34,8 @@ import java.util.stream.Collectors;
 
 
 /**
- *
+ *This class is used to refresh and draw the objects on the canvas,
+ * after add this canvas to the main scene, the objects can move dynamically
  * @author Shengdong Yan
  * @version 2019-3-9
  */
@@ -64,6 +65,11 @@ public class MyCanvas extends Canvas {
     }
 
 
+    /**
+     * use this method to initialize the two snakes and one node on the canvas,
+     * for every player, locally he views himself as snakeA,
+     * and if the player is master he would birth in the right part of the canvas
+     */
     public void  initial(){
         node = new Node();
         this.setHeight(Constants.HEIGHT);
@@ -82,7 +88,7 @@ public class MyCanvas extends Canvas {
             snakeB = new Snake(Constants.userBX,Constants.userBY,node);
             snakeBodyB = new SnakeBody(snakeB);
             snakeB.setColor(Color.YELLOW);
-            snakeB.setUserName("");  // Update the userName here  +++++++++++++++
+            snakeB.setUserName("");
             snakeBodyB.initBody();
             snakeB.setSnakeBody(snakeBodyB);
 
@@ -91,7 +97,7 @@ public class MyCanvas extends Canvas {
             snakeA = new Snake(Constants.userBX,Constants.userBY,node);
             snakeBodyA = new SnakeBody(snakeA);
             snakeA.setColor(Color.YELLOW);
-            snakeA.setUserName("");  // Update the userName here  +++++++++++++++
+            snakeA.setUserName("");
             snakeBodyA.initBody();
             snakeA.setSnakeBody(snakeBodyA);
 
@@ -104,7 +110,6 @@ public class MyCanvas extends Canvas {
 
         }
 
-
         initTimeLine(gc);
 //        drawStart();
         setGameState(Constants.GameState.RUN);
@@ -112,6 +117,10 @@ public class MyCanvas extends Canvas {
     }
 
 
+    /**
+     * use this method to deal with the key event
+     * @param event the key pressed by gamer would be past here
+     */
     public void onKeyPressed(KeyEvent event){
         KeyCode key = event.getCode();
         // change the gamestate into Puase when player press SPACE key and back when user press SPACE key again
@@ -138,8 +147,11 @@ public class MyCanvas extends Canvas {
     }
 
 
-
-
+    /**
+     * use this method to initialize a time line, which can refresh the canvas in a constant frequency
+     * and detect the game state as well as receive message.
+     * @param gc the main tools used to draw on the canvas
+     */
     public void initTimeLine( GraphicsContext gc) {
 
         timeline = new Timeline();
@@ -151,8 +163,6 @@ public class MyCanvas extends Canvas {
                 drawGridding(gc);
 
                 JSONObject jsonObject = myGame.Client.getClient().getNewMessage().getMessageAsJson();
-//                draw(gc);
-//                update();
                 JSONObject jsonObject1 = snakeToJSON(snakeA,snakeB);
                 myGame.Client.getClient().sendMessage(jsonObject1.toString());
                 if(jsonObject.has("time") && Calendar.getInstance().getTimeInMillis()-jsonObject.getLong("time")>5000) {
@@ -225,7 +235,6 @@ public class MyCanvas extends Canvas {
     public void drawScoreBoard(String usernameA, String usernameB){
         String InfoA = String.format("%-14s", usernameA)+": "+ snakeA.getScore();
         String InfoB = String.format("%-14s", usernameB)+": "+ snakeB.getScore();
-        // Username 从网络得到，顺便加成固定长度(空格大小和字体大小不一样，所以显示的长度还是不一样)
 
         label = new Label(InfoA+"\n"+ InfoB);
         label.setLayoutX(Constants.WIDTH - 300);
@@ -293,10 +302,10 @@ public class MyCanvas extends Canvas {
 
         //if(snakeB.isCollisionWithSnake(snakeA)){snakeB.rebirth();snakeBodyB.initBody();}
 
-
     }
 
-  /*update all the objects information
+  /*update all the objects information,(read information of another snake from network and send self's data out)
+  *
   * */
     public  void  update(){
 
@@ -358,7 +367,7 @@ public class MyCanvas extends Canvas {
                  snakeBodyA.update();
 
 
-            JSONObject jsonObject = snakeToJSON(snakeA,snakeB);           //  doufa danshi xvyao shenmo qv shenmo++++++++++++
+            JSONObject jsonObject = snakeToJSON(snakeA,snakeB);
             myGame.Client.getClient().sendMessage(jsonObject.toString());
             drawScoreBoard(this.username,getUsername(snakeBJson));
 

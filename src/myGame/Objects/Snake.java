@@ -7,6 +7,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import myGame.Frames.Constants;
 
+
+/**
+ *This class is used to generate snake objects
+ * @author Shengdong Yan
+ * @version 2019-03-07
+ */
 public class Snake {
   public enum DIRECTIONS {
       DIR_UP, DIR_DOWN, DIR_LEFT, DIR_RIGHT, DIR_LEFTUP, DIR_LEFTDOWN, DIR_RIGHTUP, DIR_RIGHTDOWN
@@ -26,6 +32,11 @@ public class Snake {
     private String userName;
     private double initX, initY;
 
+    /**
+     * @param x the x value of snake head
+     * @param y the y value of snake head
+     * @param node the node on the map
+     */
     public Snake(double x, double y,Node node ) {
         this.initX = x;
         this.x=x;
@@ -42,6 +53,10 @@ public class Snake {
     }
 
 
+    /**
+     * draw the snake head as a oval, and draw the eyes relatively.
+     * @param gc the tools to draw the snake on canvas
+     */
     public  void  drawSnake(GraphicsContext gc){
         gc.setFill(getColor());
         gc.fillOval(getX(),getY(),getWidth(),getHeight());
@@ -83,6 +98,9 @@ public class Snake {
         }
     }
 
+    /**
+     * upadte the x and y of snake according to the snake direction and speed.
+     */
     public  void  update(){
       //  if(this.isReachBorder()){rebirth();}
         if (this.getDirection() == DIRECTIONS.DIR_UP) {
@@ -109,6 +127,10 @@ public class Snake {
 
     }
 
+    /**
+     * change the direction
+     * @param event key event
+     */
     public void onKeyPressed(KeyEvent event) {
 
         KeyCode tmpCode = event.getCode();
