@@ -7,7 +7,7 @@ import java.net.*;
 import java.util.Calendar;
 
 /**
- * Created by sxy777 on 18/03/19.
+ *use this class to define some Json format and message translation rules
  */
 public class Client {
 

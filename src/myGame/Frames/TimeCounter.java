@@ -4,7 +4,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-
+/**
+ *This class is used to count down time in a separate thread.
+ * @author Shengdong Yan
+ * @version 2019-03-07
+ */
 
 public class TimeCounter implements Runnable{
 

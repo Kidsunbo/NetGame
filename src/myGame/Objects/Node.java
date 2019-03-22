@@ -7,6 +7,11 @@ import javafx.scene.paint.Color;
 import myGame.Frames.Constants;
 import java.util.Random;
 
+/**
+ *This class is used to generate the 'food' for snakes every time the node be eaten, another node would be generated randomly.
+ * @author Shengdong Yan
+ * @version 2019-03-07
+ */
 public class Node {
     private Color color;
     private int height, width, x,y;

@@ -10,13 +10,22 @@ import org.json.JSONObject;
 
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
-
+/**
+ *This class is used to generate the main stage of the game, the key idea is use a waiting scene to show the ready infomation pane
+ *  and a startGameScene to show the game pane.
+ * @author Shengdong Yan
+ * @version 2019-03-10
+ */
 public class GameStage extends Application {
-//    private enum GameState{READY, PAUSE, RUN, TIMEOUT};
-//    private Timeline timeline;
-//    private KeyFrame keyFrame;
-//    public static Snake snake;
-//    public  GameState gameState;
+
+
+
+    /**
+     * @param list  use to store the points values of a snakebody
+     * @param gameCanvas  use to refresh and draw objects like snake and food.
+     * @param gameInfo  to show the hints and information of the two players
+     * @param isMaster  to decide whether local player is the master of the game
+     */
     public  Stage stage = new Stage();
     public  Group root;
     public  LinkedList<Light.Point> list = new LinkedList<Light.Point>();
@@ -27,6 +36,10 @@ public class GameStage extends Application {
     public static String username;
 
 
+    /**
+     * This method is mainly used to do some initialization and play the ready scene.
+     * @param primaryStage the main stage of the game
+     */
     @Override
     public void start(Stage primaryStage)  {
 
@@ -34,7 +47,6 @@ public class GameStage extends Application {
         stage.setResizable(false);
         primaryStage.setTitle("Greedy Snake!");
         root = new Group();
-
 
         // Game Setup
         gameCanvas = new MyCanvas(root);
@@ -58,10 +70,9 @@ public class GameStage extends Application {
     }
 
     public static void main(String[] args) {
-        System.out.println(args.length);
         myGame.Client.getClient().setGameID(args[0]);
-        myGame.Client.getClient().setUsername(args[1]);    // 1 is username; 2 is mastername
-        isMaster = args[1].equals(args[2]);
+        myGame.Client.getClient().setUsername(args[1]);    // 1 is username of current player; 2 is the master name of the game.
+        isMaster = args[1].equals(args[2]);               // decide whether is master or not
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type","register");
