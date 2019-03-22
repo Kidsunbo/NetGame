@@ -7,7 +7,11 @@ import java.net.*;
 import java.util.Calendar;
 
 /**
- * Created by sxy777 on 18/03/19.
+ * This is the client class for Game part
+ * This class will keep the newest message and keep refreshing the message as soon as possible.
+ * It also use
+ * @author bxs863
+ *
  */
 public class Client {
 
@@ -66,6 +70,9 @@ public class Client {
 
     }
 
+    /**
+     *
+     */
     private void refreshIpAndPort(){
         Thread t = new Thread(()->{
             try {
