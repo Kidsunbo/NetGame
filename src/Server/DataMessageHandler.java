@@ -29,6 +29,11 @@ public class DataMessageHandler extends MessageHandler {
         return response.toString();
     }
 
+    /**
+     * Transfer the game answer
+     * @param jsonObject
+     * @param response
+     */
     private void processStartGameAnswer(JSONObject jsonObject, JSONObject response) {
         try {
             if (jsonObject.getString("reply").equals("yes")) {

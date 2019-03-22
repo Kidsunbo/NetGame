@@ -25,6 +25,9 @@ public class SocketHandler extends Thread {
         this.socket = socket;
     }
 
+    /**
+     * It the run method of SocketHandler, which is a thread Class.
+     */
     @Override
     public void run(){
         try {
@@ -45,13 +48,23 @@ public class SocketHandler extends Thread {
         }
     }
 
+    /**
+     * When the client quit, it will recognize this situation and close the socket. It's used to save the data
+     * and the other thing.
+     *
+     * @throws IOException
+     */
     private void closeSocket() throws IOException {
 
         socket.close();
-        Server.getInstance().getClients().entrySet().removeIf(p -> p.getValue().isClosed());
+        Server.getInstance().getClients().entrySet().removeIf(p -> p.getValue().isClosed()); //Check if there is a client being closed
         sendNewContactList();
     }
 
+    /**
+     * Send the logged in clients to each client. So they can update the contact list.
+     * @throws IOException
+     */
     private void sendNewContactList() throws IOException {
         JSONObject response = new JSONObject();
         response.put("type","contact_list");

@@ -59,7 +59,7 @@ public class GameStage extends Application {
 
     public static void main(String[] args) {
         myGame.Client.getClient().setGameID(args[0]);
-        myGame.Client.getClient().setUsername(args[1]);    // 1 is username; 2 is mastername
+        myGame.Client.getClient().setUsername(args[1]);    // 1 is username; 2 is master name
         isMaster = args[1].equals(args[2]);
 
         JSONObject jsonObject = new JSONObject();

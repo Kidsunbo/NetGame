@@ -11,6 +11,11 @@ public class LogOutMessageHandler extends MessageHandler {
         super(message);
     }
 
+    /**
+     * It's used to logout the user. For now, it's reserved functionality. Because we don't let the user log out now.
+     * But it will be added later.
+     * @return The message.
+     */
     @Override
     String process() {
 
@@ -24,6 +29,11 @@ public class LogOutMessageHandler extends MessageHandler {
         return response.toString();
     }
 
+    /**
+     * Log out the user.
+     * @param jsonObject the received message
+     * @param response the response.
+     */
     private void logout(JSONObject jsonObject, JSONObject response) {
         try {
             if (jsonObject.has("username")) {

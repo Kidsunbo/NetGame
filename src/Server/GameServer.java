@@ -27,9 +27,12 @@ public class GameServer {
         }
     }
 
+    /**
+     * The constructor of the Game Server
+     */
     private GameServer(){
 
-        Thread watcher = new Thread(()->{
+        Thread watcher = new Thread(()->{ // Start a new thread to assign the gameID
             while (true) {
                 for (Map.Entry<String, Integer> id : gameIDs.entrySet()) {
                     id.setValue(id.getValue() - 1);
@@ -46,7 +49,7 @@ public class GameServer {
         watcher.setDaemon(true);
         watcher.start();
 
-        Thread t = new Thread(()->{
+        Thread t = new Thread(()->{  // new Thread to receive the message
             try {
                 DatagramSocket socket = new DatagramSocket(Server.getPort());
                 while(true){
@@ -71,6 +74,10 @@ public class GameServer {
     }
 
 
+    /**
+     * Add the new address of the user to the dictionary
+     * @param packet
+     */
     private void addOrUpdate(DatagramPacket packet){
         byte[] buf = packet.getData();
         JSONObject jsonObject = new JSONObject(new String(buf));
@@ -80,6 +87,12 @@ public class GameServer {
         gameIDs.put(gameID,3600);
     }
 
+    /**
+     * Send the message to others rather than me
+     * @param packet The packet of the message
+     * @param socket The socket
+     * @throws IOException
+     */
     private void sendToOthers(DatagramPacket packet, DatagramSocket socket) throws IOException {
         byte[] buf = packet.getData();
         JSONObject jsonObject = new JSONObject(new String(buf));
@@ -93,6 +106,10 @@ public class GameServer {
         }
     }
 
+    /**
+     * Create a new ID
+     * @return The game id
+     */
     public String createGameID(){
         int i = 0;
         while(gameIDs.containsKey(String.valueOf(i))){

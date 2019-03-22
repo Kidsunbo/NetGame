@@ -13,6 +13,10 @@ public abstract class MessageHandler {
     JSONObject jsonObject = null;
 
 
+    /**
+     * Constructor of the class. it will read the type of the message, and change the message into a json object.
+     * @param message
+     */
     MessageHandler(String message){
         try {
             jsonObject = new JSONObject(message);
@@ -23,6 +27,12 @@ public abstract class MessageHandler {
         }
     }
 
+    /**
+     * It uses Polymorphism to invoke the process method for message with different types.
+     * @param message
+     * @param socket
+     * @return
+     */
     public static MessageHandler getMessageHandler(String message, Socket socket){
         MessageHandler result = null;
         try {
@@ -57,6 +67,10 @@ public abstract class MessageHandler {
         return result;
     }
 
+    /**
+     * Abstract method to be overwrite
+     * @return
+     */
     abstract String process();
 
 

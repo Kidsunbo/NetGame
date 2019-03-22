@@ -12,6 +12,10 @@ public class SignupMessageHandler extends MessageHandler {
         super(message);
     }
 
+    /**
+     * This function will start the process of processing the sign up request.
+     * @return The response message.
+     */
     @Override
     String process() {
         JSONObject response = new JSONObject();
@@ -24,6 +28,11 @@ public class SignupMessageHandler extends MessageHandler {
         return response.toString();
     }
 
+    /**
+     * The method to handle all the sign up message. It will check the database.
+     * @param jsonObject
+     * @param response
+     */
     private void signUp(JSONObject jsonObject, JSONObject response) {
         try{
             if (jsonObject.has("username") && jsonObject.has("password")) {

@@ -17,6 +17,10 @@ public class Server {
 
     }
 
+    /**
+     * This is the method for singleton
+     * @return The instance of the Server
+     */
     public static Server getInstance(){
         if(server == null){
             server = new Server();
@@ -26,12 +30,17 @@ public class Server {
 
     /**
      * Get the client
-     * @return
+     * @return A hash table to store the clients.
      */
     public Hashtable<String, Socket> getClients() {
         return clients;
     }
 
+
+    /**
+     * Start the server. It will accept all the requests,and store the socket channel into the collection.
+     * @param port The port number of server.
+     */
     public void Start(int port){
         try {
             ServerSocket ss = new ServerSocket(port);
@@ -44,6 +53,10 @@ public class Server {
         }
     }
 
+    /**
+     * In case of changing the ip of the server, so that the client can't get the ip of the server. The server will
+     * broadcast its ip and port to everyone in the network. Like a big guy screams, hi I am here.
+     */
     private static void broadServerIP(){
         try {
             MulticastSocket socket = new MulticastSocket();
@@ -100,6 +113,11 @@ public class Server {
         return port;
     }
 
+
+    /**
+     * The entry of the server
+     * @param args
+     */
     public static void main(String[] args) {
         broadServerIP();
         Server.getInstance().Start(port);

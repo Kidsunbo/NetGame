@@ -39,6 +39,10 @@ public class Client {
     private Queue<JSONObject> messageQueue = new LinkedBlockingDeque<>();
 
 
+    /**
+     * Get the client with singleton
+     * @return
+     */
     public static Client getClient(){
         if(client == null){
             client = new Client();
@@ -46,6 +50,9 @@ public class Client {
         return client;
     }
 
+    /**
+     * refresh the ip and the port. It will receive the broadcast message from the server and get the ip and the port.
+     */
     private static void refreshIpAndPort(){
         Thread t = new Thread(()->{
             try {
@@ -71,6 +78,10 @@ public class Client {
         t.setDaemon(true);
         t.start();
     }
+
+    /**
+     * Make the constructor private and use singleton to get it
+     */
     private Client() {
         es.execute(()->{
             tryToConnect();
@@ -98,6 +109,9 @@ public class Client {
         });
     }
 
+    /**
+     * Try to connect the server. If it fails. connect again.
+     */
     private void tryToConnect() {
         refreshIpAndPort();
         while(!connected.get()) {
@@ -117,10 +131,19 @@ public class Client {
     }
 
 
+    /**
+     * Check if it's connected
+     * @return
+     */
     public boolean isConnected(){
         return connected.get();
     }
 
+    /**
+     * Find the message in the message list. and remove it if it has been used.
+     * @param type
+     * @return
+     */
     public synchronized JSONObject findNext(String type){
         messageQueue.removeIf(obj->!obj.has("type"));
         for(JSONObject obj : messageQueue){
@@ -132,6 +155,11 @@ public class Client {
         return null;
     }
 
+    /**
+     * retreive Json. But it will grantee that it has message.
+     * @param type
+     * @return
+     */
     public synchronized JSONObject retreiveJson(String type){
         JSONObject result;
         while ((result = Client.getClient().findNext(type)) == null){
@@ -144,6 +172,11 @@ public class Client {
         return result;
     }
 
+    /**
+     * send login message
+     * @param username
+     * @param password
+     */
     public void login(String username,String password){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type","login");
@@ -159,6 +192,11 @@ public class Client {
         sendMessage(jsonObject);
     }
 
+    /**
+     * send sign up message
+     * @param username
+     * @param password
+     */
     public void signup(String username, String password){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type","signup");
@@ -178,6 +216,11 @@ public class Client {
         }
     }
 
+    /**
+     * Send message
+     * @param message
+     * @return
+     */
     public Client sendMessage(String message){
         out.println(message);
         return this;

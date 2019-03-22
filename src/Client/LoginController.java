@@ -97,6 +97,10 @@ public class LoginController {
 
     }
 
+    /**
+     * Do the login action
+     * @param event
+     */
     @FXML
     void loginAction(ActionEvent event) {
         if (usernameInput.getText().isEmpty()) {
@@ -150,6 +154,11 @@ public class LoginController {
         Platform.exit();
     }
 
+    /**
+     * Add the drag function to the window
+     * @param scene
+     * @return
+     */
     static Scene addDragFunction(Scene scene){
         scene.setOnMousePressed(event -> {
             LoginController.xOffset = scene.getWindow().getX() - event.getScreenX();

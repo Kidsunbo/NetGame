@@ -1,6 +1,5 @@
 package Client;
 
-import Server.MessageHandler;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -21,7 +20,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
 
-import javax.xml.soap.Text;
 import java.io.*;
 import java.util.*;
 import java.util.List;
@@ -47,6 +45,10 @@ public class ChatController {
     public GridPane shopPane;
     public GridPane settingPane;
 
+    /**
+     * return back to the chat area
+     * @param event
+     */
     public void backToChat(MouseEvent event) {
         profileBtn.setStyle("-fx-background-color:#000000");
         profileLb.setStyle("-fx-text-fill:#ffd7d7");
@@ -60,6 +62,10 @@ public class ChatController {
         settingPane.setVisible(false);
     }
 
+    /**
+     * go to the profile page
+     * @param event
+     */
     public void goProfilePage(MouseEvent event) {
         profileBtn.setStyle("-fx-background-color:#eb4d4d");
         profileLb.setStyle("-fx-text-fill:#ffa600");
@@ -73,6 +79,10 @@ public class ChatController {
         settingPane.setVisible(false);
     }
 
+    /**
+     * go to the setting page
+     * @param event
+     */
     public void goSettingPage(MouseEvent event) {
         profileBtn.setStyle("-fx-background-color:#000000");
         profileLb.setStyle("-fx-text-fill:#ffd7d7");
@@ -86,6 +96,10 @@ public class ChatController {
         settingPane.setVisible(true);
     }
 
+    /**
+     * go to the shop page
+     * @param event
+     */
     public void goShopPage(MouseEvent event) {
         profileBtn.setStyle("-fx-background-color:#000000");
         profileLb.setStyle("-fx-text-fill:#ffd7d7");
@@ -100,6 +114,9 @@ public class ChatController {
     }
 
 
+    /**
+     * For contact list cell. use profile photo
+     */
     //INNER CLASS
     class ContactListCell extends ListCell<Profile> {
         @Override
@@ -113,6 +130,9 @@ public class ChatController {
         }
     }
 
+    /**
+     * For message cell
+     */
     class MessageCell extends ListCell<String>{
 
         @Override
@@ -157,6 +177,9 @@ public class ChatController {
         }
     }
 
+    /**
+     * For game list
+     */
     class GameCell extends ListCell<File>{
         @Override
         public void updateItem(File item, boolean empty) {
@@ -171,11 +194,14 @@ public class ChatController {
                     }
                 }
                 if(url!=null){
-                Image image = new Image(url);
-                ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(picWidth);
-                imageView.setFitHeight(picHeight);
-                setGraphic(imageView);}
+                    File sourceimage = new File(url);
+                    ImageView imageView = new ImageView(new Image(sourceimage.toURI().toString()));
+                    imageView.setFitWidth(picWidth);
+                    imageView.setFitHeight(picHeight);
+                    imageView.setOpacity(1);
+                    this.setOpacity(1);
+                    setGraphic(imageView);
+                }
                 else{
                     ImageView imageView = new ImageView("Client/View/logo.jpg");
                     imageView.setFitWidth(picWidth);
@@ -190,6 +216,9 @@ public class ChatController {
         }
     }
 
+    /**
+     * The class for profile
+     */
     class Profile{
         private final String username;
         private ImageView icon;
@@ -258,6 +287,9 @@ public class ChatController {
     public ListView<String> chatArea;
 
 
+    /**
+     * initialize the UI
+     */
     @FXML
     public void initialize() {
         contactList.setCellFactory(list -> new ContactListCell());
@@ -278,7 +310,7 @@ public class ChatController {
                 });
         chatArea.setCellFactory(list -> new MessageCell());
         gameList.setCellFactory(list -> new GameCell());
-        es.execute(() -> {
+        es.execute(() -> { // receive the message all the time
             while (true) {
                 checkConnection();
                 JSONObject response;
@@ -309,7 +341,7 @@ public class ChatController {
         });
         usernameLabel.setText(username);
 
-        File gamesDir = new File("./games/");
+        File gamesDir = new File("games/");
         if (!gamesDir.exists())
             gamesDir.mkdir();
         File[] games = gamesDir.listFiles();
@@ -323,6 +355,10 @@ public class ChatController {
     }
 
 
+    /**
+     * Process the invitation
+     * @param invite
+     */
     private void processInvitation(JSONObject invite) {
         Platform.runLater(()->{
             String answer = "no";
@@ -339,6 +375,10 @@ public class ChatController {
 
     }
 
+    /**
+     * Start the game if the two people want to start
+     * @param response
+     */
     private void processStartGameAnswer(JSONObject response) {
         if(response.getString("reply").equals("yes")){
             File gamesFile = new File("games/"+response.getString("game")+"/");
@@ -380,7 +420,10 @@ public class ChatController {
     }
 
 
-
+    /**
+     * Send a new invitation
+     * @param mouseEvent
+     */
     public void startNewGame(MouseEvent mouseEvent) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type","data");
@@ -393,6 +436,9 @@ public class ChatController {
 
     }
 
+    /**
+     * Check if the network is working
+     */
     private void checkConnection(){
         if (!Client.getClient().isConnected()){
             Timer timer = new Timer(true);
@@ -418,6 +464,11 @@ public class ChatController {
             timer.purge();
         }
     }
+
+    /**
+     * Update the contact list
+     * @param jsonObject
+     */
     private void updateContactList(JSONObject jsonObject) {
         boolean isEmpty = false;
         if (contactList.getItems().isEmpty()) {
@@ -438,6 +489,10 @@ public class ChatController {
         });
     }
 
+    /**
+     * Handler the new message
+     * @param jsonObject
+     */
     private void processNewMessage(JSONObject jsonObject) {
         String fromUser = jsonObject.getString("from_user");
         String message = jsonObject.getString("message");
@@ -465,7 +520,10 @@ public class ChatController {
     }
 
 
-
+    /**
+     * Use key board to send the message
+     * @param keyEvent
+     */
     public void sendByKeyboard(KeyEvent keyEvent) {
         if(keyEvent.getCode() == KeyCode.ENTER){
             sendMessage();
@@ -477,7 +535,9 @@ public class ChatController {
     }
 
 
-
+    /**
+     * Send the message and clear the input area
+     */
     private void sendMessage(){
         String msg = inputArea.getText();
         if(msg.trim().equals("")) return;
@@ -498,6 +558,11 @@ public class ChatController {
 
     }
 
+    /**
+     * give an array of name, and change them to profile
+     * @param args
+     * @return
+     */
     private Profile[] stringsToProfiles(String[] args){
         Profile[] profiles = new Profile[args.length];
         for(int i = 0;i<args.length;i++){
@@ -506,6 +571,11 @@ public class ChatController {
         return profiles;
     }
 
+    /**
+     * filter the exist contact in the list
+     * @param names
+     * @return
+     */
     private List<String> filterExist(List<String> names){
         List<String> existName = new ArrayList<>();
         for(Profile i : contactList.getItems()){
@@ -519,6 +589,11 @@ public class ChatController {
         return result;
     }
 
+    /**
+     * remove the offline guys
+     * @param nameList
+     * @return
+     */
     private Profile[] filterOffline(List<String> nameList) {
         List<Profile> offline = new ArrayList<Profile>();
         for(Profile p : contactList.getItems()){
@@ -529,6 +604,10 @@ public class ChatController {
         return offline.toArray(new Profile[0]);
     }
 
+    /**
+     *
+     * @param listView
+     */
     private void scrollToBottom(ListView<String> listView){
         Platform.runLater(()->listView.scrollTo(chatArea.getItems().size()-1));
     }

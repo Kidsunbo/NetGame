@@ -71,7 +71,7 @@ public class Client {
     }
 
     /**
-     *
+     * get the ip and the port
      */
     private void refreshIpAndPort(){
         Thread t = new Thread(()->{
@@ -99,6 +99,10 @@ public class Client {
         t.start();
     }
 
+    /**
+     * Receive the message
+     * @return
+     */
     private String receive(){
         byte[] buf = new byte[5*1024];
         DatagramPacket packet = new DatagramPacket(buf,buf.length);
@@ -110,6 +114,10 @@ public class Client {
         return new String(buf);
     }
 
+    /**
+     * Send the message
+     * @param msg
+     */
     public void sendMessage(String msg){
         JSONObject jsonObject = new JSONObject(msg);
         jsonObject.put("gameID",gameID);
