@@ -44,7 +44,11 @@ public class SocketHandler extends Thread {
             }
         }
         catch (IOException e){
-            e.printStackTrace();
+            try {
+                closeSocket();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 

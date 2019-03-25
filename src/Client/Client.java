@@ -101,7 +101,13 @@ public class Client {
                     }
                     messageQueue.add(new JSONObject(messageStr));
                 } catch (IOException e) {
-                    System.out.println("Something wrong when reading message from server.");
+                    connected.set(false);
+                    tryToConnect();
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
