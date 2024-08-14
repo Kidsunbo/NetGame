@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.xsource</groupId>
+  <packaging>pom</packaging>
+  <artifactId>java</artifactId>
+  <version>1.0-SNAPSHOT</version>
+    
+  <modules>
+    <module>client</module>
+    <module>game</module>
+    <module>server</module>
+    <module>database</module>
+  </modules>
+    
+  <build>
+      <plugins>
+          <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>exec-maven-plugin</artifactId>
+              <version>1.2.1</version>
+              <configuration>
+                  <mainClass>org.xsource.server.Server</mainClass>
+              </configuration>
+          </plugin>
+          <plugin>
+              <groupId>org.openjfx</groupId>
+              <artifactId>javafx-maven-plugin</artifactId>
+              <version>0.0.3</version>
+              <configuration>
+                  <mainClass>org.xsource.client.Main</mainClass>
+              </configuration>
+          </plugin>
+      </plugins>
+  </build>
+</project>
